@@ -1,0 +1,137 @@
+---
+import Icon from "./Icon.astro";
+import Photo from "./Photo.astro";
+
+interface Props {
+  photo?: string;
+}
+const { photo = "equipe-1" } = Astro.props;
+
+const items = [
+  { i: "user", t: "Un agent attitré", d: "La même personne à chaque passage. Elle connaît vos locaux, vos consignes et vos habitudes." },
+  { i: "shield", t: "Des salariés formés", d: "Nos agents sont salariés de Neo Clean, le plus souvent en CDI, et formés à nos protocoles avant leur première intervention." },
+  { i: "calendar", t: "Continuité garantie", d: "En cas d'absence ou de congés, un remplaçant déjà formé sur votre site assure le passage." },
+  { i: "phone", t: "Un responsable joignable", d: "Un responsable de secteur contrôle la qualité et répond directement à vos demandes." },
+  { i: "doc", t: "Tout est écrit", d: "Devis détaillé, cahier des charges pièce par pièce, contrat clair, sans frais de dossier." },
+  { i: "euro", t: "Un prix maîtrisé", d: "Le prix est fixé à l'avance. Les prestations exceptionnelles sont chiffrées à part, jamais ajoutées sans accord." },
+];
+---
+<section class="section commit">
+  <div class="wrap grid">
+    <div class="visual">
+      <Photo name={photo} sizes="(max-width: 900px) 100vw, 40vw" class="img" />
+      <div class="badge">
+        <strong>6</strong>
+        <span>engagements tenus sur chaque site</span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="section-head">
+        <span class="eyebrow">Nos engagements</span>
+        <h2>Ce qui change avec Neo Clean</h2>
+        <p class="lede">Un agent différent chaque semaine et personne à qui parler : c'est le reproche le plus fréquent fait aux sociétés de nettoyage. Notre organisation est construite pour l'éviter.</p>
+      </div>
+      <ul class="list">
+        {items.map((it) => (
+          <li>
+            <span class="ico"><Icon name={it.i} size={22} /></span>
+            <div><h3>{it.t}</h3><p>{it.d}</p></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .visual {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .visual :global(.img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 24px;
+  }
+  .badge {
+    position: absolute;
+    right: -18px;
+    bottom: 32px;
+    display: grid;
+    gap: 2px;
+    max-width: 200px;
+    padding: 18px 20px;
+    background: var(--pink);
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -12px rgb(216 30 108 / 0.5);
+  }
+  .badge strong {
+    font: 700 2.4rem/1 var(--display);
+  }
+  .badge span {
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+  .content .section-head {
+    margin-bottom: 28px;
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 28px;
+  }
+  .list li {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+  }
+  .ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .list h3 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+  }
+  .list p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .visual {
+      position: relative;
+      top: 0;
+    }
+    .visual :global(.img) {
+      aspect-ratio: 16 / 10;
+    }
+    .badge {
+      right: 12px;
+      bottom: 12px;
+    }
+  }
+  @media (max-width: 600px) {
+    .list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,39 +1,128 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
+import Photo from "../components/Photo.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Process from "../components/Process.astro";
+import Commitments from "../components/Commitments.astro";
 import { site } from "../data/site";
-import { proServices } from "../data/services";
+import { getProServices, getZones, serviceHref, zoneHref } from "../lib/content";
+
+const pro = await getProServices();
+const zones = await getZones();
+
+const sectors = [
+  { t: "Bureaux et sièges", d: "PME, cabinets, agences, sièges sociaux, administrations.", s: "nettoyage-bureau" },
+  { t: "Coworkings et centres d'affaires", d: "Postes partagés, salles de réunion, cuisines communes.", s: "nettoyage-espace-coworking" },
+  { t: "Commerces et restauration", d: "Boutiques, restaurants, cafés, commerces de bouche.", s: "nettoyage-commerce" },
+  { t: "Santé", d: "Cabinets médicaux et dentaires, centres de santé, pharmacies.", s: "nettoyage-et-entretien-cabinet-medical-clinique-pharmacie" },
+  { t: "Hôtellerie", d: "Hôtels, apparthotels, résidences de tourisme.", s: "nettoyage-hotel" },
+  { t: "Immobilier", d: "Copropriétés, syndics, bailleurs, promoteurs.", s: "nettoyage-petite-copropriete" },
+  { t: "Industrie et logistique", d: "Entrepôts, ateliers, parkings, locaux techniques.", s: "nettoyage-industriel" },
+  { t: "Bâtiment", d: "Fins de chantier, livraisons, remises en état.", s: "nettoyage-fin-de-chantier-remise-en-etat" },
+];
 ---
 <Base
   title="Nettoyage professionnel à Paris : bureaux, commerces, copropriétés | Neo Clean"
-  description="Tous nos services de nettoyage pour les entreprises en Île-de-France : bureaux, coworkings, commerces, copropriétés, fin de chantier, vitres, désinfection."
+  description="Entreprise de nettoyage professionnel à Paris et en Île-de-France : bureaux, coworkings, commerces, cabinets médicaux, hôtels, copropriétés, fin de chantier, vitres, désinfection."
 >
-  <PageHero
+  <HubHero
     crumb="Entreprises"
     eyebrow="Services aux entreprises"
     title="Nettoyage professionnel à Paris et en Île-de-France"
-    lede="Contrat d'entretien régulier ou intervention ponctuelle : un agent attitré, un cahier des charges écrit et un responsable de secteur joignable directement."
+    lede="Contrat d'entretien régulier ou intervention ponctuelle : un agent attitré, un cahier des charges écrit et un responsable de secteur joignable directement, pour tous vos locaux professionnels."
+    photo="coworking-2"
   >
     <div class="actions">
       <a class="btn btn--primary" href="/devis/">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
-      <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+      <a class="btn btn--light" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
     </div>
-  </PageHero>
+  </HubHero>
 
+  <!-- Catalogue -->
   <section class="section">
     <div class="wrap">
-      <div class="grid-cards">
-        {proServices.map((s) => (
-          <a class="svc-card" href={`/${s.slug}/`}>
-            <span class="ico"><Icon name={s.icon} /></span>
-            <h2 class="h3">{s.title}</h2>
-            <p>{s.summary}</p>
-            <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+      <div class="section-head">
+        <span class="eyebrow">{pro.length} services</span>
+        <h2>Tous nos services de nettoyage professionnel</h2>
+        <p class="lede">De l'entretien quotidien de vos bureaux aux interventions techniques ponctuelles, chaque prestation est détaillée dans un cahier des charges écrit.</p>
+      </div>
+      <div class="cat">
+        {pro.map((s) => (
+          <a class="item" href={serviceHref(s)}>
+            <Photo name={s.data.photos[0]} sizes="(max-width: 700px) 100vw, 33vw" widths={[480, 800]} class="item__img" />
+            <span class="item__body">
+              <span class="item__ico"><Icon name={s.data.icon} size={20} /></span>
+              <h3>{s.data.title}</h3>
+              <p>{s.data.summary}</p>
+              <span class="item__freq"><Icon name="clock" size={15} />{s.data.frequency}</span>
+            </span>
           </a>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- Secteurs -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Par secteur d'activité</span>
+        <h2>Des méthodes adaptées à chaque type de locaux</h2>
+        <p class="lede">Un cabinet médical, un entrepôt et un open space ne s'entretiennent pas de la même façon. Nous adaptons les produits, le matériel, les horaires et la fréquence à votre activité.</p>
+      </div>
+      <ul class="sectors">
+        {sectors.map((x) => (
+          <li><a href={`/${x.s}/`}><strong>{x.t}</strong><span>{x.d}</span><Icon name="arrow" size={18} /></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Texte long -->
+  <section class="section">
+    <div class="wrap long">
+      <div class="article">
+        <h2>Pourquoi externaliser le nettoyage de vos locaux</h2>
+        <p>Confier l'entretien de vos locaux à une entreprise de nettoyage, c'est d'abord vous libérer d'une charge qui n'est pas votre métier. Recruter un agent en interne implique de gérer son contrat, sa paie, ses congés, ses absences, l'achat du matériel et des produits, et de contrôler soi-même la qualité du travail. Avec un prestataire, vous payez une prestation définie, réalisée par un professionnel formé, et remplacée automatiquement en cas d'absence.</p>
+        <p>L'externalisation apporte aussi de la souplesse. Si votre effectif augmente, si vous passez au télétravail partiel ou si vous emménagez dans de nouveaux locaux, la fréquence et le contenu de la prestation s'ajustent par simple avenant. Les prestations exceptionnelles, comme le shampooing des moquettes ou le lavage des vitres extérieures, sont réalisées par des équipes équipées du matériel adapté.</p>
+        <h2>Ce qui fait la qualité d'un prestataire de nettoyage</h2>
+        <p>La qualité d'une prestation de nettoyage repose sur trois éléments : la stabilité des intervenants, la clarté de ce qui est attendu et le contrôle régulier. C'est sur ces trois points que nous avons construit notre organisation.</p>
+        <p>La stabilité, c'est un agent attitré qui intervient toujours sur vos locaux. Il apprend vos consignes, connaît l'emplacement des consommables et repère immédiatement ce qui sort de l'ordinaire. Nos agents sont salariés, le plus souvent en CDI, ce qui favorise une vraie continuité dans le temps.</p>
+        <p>La clarté, c'est un cahier des charges écrit, établi après une visite de vos locaux, qui précise pièce par pièce ce qui est fait à chaque passage, chaque semaine et chaque mois. Il est annexé au contrat et sert de référence commune à votre équipe, à l'agent et à son responsable.</p>
+        <p>Le contrôle, c'est un responsable de secteur qui passe régulièrement sur vos locaux, vérifie le travail avec une grille de contrôle et reste joignable directement. Si un point ne vous convient pas, vous l'appelez, et la correction est faite au passage suivant.</p>
+        <h2>Comment est calculé le prix d'un contrat de nettoyage</h2>
+        <p>Le prix d'une prestation de nettoyage professionnel dépend principalement du temps nécessaire pour réaliser le cahier des charges. Ce temps varie selon la surface, le type de locaux, le nombre de postes de travail et de sanitaires, les revêtements de sol, la fréquence des passages et les contraintes d'accès. C'est pourquoi nous établissons toujours le devis après une visite, plutôt qu'à partir d'un simple prix au mètre carré qui ne reflète pas la réalité de vos locaux.</p>
+        <p>Le devis indique le prix mensuel de l'entretien régulier et, séparément, le prix des prestations ponctuelles éventuelles. Il n'y a pas de frais de dossier ni de frais de mise en place.</p>
+      </div>
+      <aside class="long__side">
+        <Photo name="bureau-2" sizes="(max-width: 900px) 100vw, 30vw" class="long__img" />
+        <div class="box">
+          <h3>Devis gratuit en 3 étapes</h3>
+          <ol>
+            <li>Vous décrivez vos locaux en ligne</li>
+            <li>Nous visitons gratuitement</li>
+            <li>Vous recevez devis et cahier des charges</li>
+          </ol>
+          <a class="btn btn--primary" href="/devis/">Commencer</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <Commitments photo="industriel-2" />
+  <Process />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Zones d'intervention</span>
+        <h2>Nettoyage professionnel dans toute l'Île-de-France</h2>
+      </div>
+      <ul class="chips">
+        {zones.map((z) => <li><a href={zoneHref(z)}><Icon name="pin" size={16} />Nettoyage {z.data.in} ({z.data.code})</a></li>)}
+      </ul>
     </div>
   </section>
 
@@ -41,9 +130,157 @@ import { proServices } from "../data/services";
 </Base>
 
 <style>
-  .h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+  .cat {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .item {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    background: #fff;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .item:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+    color: var(--ink);
+  }
+  .item :global(.item__img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .item__body {
+    position: relative;
+    display: grid;
+    gap: 8px;
+    padding: 30px 22px 22px;
+    align-content: start;
+  }
+  .item__ico {
+    position: absolute;
+    top: -22px;
+    left: 22px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--blue);
+    color: #fff;
+  }
+  .item h3 {
+    font-size: 1.15rem;
+  }
+  .item p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .item__freq {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--navy);
+  }
+  .sectors {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .sectors a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    row-gap: 4px;
+    align-items: center;
+    padding: 18px 22px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .sectors a:hover {
+    border-color: var(--blue);
+  }
+  .sectors strong {
+    font: 600 1.05rem var(--display);
+  }
+  .sectors span {
+    grid-row: 2;
+    color: var(--muted);
+    font-size: 0.93rem;
+  }
+  .sectors :global(svg) {
+    grid-row: 1 / 3;
+    grid-column: 2;
+    color: var(--blue);
+  }
+  .long {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+  }
+  .long__side {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 16px;
+  }
+  .long__side :global(.long__img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 18px;
+  }
+  .box {
+    display: grid;
+    gap: 14px;
+    padding: 24px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 18px;
+  }
+  .box ol {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 6px;
+    color: rgb(255 255 255 / 0.85);
+  }
+  .chips :global(svg) {
+    color: var(--pink);
+  }
+  @media (max-width: 1000px) {
+    .cat {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 900px) {
+    .long {
+      grid-template-columns: 1fr;
+    }
+    .long__side {
+      position: static;
+    }
+  }
+  @media (max-width: 640px) {
+    .cat,
+    .sectors {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

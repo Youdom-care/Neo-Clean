@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
 import CtaBand from "../components/CtaBand.astro";
 import { site } from "../data/site";
@@ -34,11 +34,12 @@ const discounts = [
   title="Tarifs du ménage à domicile et crédit d'impôt | Neo Clean"
   description="Ménage à domicile à partir de 17,65 € de l'heure après crédit d'impôt à Paris. Avance immédiate, CESU préfinancé, parrainage."
 >
-  <PageHero
+  <HubHero
     crumb="Tarifs"
     eyebrow="Particuliers"
     title="Tarifs et crédit d'impôt"
-    lede="Des prix clairs, à l'heure, sans frais d'inscription. Le crédit d'impôt de 50 % s'applique à toutes nos prestations à domicile."
+    lede="Des prix clairs, à l'heure, sans frais d'inscription. Le crédit d'impôt de 50 % s'applique à toutes nos prestations à domicile, avec l'avance immédiate."
+    photo="regulier-1"
   />
 
   <section class="section">
@@ -109,6 +110,57 @@ const discounts = [
       <div class="disc">
         {discounts.map((d) => <div><h3>{d.t}</h3><p>{d.d}</p></div>)}
       </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap long">
+      <div class="article">
+        <h2>Comment fonctionne le crédit d'impôt pour le ménage à domicile</h2>
+        <p>Les services de ménage, de repassage et d'aide à domicile réalisés à votre résidence principale ou secondaire, en France, ouvrent droit à un crédit d'impôt égal à 50 % des sommes versées. Ce dispositif est prévu par l'article 199 sexdecies du Code général des impôts. Il s'agit d'un crédit, et non d'une simple réduction : si son montant dépasse votre impôt, ou si vous n'êtes pas imposable, la différence vous est remboursée.</p>
+        <p>Les dépenses sont retenues dans la limite d'un plafond annuel de 12 000 euros, majoré de 1 500 euros par enfant à charge ou par membre du foyer âgé de plus de 65 ans, sans pouvoir dépasser 15 000 euros. Des plafonds plus élevés s'appliquent la première année ou lorsqu'un membre du foyer est en situation de handicap. Pour la grande majorité des foyers, le plafond n'est pas atteint.</p>
+        <h2>L'avance immédiate : ne payer que 50 %</h2>
+        <p>Jusqu'à récemment, il fallait avancer la totalité des sommes et attendre l'année suivante pour récupérer le crédit d'impôt. Avec le service d'avance immédiate proposé par l'Urssaf, ce n'est plus le cas : le crédit d'impôt est déduit directement de chaque facture. Concrètement, pour une facture mensuelle de 300 euros, vous ne réglez que 150 euros ; l'Urssaf nous verse le reste.</p>
+        <p>L'activation est simple : nous créons votre espace auprès de l'Urssaf, vous recevez un courriel pour confirmer votre inscription, puis chaque facture vous est présentée pour validation avant le prélèvement de votre part. Vous gardez à tout moment le contrôle de ce qui est payé.</p>
+        <p>Si vous préférez ne pas utiliser l'avance immédiate, vous réglez la totalité de vos factures et nous vous adressons chaque année une attestation fiscale à joindre à votre déclaration de revenus.</p>
+        <p>L'avance immédiate ne change rien au montant de votre crédit d'impôt : elle en modifie seulement le calendrier. Les sommes déjà déduites de vos factures apparaissent sur votre déclaration de revenus préremplie, et ne sont évidemment pas remboursées une seconde fois.</p>
+        <h2>Le paiement en CESU préfinancé</h2>
+        <p>Si votre employeur, votre comité social et économique ou votre caisse de retraite vous remet des chèques emploi service universel préfinancés, vous pouvez les utiliser pour régler nos prestations, en tout ou partie. La part payée en CESU préfinancé n'ouvre pas droit au crédit d'impôt, puisqu'elle a déjà été financée par un tiers.</p>
+        <h2>Combien coûte réellement une aide ménagère ?</h2>
+        <p>Prenons l'exemple d'un ménage de deux heures par semaine. Sur un mois, cela représente environ 8,7 heures, soit une facture d'environ 307 euros au tarif de 35,30 euros de l'heure. Avec le crédit d'impôt de 50 %, le coût réel est d'environ 154 euros par mois, soit moins de 18 euros l'heure. Avec l'avance immédiate, c'est ce montant que vous réglez directement, sans attendre de remboursement.</p>
+        <p>Ce prix comprend le salaire et les charges de l'intervenante, ses congés payés, son remplacement pendant ses absences, sa formation, son assurance, ainsi que la gestion administrative. En emploi direct, ces éléments restent à votre charge ou sous votre responsabilité.</p>
+        <h2>Ce qui fait varier le nombre d'heures</h2>
+        <p>Le tarif horaire est le même pour tous, mais le nombre d'heures nécessaires varie d'un logement à l'autre. La surface compte, bien sûr, mais aussi le nombre de pièces d'eau, la présence d'enfants ou d'animaux, le type de sols, la quantité de linge à repasser et le niveau d'exigence de chacun. Un appartement de 60 m² avec une salle de bain et sans animal s'entretient en deux heures par semaine ; le même appartement avec deux jeunes enfants et un chien en demandera souvent trois.</p>
+        <p>Lors du premier échange, nous vous proposons un nombre d'heures réaliste. Après quelques passages, nous faisons le point avec vous et votre intervenante pour ajuster si nécessaire, à la hausse comme à la baisse. Notre intérêt est que vous restiez satisfait dans la durée, pas de vous facturer des heures inutiles.</p>
+        <h2>Les réductions permanentes</h2>
+        <p>Le parrainage vous permet de bénéficier d'heures offertes lorsque vous recommandez Neo Clean à un proche qui devient client. La réduction voisinage s'applique lorsque plusieurs clients sont servis dans le même immeuble ou la même rue : l'organisation des trajets étant plus simple pour nous, nous en faisons profiter nos clients. Les conditions précises vous sont indiquées lors de votre demande de devis.</p>
+        <h2>Et pour les entreprises ?</h2>
+        <p>Pour les professionnels, nos tarifs ne sont pas affichés à l'heure : ils dépendent de la surface, du type de locaux, du nombre de postes et de sanitaires, des revêtements, de la fréquence des passages et des contraintes d'accès. Nous établissons un devis précis et gratuit après une visite de vos locaux, avec un prix mensuel fixe pour l'entretien régulier et un prix séparé pour chaque prestation ponctuelle. Il n'y a pas de frais de dossier ni de frais de mise en place. <a href="/nettoyage-professionnel/">Découvrir nos services aux entreprises</a>.</p>
+      </div>
+      <aside class="side">
+        <div class="faq">
+          <details open>
+            <summary>Le crédit d'impôt s'applique-t-il si je ne suis pas imposable ?</summary>
+            <div><p>Oui. C'est un crédit d'impôt : s'il dépasse votre impôt, la différence vous est remboursée.</p></div>
+          </details>
+          <details>
+            <summary>Y a-t-il des frais d'inscription ?</summary>
+            <div><p>Non. Vous ne payez que les heures réalisées, au tarif indiqué dans votre devis.</p></div>
+          </details>
+          <details>
+            <summary>Les heures annulées sont-elles facturées ?</summary>
+            <div><p>Une intervention annulée suffisamment à l'avance, selon le délai prévu au contrat, n'est pas facturée.</p></div>
+          </details>
+          <details>
+            <summary>Le ménage Airbnb ouvre-t-il droit au crédit d'impôt ?</summary>
+            <div><p>Non. Le ménage d'un logement loué en courte durée relève d'une activité de location.</p></div>
+          </details>
+          <details>
+            <summary>Comment suis-je facturé ?</summary>
+            <div><p>Une facture mensuelle récapitule les heures réalisées. Avec l'avance immédiate, vous validez chaque facture avant le prélèvement de votre part.</p></div>
+          </details>
+        </div>
+      </aside>
     </div>
   </section>
 
@@ -233,6 +285,24 @@ const discounts = [
   }
   .disc p {
     color: var(--muted);
+  }
+  .long {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .side {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  @media (max-width: 900px) {
+    .long {
+      grid-template-columns: 1fr;
+    }
+    .side {
+      position: static;
+    }
   }
   @media (max-width: 860px) {
     .offers,

@@ -1,33 +1,76 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import CtaBand from "../components/CtaBand.astro";
+import { site } from "../data/site";
 
 const groups = [
   {
+    id: "devis",
     title: "Devis et contrat",
     items: [
-      { q: "Le devis est-il gratuit ?", a: "Oui, le devis et la visite de vos locaux sont gratuits et sans engagement." },
-      { q: "Sous quel délai recevrai-je une réponse ?", a: "Nous vous recontactons sous 24 h ouvrées après votre demande." },
-      { q: "Y a-t-il une durée d'engagement ?", a: "Nos contrats d'entretien sont résiliables avec un préavis indiqué dans le contrat. Il n'y a pas de frais de dossier." },
-      { q: "Comment le prix est-il calculé ?", a: "Pour les entreprises, selon la surface, le type de locaux, la fréquence et les prestations incluses. Pour les particuliers, à l'heure." },
+      { q: "Le devis est-il gratuit ?", a: "Oui. Le devis et la visite de vos locaux sont gratuits et sans engagement. Pour les particuliers, un échange téléphonique suffit le plus souvent." },
+      { q: "Sous quel délai recevrai-je une réponse ?", a: "Nous vous recontactons sous 24 heures ouvrées après votre demande, pour organiser la visite ou vous transmettre une proposition." },
+      { q: "Comment le prix est-il calculé pour une entreprise ?", a: "Il dépend du temps nécessaire pour réaliser le cahier des charges : surface, type de locaux, nombre de postes et de sanitaires, revêtements, fréquence et contraintes d'accès. C'est pourquoi nous visitons toujours les locaux avant de chiffrer." },
+      { q: "Comment le prix est-il calculé pour un particulier ?", a: "À l'heure, selon le tarif indiqué dans votre devis. Le crédit d'impôt de 50 % s'applique, et l'avance immédiate permet de ne payer que la moitié chaque mois." },
+      { q: "Y a-t-il des frais de dossier ou d'inscription ?", a: "Non, aucun. Vous ne payez que les prestations réalisées." },
+      { q: "Y a-t-il une durée d'engagement ?", a: "Les contrats professionnels sont résiliables avec un préavis indiqué dans le contrat. Le ménage à domicile est sans engagement de durée." },
+      { q: "Peut-on modifier le contrat en cours de route ?", a: "Oui. Fréquence, horaires, contenu de la prestation : tout peut être ajusté par avenant, par exemple si votre effectif ou vos locaux évoluent." },
     ],
   },
   {
-    title: "Intervention",
+    id: "intervention",
+    title: "Déroulement des interventions",
     items: [
-      { q: "Est-ce toujours le même agent qui intervient ?", a: "Oui. Un agent attitré est affecté à vos locaux. En cas d'absence, un remplaçant formé sur votre site prend le relais." },
-      { q: "À quelles heures intervenez-vous ?", a: "Tôt le matin, en journée ou le soir, selon vos contraintes. Les horaires sont fixés dans le contrat." },
-      { q: "Qui fournit le matériel et les produits ?", a: "Pour les entreprises, nous fournissons le matériel et les produits. Chez les particuliers, l'intervenante utilise en général vos produits." },
-      { q: "Comment signaler un problème ?", a: "Directement auprès de votre responsable de secteur, par téléphone ou par e-mail. Il intervient rapidement pour corriger." },
+      { q: "Est-ce toujours le même agent qui intervient ?", a: "Oui. Un agent attitré est affecté à vos locaux. En cas d'absence ou de congés, un remplaçant déjà formé sur votre site prend le relais." },
+      { q: "À quelles heures intervenez-vous ?", a: "Tôt le matin, en journée, le soir, la nuit pour certains sites et le week-end, selon vos contraintes. Les horaires sont fixés dans le contrat." },
+      { q: "Faut-il être présent pendant le nettoyage ?", a: "Non. La plupart de nos clients nous confient un badge, une clé ou un code. L'agent referme les locaux et active l'alarme si besoin." },
+      { q: "Qui fournit le matériel et les produits ?", a: "Pour les entreprises, nous fournissons le matériel et les produits professionnels. Chez les particuliers, l'intervenante utilise en général vos produits et votre matériel." },
+      { q: "Quels produits utilisez-vous ?", a: "Des produits professionnels dosés avec précision, et des désinfectants conformes aux normes européennes bactéricide et virucide pour les sanitaires et les points de contact." },
+      { q: "Comment signaler un problème ?", a: "Directement auprès de votre responsable de secteur, par téléphone ou par e-mail. La correction est faite au passage suivant, ou plus tôt si nécessaire." },
+      { q: "Vos agents sont-ils assurés ?", a: "Oui, nos interventions sont couvertes par notre assurance responsabilité civile professionnelle. Une attestation peut vous être transmise sur demande." },
+      { q: "Vos agents sont-ils tenus à la confidentialité ?", a: "Oui. Ils ne consultent ni documents ni écrans, ne déplacent rien sans consigne et sont tenus à une stricte discrétion." },
     ],
   },
   {
-    title: "Particuliers",
+    id: "entreprises",
+    title: "Entreprises et copropriétés",
     items: [
-      { q: "Ai-je droit au crédit d'impôt ?", a: "Oui, le ménage à domicile ouvre droit à un crédit d'impôt de 50 % des sommes versées, que vous soyez imposable ou non." },
-      { q: "Qu'est-ce que l'avance immédiate ?", a: "Un service de l'Urssaf qui déduit le crédit d'impôt directement de vos factures. Vous ne payez que 50 % chaque mois." },
-      { q: "Dois-je être présent pendant le ménage ?", a: "Non. Vous pouvez confier un jeu de clés à votre intervenante." },
+      { q: "Quelle surface minimum pour un contrat ?", a: "Il n'y a pas de minimum. Nous entretenons des bureaux à partir d'une trentaine de mètres carrés, avec un passage par semaine." },
+      { q: "Pouvez-vous gérer plusieurs sites ?", a: "Oui. Chaque site a son agent attitré et son cahier des charges, avec un interlocuteur unique pour l'ensemble." },
+      { q: "Prenez-vous en charge les consommables des sanitaires ?", a: "Oui, si vous le souhaitez : papier, savon, sacs poubelle sont fournis et refacturés, ou achetés directement par vous." },
+      { q: "Pouvez-vous remplacer le gardien d'une copropriété ?", a: "Oui, pendant ses congés ou de façon permanente pour les tâches d'entretien, de gestion des poubelles et de distribution du courrier." },
+      { q: "Fournissez-vous un cahier des charges ?", a: "Oui, systématiquement. Il est établi après la visite de vos locaux et précise, pièce par pièce, ce qui est fait à chaque passage, chaque semaine et chaque mois. Il est annexé au contrat." },
+      { q: "Comment contrôlez-vous la qualité ?", a: "Un responsable de secteur passe régulièrement sur vos locaux avec une grille de contrôle, fait le point avec l'agent et reste joignable pour toute remarque. Nous proposons aussi un point périodique pour ajuster le cahier des charges." },
+      { q: "Proposez-vous des prestations ponctuelles en plus du contrat ?", a: "Oui : shampooing des moquettes, vitres extérieures, décapage des sols, nettoyage après travaux ou événement. Elles sont chiffrées à part et réalisées uniquement avec votre accord." },
+      { q: "Pouvez-vous intervenir dans des locaux occupés ?", a: "Oui. Nos agents savent travailler discrètement en présence de vos équipes, de vos clients ou de vos résidents, notamment dans les commerces, les coworkings et les parties communes." },
+      { q: "Intervenez-vous en urgence ?", a: "Nous faisons notre possible pour intervenir rapidement en cas d'incident (dégât des eaux, désinfection après un cas contagieux, remise en état avant une visite importante)." },
+    ],
+  },
+  {
+    id: "particuliers",
+    title: "Particuliers et crédit d'impôt",
+    items: [
+      { q: "Ai-je droit au crédit d'impôt ?", a: "Oui, le ménage et le repassage à domicile ouvrent droit à un crédit d'impôt de 50 % des sommes versées, que vous soyez imposable ou non." },
+      { q: "Qu'est-ce que l'avance immédiate ?", a: "Un service de l'Urssaf qui déduit le crédit d'impôt directement de vos factures. Vous ne payez que 50 % chaque mois, sans attendre votre déclaration de revenus." },
+      { q: "Suis-je l'employeur de l'intervenante ?", a: "Non. Elle est salariée de Neo Clean : nous gérons son contrat, sa paie, ses congés et son remplacement." },
+      { q: "Puis-je changer d'intervenante ?", a: "Oui, sans justification ni frais. Nous vous proposons une autre intervenante." },
+      { q: "Acceptez-vous les CESU préfinancés ?", a: "Oui, vous pouvez régler tout ou partie de vos factures avec des CESU préfinancés." },
+      { q: "Combien d'heures de ménage prévoir par semaine ?", a: "Pour un appartement de 50 à 70 m², deux à trois heures par semaine suffisent en général. Une famille nombreuse ou un logement plus grand demandera davantage. Nous vous conseillons lors du premier échange." },
+      { q: "L'intervenante peut-elle garder mes clés ?", a: "Oui, c'est le cas de la plupart de nos clients. Les clés sont conservées avec soin et ne sont jamais identifiées par votre adresse." },
+      { q: "Proposez-vous l'aide aux personnes âgées ?", a: "Oui, pour l'entretien du logement et du linge, avec une présence régulière. L'aide à la toilette et les soins relèvent de services spécialisés, avec lesquels nous pouvons nous coordonner." },
+      { q: "Que se passe-t-il pendant mes vacances ?", a: "Vous pouvez suspendre le service le temps de votre absence, ou demander un passage d'entretien pendant que vous êtes parti." },
+    ],
+  },
+  {
+    id: "zones",
+    title: "Zones d'intervention",
+    items: [
+      { q: "Où intervenez-vous ?", a: "À Paris et dans les départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise et Seine-et-Marne." },
+      { q: "Intervenez-vous dans toute la grande couronne ?", a: "En priorité dans les principaux pôles d'activité et les villes bien desservies. Indiquez votre code postal dans votre demande : nous vous confirmons rapidement si nous pouvons assurer un service fiable chez vous." },
+      { q: "Vos agents viennent-ils en voiture ?", a: "Pour l'entretien courant, nos agents se déplacent en transports en commun, avec le matériel stocké sur place. Pour les interventions avec machines, nous organisons la livraison du matériel." },
+      { q: "Pouvez-vous intervenir pour une entreprise qui a plusieurs sites en Île-de-France ?", a: "Oui. Chaque site est suivi par le responsable du secteur concerné, avec un interlocuteur unique qui coordonne l'ensemble et centralise la facturation." },
+      { q: "Comment garantissez-vous la ponctualité ?", a: "Nos équipes sont organisées par secteur : chaque agent intervient près de chez lui, avec des trajets courts." },
     ],
   },
 ];
@@ -37,29 +80,42 @@ const schema = {
   "@type": "FAQPage",
   mainEntity: groups.flatMap((g) => g.items).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
+const total = groups.reduce((n, g) => n + g.items.length, 0);
 ---
 <Base
-  title="Questions fréquentes | Neo Clean"
-  description="Devis, contrat, fréquence, crédit d'impôt : les réponses aux questions les plus posées sur nos services de nettoyage et de ménage à domicile."
+  title="Questions fréquentes sur le nettoyage et le ménage à domicile | Neo Clean"
+  description="Devis, contrat, déroulement des interventions, crédit d'impôt, zones d'intervention : les réponses aux questions les plus posées sur nos services de nettoyage à Paris et en Île-de-France."
   schema={[schema]}
 >
-  <PageHero crumb="Questions fréquentes" title="Questions fréquentes" lede="Vous ne trouvez pas votre réponse ? Appelez-nous ou écrivez-nous, nous vous répondons sous 24 h ouvrées." />
+  <HubHero
+    crumb="Questions fréquentes"
+    eyebrow={`${total} questions`}
+    title="Questions fréquentes"
+    lede={`Vous ne trouvez pas votre réponse ? Appelez-nous au ${site.phone} ou écrivez-nous : nous répondons sous 24 h ouvrées.`}
+    photo="bureau-2"
+  />
 
   <section class="section">
-    <div class="wrap groups">
-      {groups.map((g) => (
-        <div class="group">
-          <h2>{g.title}</h2>
-          <div class="faq">
-            {g.items.map((f) => (
-              <details>
-                <summary>{f.q}</summary>
-                <div><p>{f.a}</p></div>
-              </details>
-            ))}
+    <div class="wrap layout">
+      <nav class="toc" aria-label="Thèmes">
+        <span class="toc__title">Thèmes</span>
+        <ol>{groups.map((g) => <li><a href={`#${g.id}`}>{g.title}<span>{g.items.length}</span></a></li>)}</ol>
+      </nav>
+      <div class="groups">
+        {groups.map((g) => (
+          <div class="group" id={g.id}>
+            <h2>{g.title}</h2>
+            <div class="faq">
+              {g.items.map((f) => (
+                <details>
+                  <summary>{f.q}</summary>
+                  <div><p>{f.a}</p></div>
+                </details>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </section>
 
@@ -67,6 +123,48 @@ const schema = {
 </Base>
 
 <style>
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  .toc {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 12px;
+  }
+  .toc__title {
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+  }
+  .toc a {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .toc a:hover {
+    background: var(--blue-soft);
+  }
+  .toc a span {
+    font: 600 0.8rem var(--display);
+    color: var(--muted);
+  }
   .groups {
     display: grid;
     gap: 56px;
@@ -74,8 +172,17 @@ const schema = {
   .group {
     display: grid;
     gap: 20px;
+    scroll-margin-top: calc(var(--header-h) + 24px);
   }
   .group h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .toc {
+      position: static;
+    }
   }
 </style>

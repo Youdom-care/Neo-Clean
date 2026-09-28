@@ -1,21 +1,32 @@
 ---
+import { render } from "astro:content";
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import Photo from "../components/Photo.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Process from "../components/Process.astro";
 import { site } from "../data/site";
-import { services, type Service } from "../data/services";
+import { getServices, getZones, zoneHref, serviceHref, type ServiceEntry } from "../lib/content";
 
-export function getStaticPaths() {
-  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+export async function getStaticPaths() {
+  const services = await getServices();
+  return services.map((s) => ({ params: { slug: s.id }, props: { entry: s } }));
 }
 
-const { service: s } = Astro.props as { service: Service };
+const { entry } = Astro.props as { entry: ServiceEntry };
+const s = entry.data;
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+
 const isPro = s.audience === "pro";
 const hub = isPro
   ? { href: "/nettoyage-professionnel/", label: "Entreprises" }
   : { href: "/services-de-menage-a-domicile/", label: "Particuliers" };
-const related = services.filter((x) => x.audience === s.audience && x.slug !== s.slug).slice(0, 3);
-const devisHref = isPro ? `/devis/?service=${s.slug}` : `/devis/?type=particulier&service=${s.slug}`;
+const all = await getServices();
+const related = all.filter((x) => x.data.audience === s.audience && x.id !== entry.id).slice(0, 4);
+const zones = await getZones();
+const devisHref = isPro ? `/devis/?service=${entry.id}` : `/devis/?type=particulier&service=${entry.id}`;
+const [heroPhoto, ...morePhotos] = s.photos;
 
 const schema = [
   {
@@ -25,7 +36,7 @@ const schema = [
     serviceType: s.title,
     description: s.metaDescription,
     provider: { "@id": `${site.url}/#entreprise` },
-    areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
+    areaServed: zones.map((z) => ({ "@type": "AdministrativeArea", name: `${z.data.name} (${z.data.code})` })),
   },
   {
     "@context": "https://schema.org",
@@ -33,7 +44,7 @@ const schema = [
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Accueil", item: `${site.url}/` },
       { "@type": "ListItem", position: 2, name: hub.label, item: `${site.url}${hub.href}` },
-      { "@type": "ListItem", position: 3, name: s.title, item: `${site.url}/${s.slug}/` },
+      { "@type": "ListItem", position: 3, name: s.title, item: `${site.url}/${entry.id}/` },
     ],
   },
   {
@@ -44,181 +55,534 @@ const schema = [
 ];
 ---
 <Base title={s.metaTitle} description={s.metaDescription} schema={schema}>
-  <section class="page-hero">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Fil d'Ariane">
-        <ol>
-          <li><a href="/">Accueil</a></li>
-          <li><a href={hub.href}>{hub.label}</a></li>
-          <li aria-current="page">{s.title}</li>
-        </ol>
-      </nav>
-      <div class="head">
-        <span class="ico"><Icon name={s.icon} size={30} /></span>
-        <div>
-          <h1>{s.h1}</h1>
-          <p class="lede">{s.summary}</p>
-        </div>
-      </div>
-      <div class="actions">
-        <a class="btn btn--primary" href={devisHref}>Demander un devis gratuit <Icon name="arrow" size={18} /></a>
-        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
-      </div>
+  <!-- En-tête -->
+  <section class="hero">
+    <div class="hero__media">
+      <Photo name={heroPhoto} loading="eager" sizes="100vw" class="hero__img" />
     </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap body">
-      <div class="main">
-        <div class="prose">
-          {s.intro.map((p) => <p>{p}</p>)}
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <nav class="crumbs" aria-label="Fil d'Ariane">
+          <ol>
+            <li><a href="/">Accueil</a></li>
+            <li><a href={hub.href}>{hub.label}</a></li>
+            <li aria-current="page">{s.title}</li>
+          </ol>
+        </nav>
+        <span class="tag"><Icon name={s.icon} size={18} />{isPro ? "Service aux entreprises" : "Service à domicile"}</span>
+        <h1>{s.h1}</h1>
+        <p class="lede">{s.summary}</p>
+        <div class="actions">
+          <a class="btn btn--primary" href={devisHref}>Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+          <a class="btn btn--light" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
         </div>
-
-        <div class="block">
-          <h2>Ce qui est compris</h2>
-          <ul class="checks">
-            {s.included.map((i) => <li><Icon name="check" size={20} /><span>{i}</span></li>)}
-          </ul>
-        </div>
-
-        <div class="block">
-          <h2>Questions fréquentes</h2>
-          <div class="faq">
-            {s.faq.map((f) => (
-              <details>
-                <summary>{f.q}</summary>
-                <div><p>{f.a}</p></div>
-              </details>
-            ))}
-          </div>
-        </div>
+        <ul class="facts">
+          <li><Icon name="clock" size={18} /><span><b>Fréquence</b>{s.frequency}</span></li>
+          <li><Icon name="pin" size={18} /><span><b>Zone</b>Paris et Île-de-France</span></li>
+          <li><Icon name="doc" size={18} /><span><b>Devis</b>{isPro ? "Gratuit, après visite" : "Gratuit, sous 24 h"}</span></li>
+        </ul>
       </div>
 
-      <aside class="side">
-        <div class="facts">
-          <div>
-            <span class="k">Pour qui</span>
-            <ul>{s.forWho.map((f) => <li>{f}</li>)}</ul>
+      <aside class="plan" aria-label="Exemple de cahier des charges">
+        <header>
+          <span class="plan__label">Extrait de cahier des charges</span>
+          <strong>{s.title}</strong>
+        </header>
+        {s.schedule.map((g) => (
+          <div class="plan__group">
+            <span class="plan__freq">{g.freq}</span>
+            <ul>{g.tasks.map((t) => <li><Icon name="check" size={15} />{t}</li>)}</ul>
           </div>
-          <div>
-            <span class="k">Fréquence</span>
-            <p>{s.frequency}</p>
-          </div>
-          <div>
-            <span class="k">Zone</span>
-            <p>Paris et Île-de-France</p>
-          </div>
-          {!isPro && (
-            <div>
-              <span class="k">Crédit d'impôt</span>
-              <p>50 % des sommes versées, avec avance immédiate possible. <a href="/tarifs/">Voir les tarifs</a></p>
-            </div>
-          )}
-          <a class="btn btn--primary" href={devisHref}>Obtenir mon devis</a>
-          <p class="small">Réponse sous 24 h ouvrées · {site.hours}</p>
-        </div>
+        ))}
       </aside>
     </div>
   </section>
 
-  {related.length > 0 && (
-    <section class="section section--paper">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">À découvrir aussi</span>
-          <h2>Autres services {isPro ? "aux entreprises" : "à domicile"}</h2>
-        </div>
-        <div class="grid-cards">
-          {related.map((r) => (
-            <a class="svc-card" href={`/${r.slug}/`}>
-              <span class="ico"><Icon name={r.icon} /></span>
-              <h3>{r.title}</h3>
-              <p>{r.summary}</p>
-              <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
-            </a>
-          ))}
+  <!-- Pour qui -->
+  <section class="who">
+    <div class="wrap who__inner">
+      <span class="who__label">Pour qui</span>
+      <ul class="chips">{s.forWho.map((f) => <li>{f}</li>)}</ul>
+    </div>
+  </section>
+
+  <!-- Contenu -->
+  <section class="section">
+    <div class="wrap body">
+      <aside class="toc" aria-label="Sommaire">
+        <span class="toc__title">Sur cette page</span>
+        <ol>
+          {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          <li><a href="#compris">Ce qui est compris</a></li>
+          <li><a href="#faq">Questions fréquentes</a></li>
+        </ol>
+        <a class="btn btn--primary toc__cta" href={devisHref}>Obtenir mon devis</a>
+      </aside>
+
+      <div class="main">
+        <article class="article">
+          <Content />
+        </article>
+
+        {morePhotos.length > 0 && (
+          <div class:list={["gallery", `gallery--${Math.min(morePhotos.length, 3)}`]}>
+            {morePhotos.slice(0, 3).map((p) => (
+              <Photo name={p} sizes="(max-width: 900px) 100vw, 40vw" class="gallery__img" />
+            ))}
+          </div>
+        )}
+
+        <div class="included" id="compris">
+          <h2>Ce qui est compris</h2>
+          <ul class="checks two">
+            {s.included.map((i) => <li><Icon name="check" size={20} /><span>{i}</span></li>)}
+          </ul>
+          {!isPro && (
+            <p class="tax"><Icon name="euro" size={20} />Ce service ouvre droit à <strong>50 % de crédit d'impôt</strong>, déduit directement de votre facture avec l'avance immédiate. <a href="/tarifs/">Voir les tarifs</a></p>
+          )}
         </div>
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 
-  <CtaBand />
+  <Process audience={s.audience} title={`Mettre en place votre ${s.title.toLowerCase()}`} />
+
+  <!-- FAQ -->
+  <section class="section section--paper" id="faq">
+    <div class="wrap faq-wrap">
+      <div class="section-head">
+        <span class="eyebrow">Questions fréquentes</span>
+        <h2>{s.title} : vos questions</h2>
+        <p class="lede">Vous ne trouvez pas la réponse ? Appelez-nous au <a href={site.phoneHref}>{site.phone}</a>.</p>
+      </div>
+      <div class="faq">
+        {s.faq.map((f, i) => (
+          <details open={i === 0}>
+            <summary>{f.q}</summary>
+            <div><p>{f.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Zones -->
+  <section class="section">
+    <div class="wrap zones">
+      <div>
+        <span class="eyebrow">Où nous intervenons</span>
+        <h2>{s.title} à Paris et en Île-de-France</h2>
+        <p class="lede">Nos équipes sont organisées par département pour intervenir à l'heure, avec des agents qui habitent à proximité de vos locaux.</p>
+      </div>
+      <ul class="chips">
+        {zones.map((z) => <li><a href={zoneHref(z)}><Icon name="pin" size={16} />{z.data.name} ({z.data.code})</a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Services liés -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">À découvrir aussi</span>
+        <h2>Autres services {isPro ? "aux entreprises" : "à domicile"}</h2>
+      </div>
+      <div class="related">
+        {related.map((r) => (
+          <a class="rel" href={serviceHref(r)}>
+            <Photo name={r.data.photos[0]} sizes="(max-width: 700px) 100vw, 25vw" widths={[480, 800]} class="rel__img" />
+            <span class="rel__body">
+              <strong>{r.data.title}</strong>
+              <small>{r.data.summary}</small>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title={`Un devis pour votre ${s.title.toLowerCase()}`} />
 </Base>
 
 <style>
-  .head {
+  /* En-tête avec photo pleine largeur */
+  .hero {
+    position: relative;
+    color: #fff;
+    background: var(--ink);
+    overflow: hidden;
+  }
+  .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+  .hero__media :global(picture),
+  .hero__media :global(.hero__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(12 25 50 / 0.92) 0%, rgb(12 25 50 / 0.72) 45%, rgb(12 25 50 / 0.25) 100%),
+      linear-gradient(0deg, rgb(12 25 50 / 0.5), transparent 40%);
+  }
+  .hero__grid {
+    position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 22px;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    padding-block: clamp(40px, 6vw, 88px);
+  }
+  .hero__text {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .hero .crumbs ol {
+    margin: 0;
+    color: rgb(255 255 255 / 0.7);
+  }
+  .hero .crumbs a {
+    color: rgb(255 255 255 / 0.8);
+  }
+  .hero .crumbs li + li::before {
+    color: rgb(255 255 255 / 0.4);
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    font: 600 0.85rem var(--display);
+  }
+  .tag :global(svg) {
+    color: var(--lime);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    max-width: 18ch;
+  }
+  .hero .lede {
+    color: rgb(255 255 255 / 0.85);
+    font-size: 1.2rem;
+  }
+  .facts {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 16px 32px;
+    font-size: 0.93rem;
+  }
+  .facts li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .facts :global(svg) {
+    color: var(--lime);
+    margin-top: 3px;
+    flex: none;
+  }
+  .facts b {
+    display: block;
+    font: 600 0.72rem var(--display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  .plan {
+    background: #fff;
+    color: var(--ink);
+    border-radius: 20px;
+    padding: 24px;
+    display: grid;
+    gap: 16px;
+    box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.6);
+  }
+  .plan header {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .plan__label {
+    font: 600 0.7rem var(--display);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+  .plan header strong {
+    font: 600 1.1rem var(--display);
+  }
+  .plan__group {
+    display: grid;
+    gap: 8px;
+  }
+  .plan__freq {
+    justify-self: start;
+    font: 600 0.78rem var(--display);
+    color: var(--navy);
+    background: var(--blue-soft);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .plan ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    font-size: 0.92rem;
+  }
+  .plan li {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 8px;
     align-items: start;
   }
-  .head .ico {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    display: grid;
-    place-items: center;
-    background: #fff;
-    color: var(--blue);
-    border: 1px solid var(--line);
+  .plan li :global(svg) {
+    color: #5b7a00;
+    margin-top: 4px;
+    stroke-width: 2.4;
   }
+
+  /* Pour qui */
+  .who {
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .who__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 20px;
+    padding-block: 20px;
+  }
+  .who__label {
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Corps */
   .body {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: clamp(32px, 5vw, 64px);
+    grid-template-columns: 250px 1fr;
+    gap: clamp(32px, 5vw, 72px);
     align-items: start;
+  }
+  .toc {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 14px;
+  }
+  .toc__title {
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+    border-left: 2px solid var(--line);
+  }
+  .toc li a {
+    display: block;
+    padding: 6px 0 6px 14px;
+    margin-left: -2px;
+    border-left: 2px solid transparent;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+  .toc li a:hover {
+    color: var(--navy);
+    border-left-color: var(--blue);
+  }
+  .toc__cta {
+    margin-top: 10px;
   }
   .main {
     display: grid;
-    gap: 48px;
+    gap: 56px;
+    min-width: 0;
   }
-  .block {
+  .gallery {
     display: grid;
-    gap: 20px;
+    gap: 12px;
   }
-  .block h2 {
+  .gallery--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .gallery--3 {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  .gallery :global(.gallery__img) {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+  .gallery--1 :global(.gallery__img) {
+    aspect-ratio: 16 / 8;
+  }
+  .included {
+    display: grid;
+    gap: 22px;
+    padding: clamp(24px, 4vw, 40px);
+    background: var(--paper);
+    border-radius: 20px;
+  }
+  .included h2 {
     font-size: 1.6rem;
   }
-  .side {
+  .two {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 28px;
+  }
+  .tax {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    background: #fff;
+    border-left: 4px solid var(--pink);
+    border-radius: 0 12px 12px 0;
+  }
+  .tax :global(svg) {
+    color: var(--pink);
+    flex: none;
+    margin-top: 3px;
+  }
+
+  .faq-wrap {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  .faq-wrap .section-head {
     position: sticky;
     top: calc(var(--header-h) + 24px);
   }
-  .facts {
+
+  .zones {
     display: grid;
-    gap: 20px;
-    padding: 26px;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+  .zones > div {
+    display: grid;
+    gap: 14px;
+  }
+  .zones .chips :global(svg) {
+    color: var(--pink);
+  }
+
+  .related {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .rel {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: #fff;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--paper);
+    border-radius: 16px;
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    transition: box-shadow 0.15s, transform 0.15s;
   }
-  .k {
-    display: block;
-    font: 600 0.75rem var(--display);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  .rel:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  .rel :global(.rel__img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .rel__body {
+    display: grid;
+    gap: 6px;
+    padding: 16px 18px 20px;
+    align-content: start;
+  }
+  .rel strong {
+    font: 600 1.05rem var(--display);
+  }
+  .rel small {
     color: var(--muted);
-    margin-bottom: 6px;
+    font-size: 0.9rem;
   }
-  .facts ul {
-    margin: 0;
-    padding-left: 18px;
+
+  @media (max-width: 1080px) {
+    .related {
+      grid-template-columns: 1fr 1fr;
+    }
   }
-  .small {
-    font-size: 0.88rem;
-    color: var(--muted);
-    text-align: center;
-  }
-  @media (max-width: 900px) {
+  @media (max-width: 1000px) {
     .body {
       grid-template-columns: 1fr;
     }
-    .side {
+    .toc {
       position: static;
+      padding: 20px;
+      background: var(--paper);
+      border-radius: 16px;
+    }
+    .toc__cta {
+      display: none;
     }
   }
-  @media (max-width: 560px) {
-    .head {
+  @media (max-width: 900px) {
+    .hero__grid,
+    .faq-wrap,
+    .zones {
       grid-template-columns: 1fr;
+    }
+    .faq-wrap .section-head {
+      position: static;
+    }
+    .facts {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .two,
+    .gallery--2,
+    .gallery--3,
+    .related {
+      grid-template-columns: 1fr;
+    }
+    .hero .btn {
+      flex: 1 1 100%;
+    }
+    .hero .actions {
+      width: 100%;
     }
   }
 </style>

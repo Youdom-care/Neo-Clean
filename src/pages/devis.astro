@@ -3,7 +3,9 @@ import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import Icon from "../components/Icon.astro";
 import { site } from "../data/site";
-import { proServices, homeServices } from "../data/services";
+import { getProServices, getHomeServices } from "../lib/content";
+const proServices = (await getProServices()).map((s) => ({ slug: s.id, title: s.data.title }));
+const homeServices = (await getHomeServices()).map((s) => ({ slug: s.id, title: s.data.title }));
 
 const profiles = [
   { v: "entreprise", l: "Une entreprise", i: "desk" },

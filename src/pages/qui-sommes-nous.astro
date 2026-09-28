@@ -1,40 +1,63 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
+import Photo from "../components/Photo.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Commitments from "../components/Commitments.astro";
+import { site } from "../data/site";
 
 const values = [
-  { i: "user", t: "Des salariés en CDI", d: "Nous privilégions les contrats à durée indéterminée. Un agent stable connaît mieux vos locaux et reste plus longtemps chez vous." },
-  { i: "doc", t: "Formation continue", d: "Chaque agent est formé à nos protocoles, aux produits et aux règles d'hygiène avant sa première intervention, puis tout au long de l'année." },
-  { i: "people", t: "Un encadrement proche", d: "Nos équipes sont organisées par secteur, avec un responsable qui visite les sites et reste votre interlocuteur." },];
+  { i: "user", t: "Des salariés en CDI", d: "Nous privilégions les contrats à durée indéterminée. Un agent stable connaît mieux vos locaux, s'investit davantage et reste plus longtemps chez vous." },
+  { i: "doc", t: "La formation avant tout", d: "Chaque agent est formé à nos protocoles, aux produits et aux règles d'hygiène avant sa première intervention, puis accompagné sur le terrain." },
+  { i: "people", t: "Un encadrement proche", d: "Nos équipes sont organisées par secteur, avec un responsable qui visite les sites, connaît les agents et reste votre interlocuteur." },
+  { i: "heart", t: "Le respect des personnes", d: "Respect des clients, de leurs locaux et de leur intimité ; respect des agents, de leurs horaires et de leur santé. Les deux vont ensemble." },
+];
+
+const timeline = [
+  { t: "Le recrutement", d: "Entretien, vérification de l'expérience et des références, mise en situation. Nous recrutons autant sur le savoir-être que sur le savoir-faire." },
+  { t: "La formation", d: "Protocoles de nettoyage, code couleur du matériel, dosage des produits, règles de sécurité et de confidentialité, relation avec le client." },
+  { t: "L'affectation", d: "Chaque agent est affecté à des sites proches de chez lui, avec des horaires stables, pour une meilleure ponctualité et une meilleure qualité de vie." },
+  { t: "Le suivi", d: "Visites régulières du responsable de secteur, points d'étape, formation continue et évolution possible vers des fonctions d'encadrement." },
+];
 ---
 <Base
-  title="Qui sommes-nous | Neo Clean, entreprise de nettoyage à Paris"
-  description="Neo Clean est une entreprise de nettoyage parisienne fondée sur une conviction : des salariés bien traités font un meilleur travail. Découvrez notre équipe et nos valeurs."
+  title="Qui sommes-nous · Neo Clean, entreprise de nettoyage à Paris 12e"
+  description="Neo Clean est une entreprise de nettoyage installée dans le 12e arrondissement de Paris. Découvrez notre approche, nos valeurs, nos équipes et notre façon de travailler."
 >
-  <PageHero
+  <HubHero
     crumb="Qui sommes-nous"
     eyebrow="Notre entreprise"
     title="Des salariés bien traités font un meilleur travail"
-    lede="Neo Clean est une entreprise de nettoyage installée dans le 12e arrondissement de Paris. Elle intervient auprès des entreprises, des copropriétés et des particuliers dans toute l'Île-de-France."
+    lede="Neo Clean est une entreprise de nettoyage installée rue de Lyon, dans le 12e arrondissement de Paris. Elle intervient auprès des entreprises, des copropriétés et des particuliers dans toute l'Île-de-France."
+    photo="equipe-1"
   />
 
   <section class="section">
     <div class="wrap story">
-      <div class="prose">
-        <h2>Notre approche</h2>
-        <p>Dans le nettoyage, la qualité du service dépend presque entièrement des personnes qui le réalisent. C'est pourquoi nous avons construit Neo Clean autour de nos agents : recrutement soigné, contrats stables, formation et encadrement de proximité.</p>
-        <p>Nous travaillons en relation étroite à trois : vous, votre agent et votre responsable de secteur. Chacun sait ce qui est attendu, les consignes sont écrites, et les ajustements se font rapidement.</p>
-        <p>Cette organisation évite les deux défauts les plus courants du secteur : un intervenant différent à chaque passage et un prestataire injoignable quand quelque chose ne va pas.</p>
+      <div class="article">
+        <h2>Notre histoire et notre conviction</h2>
+        <p>Neo Clean est née d'un constat partagé par beaucoup de clients d'entreprises de nettoyage : le service se dégrade presque toujours avec le temps. Les premiers mois se passent bien, puis les intervenants changent, les consignes se perdent, la qualité baisse, et il devient difficile de joindre quelqu'un qui connaisse vraiment le dossier.</p>
+        <p>Ce problème a une cause simple : dans le nettoyage, la qualité du service dépend presque entièrement des personnes qui le réalisent. Quand les agents sont mal payés, mal formés, affectés à des sites éloignés de chez eux et sans perspective, ils partent, et la qualité part avec eux. C'est pourquoi nous avons construit Neo Clean autour de nos agents.</p>
+        <p>Notre fondateur connaît bien le secteur des services : il a été membre du bureau et administrateur du Syndicat des entreprises de services à la personne (SESP). Il en a retenu une conviction qu'il résume simplement : le bien-être des salariés est la clé de la satisfaction des clients.</p>
+        <h2>Une collaboration à trois</h2>
+        <p>Notre approche repose sur une collaboration étroite entre trois parties : vous, votre agent et votre responsable de secteur. Vous exprimez vos attentes et vos consignes, qui sont écrites dans un cahier des charges. L'agent les applique, et signale ce qu'il observe. Le responsable fait le lien, contrôle la qualité et ajuste l'organisation.</p>
+        <p>Cette relation directe évite les deux défauts les plus courants du secteur : un intervenant différent à chaque passage, et un prestataire injoignable quand quelque chose ne va pas. Chez Neo Clean, chacun sait à qui parler, et les ajustements se font rapidement.</p>
+        <h2>Pourquoi nous misons sur la stabilité</h2>
+        <p>Le secteur du nettoyage connaît un taux de rotation du personnel parmi les plus élevés. Pour un client, chaque départ d'agent a un coût caché : nouvelle personne à former, consignes oubliées, qualité en baisse pendant plusieurs semaines. Pour l'agent lui-même, des horaires éclatés et des trajets interminables entre des sites éloignés rendent le métier difficile à exercer dans la durée.</p>
+        <p>Nous faisons le choix inverse : des contrats stables, des plannings regroupés par secteur, des sites proches du domicile de chaque agent, et un responsable qui connaît personnellement ses équipes. Ce choix a un coût pour nous, mais il se traduit par des agents qui restent, qui connaissent leurs sites et qui s'y investissent. C'est ce que nos clients remarquent en premier.</p>
+        <h2>Ce que nous faisons</h2>
+        <p>Nous intervenons auprès de deux types de clients. Pour les professionnels, nous assurons l'entretien de bureaux, d'espaces de coworking, de commerces, de restaurants, de cabinets médicaux, d'hôtels, de copropriétés et de locaux industriels, ainsi que des interventions ponctuelles : fins de chantier, vitres, désinfection, traitement des sols, enlèvement de tags, débarras.</p>
+        <p>Nos clients professionnels sont très variés : cabinets de quelques personnes installés dans un appartement haussmannien, agences en open space, sièges sociaux sur plusieurs étages, boutiques et restaurants de quartier, cabinets médicaux, hôtels indépendants, syndics de copropriété, entrepôts de grande couronne. Ce qui les réunit, c'est l'exigence d'un service régulier, fiable et suivi, sans avoir à y penser.</p>
+        <p>Pour les particuliers, nous proposons le ménage régulier ou ponctuel, le repassage, le ménage de locations courte durée et l'aide ménagère aux personnes âgées ou en situation de handicap, avec le crédit d'impôt de 50 % et l'avance immédiate.</p>
       </div>
-      <blockquote class="quote">
-        <p>« Chez Neo Clean, le bien-être de nos employés est la clé de la satisfaction de nos clients. Depuis le début, nous traitons chaque personne avec attention, écoute et respect. »</p>
-        <footer>
-          <strong>Le fondateur de Neo Clean</strong>
-          <span>Ancien administrateur du Syndicat des entreprises de services à la personne (SESP)</span>
-        </footer>
-      </blockquote>
+      <aside class="story__side">
+        <Photo name="equipe-2" sizes="(max-width: 900px) 100vw, 35vw" class="story__img" />
+        <blockquote>
+          <p>« Chez Neo Clean, le bien-être de nos employés est la clé de la satisfaction de nos clients. Depuis le début, nous traitons chaque personne avec attention, écoute et respect. »</p>
+          <footer><strong>Le fondateur de Neo Clean</strong><span>Ancien administrateur du Syndicat des entreprises de services à la personne</span></footer>
+        </blockquote>
+      </aside>
     </div>
   </section>
 
@@ -56,6 +79,43 @@ const values = [
     </div>
   </section>
 
+  <section class="section">
+    <div class="wrap team">
+      <Photo name="accueil-1" sizes="(max-width: 900px) 100vw, 40vw" class="team__img" />
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">Nos équipes</span>
+          <h2>Du recrutement au suivi sur le terrain</h2>
+          <p class="lede">Nos équipes sont composées d'agents d'entretien et d'aides ménagères, encadrés par des responsables de secteur. Voici comment nous les accompagnons.</p>
+        </div>
+        <ol class="tl">
+          {timeline.map((s) => <li><h3>{s.t}</h3><p>{s.d}</p></li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <Commitments photo="coworking-2" />
+
+  <section class="section section--paper">
+    <div class="wrap where">
+      <div class="article">
+        <h2>Notre siège, au cœur de l'Est parisien</h2>
+        <p>Nos bureaux se trouvent au {site.address.street}, {site.address.postalCode} {site.address.city}, à quelques minutes de la gare de Lyon et de la Bastille. Cette implantation nous place au centre de notre zone d'intervention : les arrondissements parisiens, la petite couronne et les principaux pôles de la grande couronne sont accessibles rapidement.</p>
+        <p>C'est aussi depuis ce siège que nos responsables de secteur organisent les plannings, préparent les visites de nouveaux locaux, forment les agents qui rejoignent nos équipes et répondent aux demandes de nos clients. Une équipe à taille humaine, que vous pouvez joindre directement par téléphone, sans passer par un centre d'appels.</p>
+        <p>Nous recevons sur rendez-vous les clients qui souhaitent nous rencontrer, et les candidats qui veulent rejoindre nos équipes. Pour toute demande, le plus simple reste de nous appeler au {site.phone} ou de remplir le formulaire de devis.</p>
+        <p><a href="/zones-d-intervention/">Voir nos zones d'intervention</a> · <a href="/recrutement/">Rejoindre nos équipes</a></p>
+      </div>
+      <div class="where__card">
+        <span class="k">Neo Clean</span>
+        <p><Icon name="pin" size={18} />{site.address.street}, {site.address.postalCode} {site.address.city}</p>
+        <p><Icon name="phone" size={18} /><a href={site.phoneHref}>{site.phone}</a></p>
+        <p><Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <p><Icon name="clock" size={18} />{site.hours}</p>
+      </div>
+    </div>
+  </section>
+
   <CtaBand />
 </Base>
 
@@ -63,31 +123,39 @@ const values = [
   .story {
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
-    gap: clamp(32px, 6vw, 80px);
+    gap: clamp(32px, 6vw, 88px);
     align-items: start;
   }
-  .story h2 {
-    margin-bottom: 8px;
+  .story__side {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
   }
-  .quote {
-    margin: 0;
-    padding: 32px;
+  .story__side :global(.story__img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 24px;
+  }
+  blockquote {
+    margin: -80px 16px 0;
+    position: relative;
+    padding: 26px;
     border-radius: 18px;
     background: var(--navy);
     color: #fff;
     display: grid;
-    gap: 20px;
+    gap: 16px;
   }
-  .quote p {
-    font: 500 1.2rem/1.55 var(--display);
+  blockquote p {
+    font: 500 1.08rem/1.55 var(--display);
   }
-  .quote footer {
+  blockquote footer {
     display: grid;
-    gap: 4px;
-    font-size: 0.92rem;
+    gap: 2px;
+    font-size: 0.88rem;
     color: rgb(255 255 255 / 0.75);
   }
-  .quote strong {
+  blockquote strong {
     color: var(--lime);
   }
   .values {
@@ -95,7 +163,7 @@ const values = [
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
   .values li {
@@ -105,7 +173,7 @@ const values = [
     padding: 26px;
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 18px;
   }
   .values .ico {
     width: 48px;
@@ -118,10 +186,105 @@ const values = [
   }
   .values p {
     color: var(--muted);
-    font-size: 0.97rem;
+    font-size: 0.95rem;
   }
-  @media (max-width: 860px) {
-    .story {
+  .team {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  .team :global(.team__img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 24px 120px 24px 24px;
+  }
+  .tl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    counter-reset: t;
+  }
+  .tl li {
+    counter-increment: t;
+    position: relative;
+    display: grid;
+    gap: 4px;
+    padding: 0 0 26px 56px;
+    border-left: 2px solid var(--line);
+    margin-left: 18px;
+  }
+  .tl li:last-child {
+    border-left-color: transparent;
+    padding-bottom: 0;
+  }
+  .tl li::before {
+    content: counter(t);
+    position: absolute;
+    left: -19px;
+    top: -4px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--pink);
+    color: #fff;
+    font: 700 0.95rem var(--display);
+  }
+  .tl p {
+    color: var(--muted);
+  }
+  .where {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .where__card {
+    display: grid;
+    gap: 14px;
+    padding: 28px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+  .where__card p {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .where__card :global(svg) {
+    color: var(--pink);
+    flex: none;
+    margin-top: 4px;
+  }
+  .k {
+    font: 700 1.2rem var(--display);
+  }
+  @media (max-width: 1000px) {
+    .values {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 900px) {
+    .story,
+    .team,
+    .where {
+      grid-template-columns: 1fr;
+    }
+    .story__side {
+      position: static;
+    }
+    .team :global(.team__img) {
+      aspect-ratio: 16 / 10;
+    }
+  }
+  @media (max-width: 600px) {
+    .values {
       grid-template-columns: 1fr;
     }
   }

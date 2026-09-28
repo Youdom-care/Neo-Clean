@@ -2,7 +2,9 @@
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
 import { site } from "../data/site";
-import { proServices, homeServices } from "../data/services";
+import { getProServices, getHomeServices, serviceHref } from "../lib/content";
+const proServices = (await getProServices()).map((s) => ({ href: serviceHref(s), title: s.data.title }));
+const homeServices = (await getHomeServices()).map((s) => ({ href: serviceHref(s), title: s.data.title }));
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href);
@@ -17,7 +19,7 @@ const isActive = (href: string) => path === href || path.startsWith(href);
           <a href="/nettoyage-professionnel/" aria-current={isActive("/nettoyage-professionnel/") ? "page" : undefined}>Entreprises</a>
           <div class="sub">
             <ul>
-              {proServices.map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+              {proServices.map((s) => <li><a href={s.href}>{s.title}</a></li>)}
             </ul>
           </div>
         </li>
@@ -25,11 +27,12 @@ const isActive = (href: string) => path === href || path.startsWith(href);
           <a href="/services-de-menage-a-domicile/" aria-current={isActive("/services-de-menage-a-domicile/") ? "page" : undefined}>Particuliers</a>
           <div class="sub sub--narrow">
             <ul>
-              {homeServices.map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+              {homeServices.map((s) => <li><a href={s.href}>{s.title}</a></li>)}
               <li><a href="/tarifs/">Tarifs et crédit d'impôt</a></li>
             </ul>
           </div>
         </li>
+        <li><a href="/zones-d-intervention/" aria-current={isActive("/zones-d-intervention/") || path.startsWith("/nettoyage-bureaux-") ? "page" : undefined}>Zones</a></li>
         <li><a href="/qui-sommes-nous/" aria-current={isActive("/qui-sommes-nous/") ? "page" : undefined}>Qui sommes-nous</a></li>
         <li><a href="/contact/" aria-current={isActive("/contact/") ? "page" : undefined}>Contact</a></li>
       </ul>
@@ -195,13 +198,13 @@ const isActive = (href: string) => path === href || path.startsWith(href);
     display: block;
   }
 
-  @media (max-width: 1080px) {
+  @media (max-width: 1240px) {
     .hdr__phone span {
       display: none;
     }
   }
 
-  @media (max-width: 940px) {
+  @media (max-width: 1100px) {
     .hdr__toggle {
       display: grid;
     }

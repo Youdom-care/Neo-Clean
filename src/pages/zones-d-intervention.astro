@@ -1,89 +1,248 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
+import Photo from "../components/Photo.astro";
+import IdfMap from "../components/IdfMap.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { zones } from "../data/zones";
+import { getZones, zoneHref } from "../lib/content";
+const zones = await getZones();
+const petite = zones.filter((z) => ["75", "92", "93", "94"].includes(z.data.code));
+const grande = zones.filter((z) => !["75", "92", "93", "94"].includes(z.data.code));
 ---
 <Base
-  title="Zones d'intervention : Paris et Île-de-France | Neo Clean"
-  description="Neo Clean intervient à Paris et dans les sept départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise, Seine-et-Marne."
+  title="Zones d'intervention : entreprise de nettoyage à Paris et en Île-de-France | Neo Clean"
+  description="Neo Clean intervient à Paris et dans les départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise et Seine-et-Marne."
 >
-  <PageHero
+  <HubHero
     crumb="Zones d'intervention"
+    eyebrow="Zones d'intervention"
     title="Paris et toute l'Île-de-France"
-    lede="Nos équipes sont organisées par secteur pour limiter les trajets et garantir la ponctualité. Choisissez votre département."
+    lede="Depuis notre siège du 12e arrondissement, nos équipes sont organisées par secteur. Chaque agent intervient près de chez lui, pour une ponctualité sans faille."
+    photo="bureau-1"
   />
+
   <section class="section">
-    <div class="wrap">
-      <ul class="zones">
-        {zones.map((z) => (
-          <li>
-            <a href={`/${z.slug}/`}>
-              <span class="code">{z.code}</span>
-              <span class="txt">
-                <strong>{z.name}</strong>
-                <small>{z.areas.slice(0, 3).join(" · ")}</small>
-              </span>
-              <Icon name="arrow" size={18} />
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div class="wrap top">
+      <IdfMap />
+      <div class="groups">
+        <div>
+          <h2>Paris et petite couronne</h2>
+          <p class="muted">Nos secteurs les plus proches, desservis quotidiennement par nos équipes.</p>
+          <ul class="zl">
+            {petite.map((z) => (
+              <li><a href={zoneHref(z)}><b>{z.data.code}</b><span><strong>{z.data.name}</strong><small>{z.data.areas.slice(0, 3).map((a) => a.name).join(" · ")}</small></span><Icon name="arrow" size={18} /></a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2>Grande couronne</h2>
+          <p class="muted">Principaux pôles d'activité et villes bien desservies. Vérifiez votre commune dans la demande de devis.</p>
+          <ul class="zl">
+            {grande.map((z) => (
+              <li><a href={zoneHref(z)}><b>{z.data.code}</b><span><strong>{z.data.name}</strong><small>{z.data.areas.slice(0, 3).map((a) => a.name).join(" · ")}</small></span><Icon name="arrow" size={18} /></a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Département par département</span>
+        <h2>Les secteurs que nous connaissons le mieux</h2>
+      </div>
+      <div class="detail">
+        {zones.map((z) => (
+          <article class="dz">
+            <Photo name={z.data.photo} sizes="(max-width: 700px) 100vw, 50vw" widths={[480, 800]} class="dz__img" />
+            <div class="dz__body">
+              <div class="dz__head"><b>{z.data.code}</b><h3>Nettoyage {z.data.in}</h3></div>
+              <p>{z.data.lede}</p>
+              <ul>
+                {z.data.areas.map((a) => <li><strong>{a.name}</strong> — {a.text}</li>)}
+              </ul>
+              <a class="go" href={zoneHref(z)}>Notre page {z.data.name} <Icon name="arrow" size={16} /></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap long">
+      <div class="article">
+        <h2>Une organisation par secteur, pour être à l'heure</h2>
+        <p>Dans le nettoyage, la ponctualité n'est pas négociable. Un agent qui arrive en retard, c'est un open space pas prêt à l'arrivée des équipes, une boutique qui ouvre avec des sols sales ou des conteneurs sortis après le passage de la benne. C'est pourquoi nous organisons nos équipes par secteur géographique.</p>
+        <p>Chaque agent intervient dans un périmètre restreint, le plus souvent proche de son domicile. Les trajets sont courts, les aléas de transport limités, et le remplacement en cas d'absence plus facile à organiser. Chaque secteur est suivi par un responsable qui connaît les sites et peut s'y rendre rapidement.</p>
+        <h2>Paris et la petite couronne</h2>
+        <p>Paris, les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne forment notre cœur d'activité. Notre siège de la rue de Lyon, dans le 12e, est à quelques stations des communes limitrophes de l'Est parisien. Nous y entretenons des bureaux, des commerces, des cabinets médicaux, des copropriétés, et proposons le ménage à domicile.</p>
+        <h2>La grande couronne</h2>
+        <p>Dans les Yvelines, l'Essonne, le Val-d'Oise et la Seine-et-Marne, nous intervenons en priorité dans les principaux pôles d'activité et les villes bien desservies : Saint-Quentin-en-Yvelines, Versailles, Massy, le plateau de Saclay, Cergy-Pontoise, Roissy, Marne-la-Vallée ou Val d'Europe. Pour une commune plus éloignée, indiquez votre code postal dans votre demande : nous vous confirmons franchement si nous pouvons assurer un service fiable.</p>
+      </div>
+      <Photo name="copro-2" sizes="(max-width: 900px) 100vw, 35vw" class="long__img" />
+    </div>
+  </section>
+
   <CtaBand />
 </Base>
 
 <style>
-  .zones {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .top {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .groups {
+    display: grid;
+    gap: 40px;
+  }
+  .groups > div {
+    display: grid;
     gap: 12px;
   }
-  .zones a {
+  .groups h2 {
+    font-size: 1.5rem;
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .zl {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: 56px 1fr auto;
+    gap: 8px;
+  }
+  .zl a {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
     gap: 16px;
     align-items: center;
-    padding: 18px;
+    padding: 12px 16px 12px 12px;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 14px;
     color: var(--ink);
     text-decoration: none;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .zones a:hover {
+  .zl a:hover {
     border-color: var(--blue);
     box-shadow: var(--shadow);
   }
-  .code {
-    width: 56px;
-    height: 56px;
+  .zl b {
+    width: 52px;
+    height: 52px;
     border-radius: 12px;
     display: grid;
     place-items: center;
     background: var(--navy);
     color: #fff;
-    font: 700 1.2rem var(--display);
+    font: 700 1.1rem var(--display);
   }
-  .txt {
+  .zl span {
     display: grid;
-    gap: 2px;
   }
-  .txt strong {
-    font: 600 1.1rem var(--display);
+  .zl strong {
+    font: 600 1.05rem var(--display);
   }
-  .txt small {
+  .zl small {
     color: var(--muted);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
-  @media (max-width: 400px) {
-    .zones {
+  .zl :global(svg) {
+    color: var(--muted);
+  }
+  .detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .dz {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .dz :global(.dz__img) {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+  }
+  .dz__body {
+    display: grid;
+    gap: 12px;
+    padding: 24px;
+    align-content: start;
+  }
+  .dz__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dz__head b {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--pink);
+    color: #fff;
+    font: 700 1rem var(--display);
+  }
+  .dz p {
+    color: var(--muted);
+  }
+  .dz ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.93rem;
+    color: var(--muted);
+  }
+  .dz strong {
+    color: var(--ink);
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 600 0.95rem var(--display);
+  }
+  @media (max-width: 800px) {
+    .detail {
       grid-template-columns: 1fr;
+    }
+  }
+  .long {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .long :global(.long__img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 24px;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  @media (max-width: 900px) {
+    .top,
+    .long {
+      grid-template-columns: 1fr;
+    }
+    .long :global(.long__img) {
+      position: static;
+      aspect-ratio: 16 / 10;
     }
   }
 </style>

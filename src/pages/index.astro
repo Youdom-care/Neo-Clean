@@ -1,32 +1,45 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
+import Photo from "../components/Photo.astro";
+import IdfMap from "../components/IdfMap.astro";
 import CtaBand from "../components/CtaBand.astro";
+import Process from "../components/Process.astro";
+import Commitments from "../components/Commitments.astro";
 import { site } from "../data/site";
-import { proServices, homeServices } from "../data/services";
-import { zones } from "../data/zones";
+import { getProServices, getHomeServices, getZones, serviceHref, zoneHref } from "../lib/content";
 
-const featured = proServices.slice(0, 8);
+const pro = await getProServices();
+const home = await getHomeServices();
+const zones = await getZones();
+const featured = pro.slice(0, 9);
 
-const steps = [
-  { t: "Vous décrivez votre besoin", d: "Par le formulaire ou par téléphone : type de locaux, surface, fréquence souhaitée." },
-  { t: "Visite gratuite et devis", d: "Nous visitons vos locaux et vous envoyons un devis détaillé avec un cahier des charges écrit." },
-  { t: "Un agent attitré", d: "Le même agent intervient à chaque passage. Il connaît vos locaux et vos consignes." },
-  { t: "Suivi et contrôle", d: "Un responsable de secteur contrôle la qualité et reste votre interlocuteur direct." },
+const trust = [
+  { i: "user", t: "Agent attitré", d: "La même personne à chaque passage" },
+  { i: "pin", t: "8 départements", d: "Paris et toute l'Île-de-France" },
+  { i: "clock", t: "Devis sous 24 h", d: "Visite de vos locaux offerte" },
+  { i: "euro", t: "50 % de crédit d'impôt", d: "Pour le ménage à domicile" },
 ];
 
-const promises = [
-  { i: "user", t: "Un interlocuteur unique", d: "Un responsable de secteur joignable directement, qui connaît votre dossier." },
-  { i: "shield", t: "Personnel déclaré et assuré", d: "Agents salariés, formés à nos protocoles et couverts par notre assurance responsabilité civile professionnelle." },
-  { i: "calendar", t: "Continuité du service", d: "En cas d'absence, un remplaçant formé sur votre site assure le passage." },
-  { i: "doc", t: "Sans engagement caché", d: "Devis détaillé, contrat clair, résiliable avec préavis. Pas de frais de dossier." },
+const compare = [
+  { c: "Agent attitré, qui connaît vos locaux", n: true, a: false, s: true },
+  { c: "Remplacement organisé en cas d'absence", n: true, a: true, s: false },
+  { c: "Cahier des charges écrit, pièce par pièce", n: true, a: false, s: false },
+  { c: "Responsable joignable directement", n: true, a: false, s: false },
+  { c: "Aucune gestion administrative ni de paie", n: true, a: true, s: false },
+  { c: "Matériel et produits professionnels fournis", n: true, a: true, s: false },
+  { c: "Prix fixé à l'avance, sans frais de dossier", n: true, a: false, s: true },
 ];
 
 const faq = [
-  { q: "Combien coûte le nettoyage de bureaux ?", a: "Le prix dépend de la surface, du type de locaux, de la fréquence des passages et des prestations incluses. Nous établissons un devis précis et gratuit après une visite, sans frais de dossier." },
-  { q: "Dans quelles villes intervenez-vous ?", a: "À Paris et dans toute l'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise et Seine-et-Marne." },
-  { q: "Quel est le délai pour démarrer ?", a: "Après validation du devis, nous démarrons en général sous une à deux semaines, le temps d'affecter et de former l'agent sur votre site." },
-  { q: "Les particuliers bénéficient-ils du crédit d'impôt ?", a: "Oui, le ménage à domicile ouvre droit à un crédit d'impôt de 50 % des sommes versées, dans les conditions prévues par l'article 199 sexdecies du Code général des impôts. Avec l'avance immédiate, vous ne payez que la moitié de la facture chaque mois." },
+  { q: "Combien coûte le nettoyage de bureaux à Paris ?", a: "Le prix dépend de la surface, du type de locaux, du nombre de sanitaires, de la fréquence des passages et des prestations incluses. Nous établissons un devis précis et gratuit après une visite de vos locaux, sans frais de dossier." },
+  { q: "Dans quelles villes intervenez-vous ?", a: "À Paris et dans les sept autres départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise et Seine-et-Marne. En grande couronne, nous vérifions avec vous la faisabilité selon votre commune." },
+  { q: "Quel est le délai pour démarrer une prestation ?", a: "Après validation du devis, nous démarrons en général sous une à deux semaines, le temps d'affecter un agent qui habite votre secteur et de le former sur votre site. Une intervention ponctuelle peut être organisée plus rapidement." },
+  { q: "Est-ce toujours le même agent qui intervient ?", a: "Oui. Nous affectons un agent attitré à chaque site. En cas d'absence ou de congés, un remplaçant déjà formé sur vos locaux assure le passage." },
+  { q: "Qui fournit le matériel et les produits ?", a: "Pour les entreprises, nous fournissons le matériel et les produits professionnels. Chez les particuliers, l'intervenante utilise en général vos produits, ce qui vous laisse choisir ce qui entre chez vous." },
+  { q: "Les particuliers bénéficient-ils du crédit d'impôt ?", a: "Oui. Le ménage et le repassage à domicile ouvrent droit à un crédit d'impôt de 50 % des sommes versées. Avec l'avance immédiate, vous ne payez que la moitié de la facture chaque mois." },
+  { q: "Y a-t-il une durée d'engagement ?", a: "Nos contrats sont résiliables avec un préavis indiqué dans le contrat. Le ménage à domicile est sans engagement de durée." },
+  { q: "Intervenez-vous le soir et le week-end ?", a: "Oui. Nous intervenons tôt le matin, le soir, la nuit pour certains sites et le week-end, selon les contraintes de vos locaux et de votre activité." },
 ];
 
 const faqSchema = {
@@ -37,21 +50,21 @@ const faqSchema = {
 ---
 <Base
   title="Neo Clean · Entreprise de nettoyage de bureaux à Paris et en Île-de-France"
-  description="Nettoyage de bureaux, commerces, copropriétés et ménage à domicile à Paris et en Île-de-France. Agent attitré, visite et devis gratuits sous 24 h."
+  description="Entreprise de nettoyage à Paris : bureaux, commerces, copropriétés, fin de chantier et ménage à domicile en Île-de-France. Agent attitré, visite et devis gratuits sous 24 h."
   schema={[faqSchema]}
 >
   <!-- Hero -->
   <section class="hero">
     <div class="wrap hero__grid">
       <div class="hero__text">
-        <span class="eyebrow">Paris et Île-de-France</span>
+        <span class="pill"><span class="dot"></span>Entreprise de nettoyage · Paris et Île-de-France</span>
         <h1>Des locaux propres chaque matin, <span class="hl">sans y penser.</span></h1>
         <p class="lede">
-          Neo Clean entretient les bureaux, commerces et immeubles d'Île-de-France avec un agent attitré, un cahier des charges écrit et un responsable joignable directement.
+          Bureaux, commerces, copropriétés et domiciles : Neo Clean vous confie un agent attitré, un cahier des charges écrit et un responsable joignable directement. Vous n'avez plus à vous en occuper.
         </p>
         <div class="actions">
-          <a class="btn btn--primary" href="/devis/">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
-          <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+          <a class="btn btn--primary btn--lg" href="/devis/">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+          <a class="btn btn--ghost btn--lg" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
         </div>
         <ul class="hero__proof">
           <li><Icon name="check" size={18} />Visite et devis gratuits</li>
@@ -60,178 +73,222 @@ const faqSchema = {
         </ul>
       </div>
 
-      <!-- Fiche de passage : montre concrètement ce que reçoit le client -->
-      <figure class="sheet" aria-label="Exemple de fiche de passage">
-        <header class="sheet__head">
-          <div>
-            <span class="sheet__label">Exemple de fiche de passage</span>
-            <strong>Bureaux · 3e étage · 180 m²</strong>
-          </div>
-          <span class="sheet__time">Mar. 06:30</span>
-        </header>
-        <ul class="sheet__list">
-          <li class="done"><Icon name="check" size={16} />Sols aspirés et lavés</li>
-          <li class="done"><Icon name="check" size={16} />Postes de travail dépoussiérés</li>
-          <li class="done"><Icon name="check" size={16} />Sanitaires désinfectés, savon rechargé</li>
-          <li class="done"><Icon name="check" size={16} />Cuisine : plans, évier, micro-ondes</li>
-          <li class="done"><Icon name="check" size={16} />Corbeilles vidées, tri respecté</li>
-          <li class="todo"><span class="dot"></span>Vitres de la salle de réunion · jeudi</li>
-        </ul>
-        <footer class="sheet__foot">
-          <span class="avatar" aria-hidden="true">AK</span>
-          <div><strong>Aminata K.</strong><span>Votre agent attitré</span></div>
-          <span class="badge">5/6 ✓</span>
-        </footer>
-        <figcaption class="visually-hidden">Exemple de compte rendu de passage envoyé au client.</figcaption>
-      </figure>
+      <div class="hero__visual">
+        <div class="hero__photo">
+          <Photo name="accueil-2" loading="eager" sizes="(max-width: 900px) 100vw, 45vw" position="50% 30%" class="hero__img" />
+        </div>
+        <div class="float float--sheet" aria-label="Exemple de fiche de passage">
+          <span class="float__label">Exemple de fiche de passage</span>
+          <strong>Bureaux · 3e étage · 180 m²</strong>
+          <ul>
+            <li><Icon name="check" size={14} />Sols aspirés et lavés</li>
+            <li><Icon name="check" size={14} />Sanitaires désinfectés</li>
+            <li><Icon name="check" size={14} />Cuisine et corbeilles</li>
+          </ul>
+        </div>
+        <div class="float float--next">
+          <Icon name="clock" size={20} />
+          <span><b>Prochain passage</b>Mardi, 6 h 30</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bande de confiance -->
+  <section class="trust">
+    <div class="wrap">
+      <ul>
+        {trust.map((t) => (
+          <li><span class="ico"><Icon name={t.i} size={22} /></span><span><b>{t.t}</b>{t.d}</span></li>
+        ))}
+      </ul>
     </div>
   </section>
 
   <!-- Deux publics -->
-  <section class="section section--paper">
+  <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">Nos clients</span>
         <h2>Professionnels ou particuliers, un service pensé pour vous</h2>
       </div>
       <div class="split">
-        <a class="split__card split__card--pro" href="/nettoyage-professionnel/">
-          <Icon name="building" size={32} />
-          <h3>Entreprises, commerces et copropriétés</h3>
-          <p>Bureaux, coworkings, boutiques, cabinets médicaux, parties communes, fins de chantier. Contrat d'entretien régulier ou intervention ponctuelle.</p>
-          <span class="more">Voir les services professionnels <Icon name="arrow" size={18} /></span>
+        <a class="split__card" href="/nettoyage-professionnel/">
+          <Photo name="coworking-2" sizes="(max-width: 700px) 100vw, 50vw" class="split__img" />
+          <span class="split__body">
+            <span class="split__tag">Entreprises</span>
+            <strong>Bureaux, commerces, copropriétés</strong>
+            <span>Contrat d'entretien régulier ou intervention ponctuelle : bureaux, coworkings, boutiques, cabinets médicaux, parties communes, fins de chantier.</span>
+            <span class="go">{pro.length} services professionnels <Icon name="arrow" size={18} /></span>
+          </span>
         </a>
         <a class="split__card split__card--home" href="/services-de-menage-a-domicile/">
-          <Icon name="heart" size={32} />
-          <h3>Particuliers</h3>
-          <p>Ménage régulier ou ponctuel, repassage, locations Airbnb, aide aux seniors. 50 % de crédit d'impôt et avance immédiate.</p>
-          <span class="more">Voir le ménage à domicile <Icon name="arrow" size={18} /></span>
+          <Photo name="regulier-1" sizes="(max-width: 700px) 100vw, 50vw" class="split__img" />
+          <span class="split__body">
+            <span class="split__tag">Particuliers</span>
+            <strong>Ménage et repassage à domicile</strong>
+            <span>Ménage régulier ou ponctuel, repassage, locations Airbnb, aide aux seniors. 50 % de crédit d'impôt et avance immédiate.</span>
+            <span class="go">Le ménage à domicile <Icon name="arrow" size={18} /></span>
+          </span>
         </a>
       </div>
     </div>
   </section>
 
   <!-- Services pro -->
-  <section class="section">
+  <section class="section section--paper">
     <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">Services aux entreprises</span>
-        <h2>Ce que nous entretenons</h2>
-        <p class="lede">Chaque prestation fait l'objet d'un cahier des charges écrit : vous savez exactement ce qui est fait, à quelle fréquence.</p>
+      <div class="section-head section-head--row">
+        <div>
+          <span class="eyebrow">Services aux entreprises</span>
+          <h2>Ce que nous entretenons</h2>
+        </div>
+        <p class="lede">Chaque prestation fait l'objet d'un cahier des charges écrit : vous savez exactement ce qui est fait, à quelle fréquence et à quel prix.</p>
       </div>
-      <div class="grid-cards">
-        {featured.map((s) => (
-          <a class="svc-card" href={`/${s.slug}/`}>
-            <span class="ico"><Icon name={s.icon} /></span>
-            <h3>{s.title}</h3>
-            <p>{s.summary}</p>
-            <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+      <div class="svc-grid">
+        {featured.map((s, i) => (
+          <a class:list={["svc", { "svc--wide": i === 0 }]} href={serviceHref(s)}>
+            <Photo name={s.data.photos[0]} sizes={i === 0 ? "(max-width: 700px) 100vw, 50vw" : "(max-width: 700px) 100vw, 25vw"} widths={[480, 800, 1200]} class="svc__img" />
+            <span class="svc__body">
+              <span class="svc__ico"><Icon name={s.data.icon} size={20} /></span>
+              <strong>{s.data.title}</strong>
+              <small>{s.data.summary}</small>
+            </span>
           </a>
         ))}
       </div>
-      <p class="all"><a href="/nettoyage-professionnel/">Voir les {proServices.length} services professionnels</a></p>
+      <p class="all"><a class="btn btn--ghost" href="/nettoyage-professionnel/">Voir les {pro.length} services professionnels <Icon name="arrow" size={18} /></a></p>
     </div>
   </section>
 
-  <!-- Méthode -->
-  <section class="section section--navy">
+  <!-- Texte de présentation -->
+  <section class="section">
+    <div class="wrap intro">
+      <div class="intro__text article">
+        <span class="eyebrow">Neo Clean</span>
+        <h2>Une entreprise de nettoyage parisienne, au service de toute l'Île-de-France</h2>
+        <p>Neo Clean est une entreprise de nettoyage installée au 61 rue de Lyon, dans le 12e arrondissement de Paris. Nous entretenons les bureaux, les commerces, les cabinets médicaux, les hôtels et les parties communes d'immeubles, et proposons aux particuliers le ménage, le repassage et l'aide à domicile.</p>
+        <p>Notre conviction est simple : dans le nettoyage, la qualité du service dépend presque entièrement des personnes qui le réalisent. Nous avons donc construit notre organisation autour de nos agents. Ils sont salariés, le plus souvent en CDI, formés à nos protocoles et encadrés par des responsables de secteur qui visitent régulièrement les sites.</p>
+        <p>Pour nos clients, cela se traduit concrètement : un agent attitré qui connaît vos locaux, un cahier des charges écrit qui précise ce qui est fait pièce par pièce, un remplaçant formé quand l'agent est absent, et un interlocuteur que vous pouvez appeler directement. Pas de centre d'appels, pas de nouvel intervenant chaque semaine.</p>
+        <h3>Des méthodes professionnelles</h3>
+        <p>Nous travaillons avec des microfibres à code couleur pour séparer les zones, des désinfectants conformes aux normes européennes pour les sanitaires et les points de contact, et du matériel mécanisé pour les grandes surfaces. Chaque revêtement de sol reçoit le traitement qui lui convient, de la moquette au marbre.</p>
+        <h3>Des horaires adaptés à votre activité</h3>
+        <p>Nous intervenons tôt le matin, le soir, la nuit pour les sites logistiques et le week-end, pour que vos locaux soient prêts quand vos équipes, vos clients ou vos résidents arrivent.</p>
+      </div>
+      <div class="intro__media">
+        <Photo name="equipe-2" sizes="(max-width: 900px) 100vw, 35vw" class="intro__img" />
+        <blockquote>
+          « Le bien-être de nos employés est la clé de la satisfaction de nos clients. »
+          <cite>Le fondateur de Neo Clean</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <Commitments photo="accueil-1" />
+
+  <Process />
+
+  <!-- Comparatif -->
+  <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow eyebrow--lime">Notre méthode</span>
-        <h2>De la première visite au passage quotidien</h2>
+        <span class="eyebrow">Comparatif</span>
+        <h2>Neo Clean, un prestataire classique ou un salarié en direct ?</h2>
+        <p class="lede">Trois façons d'organiser l'entretien de vos locaux, et ce que chacune vous apporte vraiment.</p>
       </div>
-      <ol class="steps">
-        {steps.map((s, i) => (
-          <li>
-            <span class="steps__n">{i + 1}</span>
-            <h3>{s.t}</h3>
-            <p>{s.d}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- Engagements -->
-  <section class="section">
-    <div class="wrap promises">
-      <div class="section-head">
-        <span class="eyebrow">Nos engagements</span>
-        <h2>Ce qui change avec Neo Clean</h2>
-        <p class="lede">Le problème le plus fréquent avec un prestataire de nettoyage, c'est un agent différent chaque semaine et personne à qui parler. Nous avons construit notre organisation pour l'éviter.</p>
+      <div class="cmp">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"><span class="visually-hidden">Critère</span></th>
+              <th scope="col" class="cmp__us">Neo Clean</th>
+              <th scope="col">Prestataire classique</th>
+              <th scope="col">Salarié en direct</th>
+            </tr>
+          </thead>
+          <tbody>
+            {compare.map((r) => (
+              <tr>
+                <th scope="row">{r.c}</th>
+                <td class="cmp__us">{r.n ? <span class="yes" aria-label="Oui"><Icon name="check" size={18} /></span> : <span class="no" aria-label="Non">–</span>}</td>
+                <td>{r.a ? <span class="yes" aria-label="Oui"><Icon name="check" size={18} /></span> : <span class="no" aria-label="Non">–</span>}</td>
+                <td>{r.s ? <span class="yes" aria-label="Oui"><Icon name="check" size={18} /></span> : <span class="no" aria-label="Non">–</span>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <ul class="promises__list">
-        {promises.map((p) => (
-          <li>
-            <span class="ico"><Icon name={p.i} /></span>
-            <div><h3>{p.t}</h3><p>{p.d}</p></div>
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
   <!-- Particuliers -->
   <section class="section section--paper">
     <div class="wrap home">
-      <div class="home__text">
-        <span class="eyebrow">Ménage à domicile</span>
-        <h2>Chez vous, la même intervenante à chaque passage</h2>
-        <p class="lede">Nous recrutons, déclarons et remplaçons votre intervenante. Vous n'avez aucune démarche d'employeur, et vous bénéficiez de 50 % de crédit d'impôt.</p>
+      <div class="home__media">
+        <Photo name="domicile-1" sizes="(max-width: 900px) 100vw, 45vw" class="home__img" />
         <div class="price">
           <span class="price__label">Ménage à domicile, à partir de</span>
           <span class="price__value">17,65 €<small>/h</small></span>
-          <span class="price__note">après crédit d'impôt, soit 35,30 € TTC facturés</span>
-        </div>
-        <div class="actions">
-          <a class="btn btn--primary" href="/devis/?type=particulier">Demander un devis</a>
-          <a class="btn btn--ghost" href="/tarifs/">Voir les tarifs</a>
+          <span class="price__note">après crédit d'impôt · 35,30 € TTC facturés</span>
         </div>
       </div>
-      <ul class="home__list">
-        {homeServices.map((s) => (
-          <li>
-            <a href={`/${s.slug}/`}>
-              <span class="ico"><Icon name={s.icon} size={20} /></span>
-              <span><strong>{s.title}</strong><small>{s.summary}</small></span>
-              <Icon name="arrow" size={18} class="arr" />
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div class="home__text">
+        <span class="eyebrow">Ménage à domicile</span>
+        <h2>Chez vous, la même intervenante à chaque passage</h2>
+        <p class="lede">Nous recrutons, déclarons et remplaçons votre intervenante. Vous n'avez aucune démarche d'employeur, et vous ne payez que la moitié grâce au crédit d'impôt et à l'avance immédiate.</p>
+        <ul class="home__list">
+          {home.map((s) => (
+            <li>
+              <a href={serviceHref(s)}>
+                <span class="ico"><Icon name={s.data.icon} size={20} /></span>
+                <span><strong>{s.data.title}</strong><small>{s.data.summary}</small></span>
+                <Icon name="arrow" size={18} class="arr" />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="actions">
+          <a class="btn btn--primary" href="/devis/?type=particulier">Demander un devis</a>
+          <a class="btn btn--ghost" href="/tarifs/">Tarifs et crédit d'impôt</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Zones -->
   <section class="section">
     <div class="wrap zones">
-      <div>
-        <span class="eyebrow">Zone d'intervention</span>
-        <h2>Paris et toute l'Île-de-France</h2>
-        <p class="lede">Nos équipes sont organisées par secteur pour limiter les trajets et garantir la ponctualité.</p>
+      <div class="zones__text">
+        <span class="eyebrow">Zones d'intervention</span>
+        <h2>Paris et les huit départements d'Île-de-France</h2>
+        <p class="lede">Depuis notre siège du 12e arrondissement, nos équipes sont organisées par secteur. Chaque agent intervient près de chez lui : c'est la meilleure garantie de ponctualité.</p>
+        <ul class="zones__list">
+          {zones.map((z) => (
+            <li><a href={zoneHref(z)}><b>{z.data.code}</b><span>Nettoyage {z.data.in}</span><Icon name="arrow" size={16} /></a></li>
+          ))}
+        </ul>
       </div>
-      <ul class="zones__list">
-        {zones.map((z) => <li><a href={`/${z.slug}/`}><Icon name="pin" size={18} />{z.name} ({z.code})</a></li>)}
-      </ul>
+      <IdfMap />
     </div>
   </section>
 
   <!-- FAQ -->
   <section class="section section--paper">
-    <div class="wrap">
+    <div class="wrap faq-wrap">
       <div class="section-head">
         <span class="eyebrow">Questions fréquentes</span>
         <h2>Vos questions, nos réponses</h2>
+        <p class="lede">D'autres questions ? <a href="/faq/">Consultez toute la FAQ</a> ou appelez-nous au <a href={site.phoneHref}>{site.phone}</a>.</p>
       </div>
       <div class="faq">
-        {faq.map((f) => (
-          <details>
+        {faq.map((f, i) => (
+          <details open={i === 0}>
             <summary>{f.q}</summary>
             <div><p>{f.a}</p></div>
           </details>
         ))}
       </div>
-      <p class="all"><a href="/faq/">Toutes les questions fréquentes</a></p>
     </div>
   </section>
 
@@ -239,33 +296,67 @@ const faqSchema = {
 </Base>
 
 <style>
+  /* Hero */
   .hero {
-    padding-block: clamp(40px, 6vw, 88px);
+    padding-block: clamp(32px, 5vw, 72px) clamp(48px, 6vw, 96px);
     background:
-      radial-gradient(900px 400px at 85% 10%, var(--blue-soft), transparent 70%),
+      radial-gradient(800px 500px at 90% 0%, var(--blue-soft), transparent 70%),
+      radial-gradient(500px 300px at 0% 100%, #fce8f1, transparent 70%),
       var(--white);
     overflow: hidden;
   }
   .hero__grid {
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: clamp(32px, 5vw, 72px);
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(32px, 5vw, 80px);
     align-items: center;
   }
   .hero__text {
     display: grid;
-    gap: 22px;
+    gap: 24px;
     justify-items: start;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--line);
+    font: 600 0.85rem var(--display);
+    color: var(--navy);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 0 0 4px rgb(168 200 47 / 0.25);
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5.4vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
   }
   .hl {
     color: var(--blue);
+    background: linear-gradient(transparent 70%, rgb(168 200 47 / 0.35) 70%);
+  }
+  .hero .lede {
+    font-size: 1.2rem;
+  }
+  .btn--lg {
+    min-height: 56px;
+    padding-inline: 28px;
+    font-size: 1.05rem;
   }
   .hero__proof {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 8px 22px;
-    margin: 4px 0 0;
+    margin: 0;
     padding: 0;
     font-size: 0.95rem;
     color: var(--muted);
@@ -276,299 +367,466 @@ const faqSchema = {
     gap: 8px;
   }
   .hero__proof :global(svg) {
-    color: var(--lime);
+    color: #6f8f10;
     stroke-width: 2.4;
   }
 
-  .sheet {
-    margin: 0;
+  .hero__visual {
+    position: relative;
+    padding: 0 0 40px 40px;
+  }
+  .hero__photo {
+    border-radius: 28px 28px 28px 120px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    box-shadow: 0 40px 80px -30px rgb(18 48 107 / 0.45);
+  }
+  .hero__photo :global(picture),
+  .hero__photo :global(.hero__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .float {
+    position: absolute;
     background: #fff;
-    border: 1px solid var(--line);
     border-radius: 18px;
-    box-shadow: 0 30px 60px -20px rgb(18 48 107 / 0.25), var(--shadow);
-    padding: 22px;
+    box-shadow: 0 24px 48px -16px rgb(15 29 51 / 0.3);
+  }
+  .float--sheet {
+    left: 0;
+    bottom: 0;
+    width: min(270px, 70%);
+    padding: 18px 20px;
     display: grid;
-    gap: 16px;
-    transform: rotate(1.2deg);
+    gap: 8px;
   }
-  .sheet__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    gap: 12px;
-    padding-bottom: 14px;
-    border-bottom: 1px dashed var(--line);
-  }
-  .sheet__head div {
-    display: grid;
-    gap: 4px;
-  }
-  .sheet__label {
-    font: 600 0.72rem var(--display);
+  .float__label {
+    font: 600 0.68rem var(--display);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--pink);
   }
-  .sheet__head strong {
-    font: 600 1.02rem var(--display);
+  .float--sheet strong {
+    font: 600 0.98rem var(--display);
   }
-  .sheet__time {
-    font: 600 0.85rem var(--display);
-    background: var(--blue-soft);
-    color: var(--navy);
-    padding: 6px 10px;
-    border-radius: 8px;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-  }
-  .sheet__list {
+  .float--sheet ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
-    font-size: 0.95rem;
+    gap: 6px;
+    font-size: 0.88rem;
   }
-  .sheet__list li {
-    display: grid;
-    grid-template-columns: 22px 1fr;
+  .float--sheet li {
+    display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
-  .sheet__list .done :global(svg) {
-    width: 22px;
-    height: 22px;
+  .float--sheet li :global(svg) {
+    width: 20px;
+    height: 20px;
     padding: 3px;
     border-radius: 50%;
     background: #eef6d6;
     color: #5b7a00;
-    stroke-width: 2.6;
+    stroke-width: 2.8;
   }
-  .sheet__list .todo {
-    color: var(--muted);
-  }
-  .dot {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px dashed var(--line);
-  }
-  .sheet__foot {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+  .float--next {
+    top: 28px;
+    right: -12px;
+    display: flex;
     align-items: center;
     gap: 12px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--line);
+    padding: 12px 16px;
   }
-  .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--navy);
-    color: #fff;
+  .float--next :global(svg) {
+    color: var(--blue);
+  }
+  .float--next span {
     display: grid;
-    place-items: center;
-    font: 600 0.85rem var(--display);
-  }
-  .sheet__foot div {
-    display: grid;
-    line-height: 1.3;
-  }
-  .sheet__foot strong {
-    font: 600 0.95rem var(--display);
-  }
-  .sheet__foot div span {
     font-size: 0.85rem;
     color: var(--muted);
+    line-height: 1.3;
   }
-  .badge {
-    font: 600 0.85rem var(--display);
-    color: #5b7a00;
-    background: #eef6d6;
-    padding: 6px 10px;
-    border-radius: 999px;
+  .float--next b {
+    font: 600 0.9rem var(--display);
+    color: var(--ink);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .float--sheet {
+      animation: rise 0.7s 0.15s both cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .float--next {
+      animation: rise 0.7s 0.35s both cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    @keyframes rise {
+      from {
+        transform: translateY(14px);
+      }
+    }
   }
 
-  .split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .split__card {
-    display: grid;
-    gap: 14px;
-    align-content: start;
-    padding: clamp(24px, 4vw, 40px);
-    border-radius: 20px;
-    text-decoration: none;
-    color: var(--ink);
+  /* Bande de confiance */
+  .trust {
+    border-block: 1px solid var(--line);
     background: #fff;
-    border: 1px solid var(--line);
-    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .split__card:hover {
-    border-color: var(--blue);
-    box-shadow: var(--shadow);
-    color: var(--ink);
-  }
-  .split__card > :global(svg) {
-    color: var(--blue);
-  }
-  .split__card--home > :global(svg) {
-    color: var(--pink);
-  }
-  .split__card h3 {
-    font-size: 1.45rem;
-  }
-  .split__card p {
-    color: var(--muted);
-  }
-  .more {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font: 600 0.98rem var(--display);
-    color: var(--blue);
-    margin-top: 6px;
-  }
-
-  .all {
-    margin-top: 28px;
-    font: 600 1rem var(--display);
-  }
-
-  .eyebrow--lime {
-    color: var(--lime);
-  }
-  .steps {
+  .trust ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    counter-reset: s;
   }
-  .steps li {
-    display: grid;
-    gap: 10px;
-    align-content: start;
-    padding: 24px;
-    border-radius: var(--radius);
-    background: rgb(255 255 255 / 0.06);
-    border: 1px solid rgb(255 255 255 / 0.12);
-  }
-  .steps__n {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: var(--lime);
-    color: var(--ink);
-    font: 700 1rem var(--display);
-  }
-  .steps p {
-    color: rgb(255 255 255 / 0.75);
-    font-size: 0.97rem;
-  }
-
-  .promises {
-    display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
-    gap: clamp(32px, 5vw, 72px);
-    align-items: start;
-  }
-  .promises .section-head {
-    margin: 0;
-  }
-  .promises__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
+  .trust li {
+    display: flex;
+    align-items: center;
     gap: 14px;
+    padding: 24px 20px;
   }
-  .promises__list li {
-    display: grid;
-    grid-template-columns: 48px 1fr;
-    gap: 18px;
-    padding: 22px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+  .trust li + li {
+    border-left: 1px solid var(--line);
   }
-  .promises__list .ico,
-  .home__list .ico {
-    width: 48px;
-    height: 48px;
+  .trust .ico {
+    flex: none;
+    width: 46px;
+    height: 46px;
     border-radius: 12px;
     display: grid;
     place-items: center;
     background: var(--blue-soft);
     color: var(--blue);
   }
-  .promises__list div {
+  .trust li span:last-child {
     display: grid;
-    gap: 6px;
-  }
-  .promises__list p {
+    font-size: 0.9rem;
     color: var(--muted);
+    line-height: 1.35;
+  }
+  .trust b {
+    font: 600 1rem var(--display);
+    color: var(--ink);
   }
 
-  .home {
+  /* Deux publics */
+  .split {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(32px, 5vw, 72px);
+    gap: 20px;
+  }
+  .split__card {
+    position: relative;
+    display: block;
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 420px;
+    color: #fff;
+    text-decoration: none;
+    isolation: isolate;
+  }
+  .split__card :global(picture) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+  .split__card :global(.split__img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 0.5s;
+  }
+  .split__card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 25 50 / 0.05) 20%, rgb(12 25 50 / 0.9) 100%);
+  }
+  .split__card:hover :global(.split__img) {
+    transform: scale(1.04);
+  }
+  .split__body {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: grid;
+    gap: 10px;
+    padding: clamp(22px, 3.5vw, 36px);
+  }
+  .split__tag {
+    justify-self: start;
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--blue);
+    padding: 5px 10px;
+    border-radius: 6px;
+  }
+  .split__card--home .split__tag {
+    background: var(--pink);
+  }
+  .split__body strong {
+    font: 700 clamp(1.4rem, 2.4vw, 1.8rem)/1.2 var(--display);
+  }
+  .split__body > span:not(.split__tag):not(.go) {
+    color: rgb(255 255 255 / 0.85);
+    max-width: 48ch;
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 600 1rem var(--display);
+    color: #fff;
+  }
+
+  /* Services */
+  .section-head--row {
+    max-width: none;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    gap: 24px 64px;
+  }
+  .section-head--row > div {
+    display: grid;
+    gap: 14px;
+  }
+  .svc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .svc {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .svc:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+    color: var(--ink);
+  }
+  .svc--wide {
+    grid-column: span 2;
+    grid-row: span 2;
+    grid-template-rows: 1fr auto;
+  }
+  .svc--wide :global(picture) {
+    height: 100%;
+  }
+  .svc :global(.svc__img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .svc--wide :global(.svc__img) {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 280px;
+  }
+  .svc__body {
+    position: relative;
+    display: grid;
+    gap: 6px;
+    padding: 30px 20px 22px;
+    align-content: start;
+  }
+  .svc__ico {
+    position: absolute;
+    top: -22px;
+    left: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 8px 20px -6px rgb(31 95 209 / 0.6);
+  }
+  .svc strong {
+    font: 600 1.08rem var(--display);
+  }
+  .svc--wide strong {
+    font-size: 1.4rem;
+  }
+  .svc small {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .all {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  /* Présentation */
+  .intro {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+  }
+  .intro__text h2 {
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    margin-top: 12px;
+  }
+  .intro__media {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 0;
+  }
+  .intro__media :global(.intro__img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 24px;
+  }
+  .intro__media blockquote {
+    margin: -60px 20px 0;
+    position: relative;
+    padding: 22px 24px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 18px;
+    font: 500 1.08rem/1.5 var(--display);
+  }
+  .intro__media cite {
+    display: block;
+    margin-top: 10px;
+    font: 500 0.85rem var(--body);
+    font-style: normal;
+    color: var(--lime);
+  }
+
+  /* Comparatif */
+  .cmp {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #fff;
+  }
+  .cmp table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+  }
+  .cmp th,
+  .cmp td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  .cmp tbody th {
+    text-align: left;
+    font-weight: 500;
+  }
+  .cmp thead th {
+    font: 600 0.95rem var(--display);
+    color: var(--muted);
+  }
+  .cmp tr:last-child th,
+  .cmp tr:last-child td {
+    border-bottom: 0;
+  }
+  .cmp .cmp__us {
+    background: var(--blue-soft);
+    color: var(--navy);
+  }
+  .cmp thead .cmp__us {
+    background: var(--navy);
+    color: #fff;
+  }
+  .yes {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #eef6d6;
+    color: #5b7a00;
+  }
+  .yes :global(svg) {
+    stroke-width: 2.6;
+  }
+  .no {
+    color: #b0b9c7;
+    font-size: 1.3rem;
+  }
+
+  /* Particuliers */
+  .home {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(32px, 6vw, 80px);
     align-items: center;
   }
-  .home__text {
-    display: grid;
-    gap: 20px;
-    justify-items: start;
+  .home__media {
+    position: relative;
+  }
+  .home__media :global(.home__img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 24px 120px 24px 24px;
   }
   .price {
+    position: absolute;
+    right: -16px;
+    bottom: 28px;
     display: grid;
     gap: 2px;
     padding: 18px 22px;
-    border-left: 4px solid var(--pink);
     background: #fff;
-    border-radius: 0 12px 12px 0;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px -16px rgb(15 29 51 / 0.3);
   }
   .price__label {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--muted);
   }
   .price__value {
     font: 700 2.2rem/1.1 var(--display);
-    color: var(--navy);
+    color: var(--pink);
     font-variant-numeric: tabular-nums;
   }
   .price__value small {
     font-size: 1rem;
-    font-weight: 600;
     color: var(--muted);
   }
   .price__note {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     color: var(--muted);
+  }
+  .home__text {
+    display: grid;
+    gap: 20px;
   }
   .home__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
+    gap: 8px;
   }
   .home__list a {
     display: grid;
-    grid-template-columns: 48px 1fr auto;
-    gap: 16px;
+    grid-template-columns: 44px 1fr auto;
+    gap: 14px;
     align-items: center;
-    padding: 14px 18px 14px 14px;
+    padding: 12px 16px 12px 12px;
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 14px;
     color: var(--ink);
     text-decoration: none;
   }
@@ -576,89 +834,159 @@ const faqSchema = {
     border-color: var(--pink);
   }
   .home__list .ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
     background: #fce8f1;
     color: var(--pink);
   }
   .home__list strong {
     display: block;
-    font: 600 1.02rem var(--display);
+    font: 600 1rem var(--display);
   }
   .home__list small {
-    display: block;
     color: var(--muted);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
   .home__list :global(.arr) {
     color: var(--muted);
   }
 
+  /* Zones */
   .zones {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(32px, 5vw, 72px);
+    gap: clamp(32px, 6vw, 80px);
     align-items: center;
   }
-  .zones > div {
+  .zones__text {
     display: grid;
-    gap: 14px;
+    gap: 16px;
   }
   .zones__list {
     list-style: none;
-    margin: 0;
+    margin: 8px 0 0;
     padding: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
   }
   .zones__list a {
-    display: flex;
+    display: grid;
+    grid-template-columns: 38px 1fr auto;
+    gap: 12px;
     align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
+    padding: 10px 14px 10px 10px;
     border: 1px solid var(--line);
-    border-radius: 10px;
-    font-weight: 500;
+    border-radius: 12px;
     color: var(--ink);
     text-decoration: none;
+    font-size: 0.93rem;
   }
   .zones__list a:hover {
-    border-color: var(--pink);
+    border-color: var(--blue);
+  }
+  .zones__list b {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--navy);
+    color: #fff;
+    font: 700 0.9rem var(--display);
   }
   .zones__list :global(svg) {
-    color: var(--pink);
-    flex: none;
+    color: var(--muted);
+  }
+
+  /* FAQ */
+  .faq-wrap {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  .faq-wrap .section-head {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
   }
 
   @media (max-width: 1000px) {
-    .steps {
+    .svc-grid {
       grid-template-columns: 1fr 1fr;
+    }
+    .trust ul {
+      grid-template-columns: 1fr 1fr;
+    }
+    .trust li:nth-child(3) {
+      border-left: 0;
+    }
+    .trust li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
     }
   }
   @media (max-width: 900px) {
     .hero__grid,
-    .promises,
+    .intro,
     .home,
-    .zones {
+    .zones,
+    .faq-wrap,
+    .section-head--row {
       grid-template-columns: 1fr;
     }
-    .sheet {
-      transform: none;
-      max-width: 460px;
+    .hero__visual {
+      max-width: 520px;
+      padding-left: 24px;
+    }
+    .intro__media,
+    .faq-wrap .section-head {
+      position: static;
+    }
+    .intro__media :global(.intro__img),
+    .home__media :global(.home__img) {
+      aspect-ratio: 16 / 11;
+    }
+    .price {
+      right: 12px;
     }
   }
   @media (max-width: 640px) {
     .split,
-    .steps {
+    .svc-grid {
       grid-template-columns: 1fr;
     }
-    .hero__text .actions {
+    .svc--wide {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    .svc--wide :global(.svc__img) {
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+    .split__card {
+      min-height: 380px;
+    }
+    .hero__text .actions,
+    .hero__text .btn {
       width: 100%;
     }
-    .hero__text .btn {
-      flex: 1 1 100%;
+    .float--next {
+      right: 8px;
     }
-  }
-  @media (max-width: 420px) {
+    .trust ul {
+      grid-template-columns: 1fr;
+    }
+    .trust li,
+    .trust li + li {
+      border-left: 0;
+      padding: 16px 0;
+    }
+    .trust li + li {
+      border-top: 1px solid var(--line);
+    }
     .zones__list {
       grid-template-columns: 1fr;
     }

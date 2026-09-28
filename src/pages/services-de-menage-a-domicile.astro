@@ -1,44 +1,78 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
+import Photo from "../components/Photo.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { homeServices } from "../data/services";
+import Process from "../components/Process.astro";
+import { site } from "../data/site";
+import { getHomeServices, getZones, serviceHref, zoneHref } from "../lib/content";
+
+const home = await getHomeServices();
+const zones = await getZones();
 
 const reasons = [
-  { t: "Aucune démarche d'employeur", d: "Nous recrutons, déclarons et payons l'intervenante. Vous recevez une facture." },
-  { t: "La même intervenante", d: "Elle connaît votre logement et vos consignes. Un remplaçant est prévu en cas d'absence." },
-  { t: "50 % de crédit d'impôt", d: "Avec l'avance immédiate, vous ne payez que la moitié de la facture chaque mois." },
-  { t: "Sans engagement de durée", d: "Vous pouvez modifier la fréquence ou arrêter le service avec un simple préavis." },
+  { i: "user", t: "Aucune démarche d'employeur", d: "Nous recrutons, déclarons et payons l'intervenante. Vous recevez une facture mensuelle, et c'est tout." },
+  { i: "heart", t: "La même intervenante", d: "Elle connaît votre logement et vos consignes. Un remplaçant est prévu pendant ses congés." },
+  { i: "euro", t: "50 % de crédit d'impôt", d: "Avec l'avance immédiate, vous ne payez que la moitié de la facture chaque mois." },
+  { i: "calendar", t: "Sans engagement de durée", d: "Vous modifiez la fréquence, suspendez pendant vos vacances ou arrêtez avec un simple préavis." },
 ];
+
+const faq = [
+  { q: "Quelle est la différence entre passer par Neo Clean et employer quelqu'un directement ?", a: "En emploi direct, vous êtes l'employeur : vous déclarez, payez les congés et gérez les absences. Avec Neo Clean, l'intervenante est notre salariée : nous gérons tout, et nous la remplaçons si elle est absente." },
+  { q: "Combien d'heures de ménage faut-il prévoir ?", a: "Pour un appartement de 50 à 70 m² entretenu chaque semaine, deux à trois heures suffisent en général. Nous vous conseillons lors du premier échange." },
+  { q: "Comment fonctionne l'avance immédiate du crédit d'impôt ?", a: "C'est un service de l'Urssaf. Une fois activé, le crédit d'impôt est déduit de chaque facture : vous ne payez que 50 %, et l'Urssaf nous verse le reste." },
+  { q: "Faut-il fournir les produits ?", a: "Oui, l'intervenante utilise vos produits et votre matériel. Vous choisissez ainsi ce qui entre chez vous." },
+];
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
 ---
 <Base
-  title="Ménage à domicile à Paris et en Île-de-France | Neo Clean"
-  description="Femme de ménage à domicile, repassage, ménage Airbnb et aide aux seniors à Paris. 50 % de crédit d'impôt, avance immédiate, même intervenante à chaque passage."
+  title="Ménage à domicile à Paris et en Île-de-France, 50 % de crédit d'impôt | Neo Clean"
+  description="Femme de ménage à domicile, repassage, ménage Airbnb et aide aux seniors à Paris et en Île-de-France. Même intervenante à chaque passage, 50 % de crédit d'impôt, avance immédiate."
+  schema={[faqSchema]}
 >
-  <PageHero
+  <HubHero
     crumb="Particuliers"
     eyebrow="Particuliers"
     title="Ménage à domicile à Paris et en Île-de-France"
-    lede="Une intervenante attitrée, déclarée et remplacée si besoin. Vous ne payez que 50 % du prix grâce au crédit d'impôt."
+    lede="Une intervenante attitrée, déclarée et remplacée si besoin. Vous ne payez que la moitié grâce au crédit d'impôt et à l'avance immédiate."
+    photo="domicile-1"
   >
     <div class="actions">
       <a class="btn btn--primary" href="/devis/?type=particulier">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
-      <a class="btn btn--ghost" href="/tarifs/">Voir les tarifs</a>
+      <a class="btn btn--light" href="/tarifs/">Voir les tarifs</a>
     </div>
-  </PageHero>
+  </HubHero>
 
   <section class="section">
     <div class="wrap">
-      <div class="grid-cards">
-        {homeServices.map((s) => (
-          <a class="svc-card" href={`/${s.slug}/`}>
-            <span class="ico"><Icon name={s.icon} /></span>
-            <h2 class="h3">{s.title}</h2>
-            <p>{s.summary}</p>
-            <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+      <div class="section-head">
+        <span class="eyebrow">Nos services à domicile</span>
+        <h2>Le ménage, le linge et l'aide au quotidien</h2>
+      </div>
+      <div class="cat">
+        {home.map((s) => (
+          <a class="item" href={serviceHref(s)}>
+            <Photo name={s.data.photos[0]} sizes="(max-width: 700px) 100vw, 33vw" widths={[480, 800]} class="item__img" />
+            <span class="item__body">
+              <span class="item__ico"><Icon name={s.data.icon} size={20} /></span>
+              <h3>{s.data.title}</h3>
+              <p>{s.data.summary}</p>
+            </span>
           </a>
         ))}
+        <a class="item item--price" href="/tarifs/">
+          <span class="item__body">
+            <span class="k">À partir de</span>
+            <span class="big">17,65 €<small>/h</small></span>
+            <p>après crédit d'impôt, soit 35,30 € TTC facturés</p>
+            <span class="go">Tarifs et crédit d'impôt <Icon name="arrow" size={16} /></span>
+          </span>
+        </a>
       </div>
     </div>
   </section>
@@ -46,46 +80,187 @@ const reasons = [
   <section class="section section--paper">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Pourquoi passer par Neo Clean</span>
+        <span class="eyebrow">Pourquoi Neo Clean</span>
         <h2>Le ménage sans les contraintes</h2>
       </div>
       <ul class="reasons">
         {reasons.map((r) => (
-          <li><Icon name="check" size={22} /><div><h3>{r.t}</h3><p>{r.d}</p></div></li>
+          <li><span class="ico"><Icon name={r.i} size={22} /></span><div><h3>{r.t}</h3><p>{r.d}</p></div></li>
         ))}
       </ul>
     </div>
   </section>
 
-  <CtaBand title="Un devis en deux minutes" />
+  <section class="section">
+    <div class="wrap long">
+      <div class="article">
+        <h2>Faire appel à une entreprise de ménage à domicile</h2>
+        <p>Il existe deux façons de faire appel à une aide ménagère : l'employer directement, ou passer par une entreprise de services à la personne comme Neo Clean. En emploi direct, vous devenez employeur : vous déclarez les heures, payez les congés, gérez les absences et, le jour où la collaboration s'arrête, la procédure de fin de contrat. Avec Neo Clean, l'intervenante est notre salariée. Nous la recrutons, la formons, la déclarons et la remplaçons pendant ses congés. Vous recevez une facture, et c'est tout.</p>
+        <p>Les deux formules ouvrent droit au même crédit d'impôt de 50 %. La différence tient à la simplicité et à la continuité du service : avec une entreprise, vous n'êtes jamais sans solution quand votre intervenante est malade ou en vacances.</p>
+        <h2>Comment nous choisissons votre intervenante</h2>
+        <p>Nous recrutons nos intervenantes avec soin : expérience, références, entretien, mise en situation. Nous accordons autant d'importance au savoir-être qu'au savoir-faire : ponctualité, discrétion, respect de votre intérieur et de vos habitudes.</p>
+        <p>Pour vous, nous choisissons une intervenante qui habite votre secteur, disponible aux jours et heures qui vous conviennent. Avant le premier passage, nous faisons le point avec vous sur vos priorités et vos consignes, que nous lui transmettons.</p>
+        <h2>Le crédit d'impôt et l'avance immédiate</h2>
+        <p>Les services de ménage, de repassage et d'aide à domicile ouvrent droit à un crédit d'impôt égal à 50 % des sommes versées, dans la limite d'un plafond annuel. Il s'applique que vous soyez imposable ou non : si le crédit dépasse votre impôt, la différence vous est remboursée.</p>
+        <p>Depuis la mise en place de l'avance immédiate par l'Urssaf, vous n'avez plus à avancer la totalité des sommes en attendant votre déclaration de revenus. Le crédit d'impôt est déduit directement de chaque facture : vous ne payez que la moitié, chaque mois. Nous vous accompagnons pour activer ce service.</p>
+        <h2>Ce que nous faisons chez vous</h2>
+        <p>Le contenu du ménage est défini avec vous : dépoussiérage, sols, cuisine, salle de bain, changement des draps, sortie des poubelles. Le repassage peut être ajouté, avec un temps dédié. Pour les personnes âgées ou en situation de handicap, l'intervenante peut aussi faire les petites courses de proximité et porter une attention particulière à la sécurité du logement.</p>
+        <p>L'intervenante utilise vos produits et votre matériel, ce qui vous permet de choisir ce qui entre chez vous : produits écologiques, sans parfum ou adaptés à vos surfaces.</p>
+        <h2>Pour qui, et pour quels besoins</h2>
+        <p>Nos clients particuliers ont des profils très différents. Des actifs qui rentrent tard et veulent retrouver leurs soirées et leurs week-ends. Des familles avec de jeunes enfants, pour qui le linge et le ménage prennent une place considérable. Des retraités qui souhaitent garder un logement impeccable sans se fatiguer. Des personnes en convalescence après une opération. Des propriétaires qui louent leur appartement en courte durée.</p>
+        <p>Pour chacun, la fréquence et le contenu de la prestation sont différents. Un ménage de deux heures chaque semaine suffit à entretenir un appartement de taille moyenne. Une famille nombreuse préférera souvent trois heures, dont une consacrée au repassage. Une personne âgée appréciera deux passages plus courts dans la semaine, pour une présence plus régulière. Nous vous conseillons lors du premier échange, sans chercher à vous vendre plus d'heures que nécessaire.</p>
+        <h2>La confiance, au cœur du service</h2>
+        <p>Confier ses clés et son intérieur à une personne extérieure n'est jamais anodin. C'est pourquoi nous prenons le temps de bien vous connaître avant le premier passage, et de choisir une intervenante dont le profil correspond à vos attentes. Nos intervenantes sont tenues à une stricte discrétion : elles ne touchent pas à vos papiers ni à vos effets personnels, et respectent les consignes que vous leur donnez.</p>
+        <p>Au quotidien, la communication est simple : un petit mot laissé sur la table, un message, ou un appel à notre équipe si vous préférez passer par nous. Vous pouvez à tout moment ajuster les priorités, signaler un point à améliorer ou demander une tâche ponctuelle.</p>
+        <h2>Changer d'intervenante si besoin</h2>
+        <p>La relation avec votre intervenante repose sur la confiance. Si, pour une raison ou une autre, la collaboration ne vous convient pas, dites-le nous simplement : nous vous proposons une autre intervenante, sans justification à fournir et sans frais. Notre objectif est que vous soyez pleinement satisfait du service, dans la durée.</p>
+      </div>
+      <aside class="long__side">
+        <Photo name="regulier-2" sizes="(max-width: 900px) 100vw, 30vw" class="long__img" />
+        <div class="faq">
+          {faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <div><p>{f.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <Process audience="particulier" title="Votre ménage à domicile en 4 étapes" />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Où nous intervenons</span>
+        <h2>Ménage à domicile en Île-de-France</h2>
+      </div>
+      <ul class="chips">
+        {zones.map((z) => <li><a href={zoneHref(z)}><Icon name="pin" size={16} />{z.data.name} ({z.data.code})</a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand title="Un devis en deux minutes" text={`Décrivez votre logement et vos attentes. Nous vous rappelons sous 24 h ouvrées, ou appelez-nous au ${site.phone}.`} />
 </Base>
 
 <style>
-  .h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+  .cat {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .item {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    background: #fff;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .item:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+    color: var(--ink);
+  }
+  .item :global(.item__img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .item__body {
+    position: relative;
+    display: grid;
+    gap: 8px;
+    padding: 30px 22px 22px;
+    align-content: start;
+  }
+  .item__ico {
+    position: absolute;
+    top: -22px;
+    left: 22px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--pink);
+    color: #fff;
+  }
+  .item h3 {
+    font-size: 1.15rem;
+  }
+  .item p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .item--price {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    grid-template-rows: 1fr;
+    align-content: center;
+  }
+  .item--price:hover {
+    color: #fff;
+  }
+  .item--price .item__body {
+    padding: 32px;
+  }
+  .item--price p {
+    color: rgb(255 255 255 / 0.75);
+  }
+  .k {
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lime);
+  }
+  .big {
+    font: 700 3rem/1 var(--display);
+    letter-spacing: -0.03em;
+  }
+  .big small {
+    font-size: 1.1rem;
+    color: rgb(255 255 255 / 0.7);
+  }
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font: 600 0.95rem var(--display);
   }
   .reasons {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
   .reasons li {
     display: grid;
-    grid-template-columns: 22px 1fr;
-    gap: 16px;
-    padding: 24px;
+    gap: 14px;
+    align-content: start;
+    padding: 26px;
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 18px;
   }
-  .reasons :global(svg) {
+  .reasons .ico {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #fce8f1;
     color: var(--pink);
-    margin-top: 2px;
   }
   .reasons div {
     display: grid;
@@ -93,8 +268,45 @@ const reasons = [
   }
   .reasons p {
     color: var(--muted);
+    font-size: 0.95rem;
   }
-  @media (max-width: 700px) {
+  .long {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+  }
+  .long__side {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 16px;
+  }
+  .long__side :global(.long__img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 18px;
+  }
+  .chips :global(svg) {
+    color: var(--pink);
+  }
+  @media (max-width: 1000px) {
+    .cat,
+    .reasons {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 900px) {
+    .long {
+      grid-template-columns: 1fr;
+    }
+    .long__side {
+      position: static;
+    }
+  }
+  @media (max-width: 640px) {
+    .cat,
     .reasons {
       grid-template-columns: 1fr;
     }

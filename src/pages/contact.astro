@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import PageHero from "../components/PageHero.astro";
+import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
 import { site } from "../data/site";
 
@@ -10,7 +10,7 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
   title="Contact | Neo Clean, entreprise de nettoyage à Paris 12e"
   description={`Contactez Neo Clean au ${site.phone} ou par e-mail. ${site.hours}. ${site.address.street}, ${site.address.postalCode} ${site.address.city}.`}
 >
-  <PageHero crumb="Contact" title="Nous contacter" lede="Pour un devis, la réponse la plus rapide passe par le formulaire en ligne. Pour toute autre question, appelez-nous ou écrivez-nous." />
+  <HubHero crumb="Contact" eyebrow="Contact" photo="accueil-2" position="50% 25%" title="Nous contacter" lede="Pour un devis, la réponse la plus rapide passe par le formulaire en ligne. Pour toute autre question, appelez-nous ou écrivez-nous." />
 
   <section class="section">
     <div class="wrap cards">

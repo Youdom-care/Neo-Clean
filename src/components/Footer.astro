@@ -2,7 +2,10 @@
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
 import { site } from "../data/site";
-import { proServices, homeServices } from "../data/services";
+import { getProServices, getHomeServices, getZones, serviceHref, zoneHref } from "../lib/content";
+const proServices = (await getProServices()).map((s) => ({ href: serviceHref(s), title: s.data.title }));
+const homeServices = (await getHomeServices()).map((s) => ({ href: serviceHref(s), title: s.data.title }));
+const zones = (await getZones()).map((z) => ({ href: zoneHref(z), title: `${z.data.name} (${z.data.code})` }));
 const year = new Date().getFullYear();
 ---
 <footer class="ftr">
@@ -20,23 +23,27 @@ const year = new Date().getFullYear();
 
     <nav aria-label="Services entreprises">
       <h2>Entreprises</h2>
-      <ul>{proServices.slice(0, 8).map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+      <ul>{proServices.slice(0, 8).map((s) => <li><a href={s.href}>{s.title}</a></li>)}
         <li><a href="/nettoyage-professionnel/">Tous les services</a></li>
       </ul>
     </nav>
 
     <nav aria-label="Services particuliers">
       <h2>Particuliers</h2>
-      <ul>{homeServices.map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+      <ul>{homeServices.map((s) => <li><a href={s.href}>{s.title}</a></li>)}
         <li><a href="/tarifs/">Tarifs et crédit d'impôt</a></li>
       </ul>
+    </nav>
+
+    <nav aria-label="Zones d'intervention">
+      <h2>Zones</h2>
+      <ul>{zones.map((z) => <li><a href={z.href}>{z.title}</a></li>)}</ul>
     </nav>
 
     <nav aria-label="Neo Clean">
       <h2>Neo Clean</h2>
       <ul>
         <li><a href="/qui-sommes-nous/">Qui sommes-nous</a></li>
-        <li><a href="/zones-d-intervention/">Zones d'intervention</a></li>
         <li><a href="/faq/">Questions fréquentes</a></li>
         <li><a href="/recrutement/">Nous rejoindre</a></li>
         <li><a href="/contact/">Contact</a></li>
@@ -76,7 +83,7 @@ const year = new Date().getFullYear();
   }
   .ftr__grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
     gap: 40px;
   }
   .ftr__brand {
@@ -126,6 +133,14 @@ const year = new Date().getFullYear();
   }
   .callbar {
     display: none;
+  }
+  @media (max-width: 1100px) {
+    .ftr__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .ftr__brand {
+      grid-column: 1 / -1;
+    }
   }
   @media (max-width: 900px) {
     .ftr__grid {

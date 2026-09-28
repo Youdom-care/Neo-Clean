@@ -1,0 +1,167 @@
+---
+// Carte schématique de l'Île-de-France : Paris au centre, petite couronne,
+// grande couronne. Les positions viennent des fichiers src/content/zones/*.md.
+import { getZones, zoneHref } from "../lib/content";
+
+interface Props {
+  active?: string; // id de la zone mise en avant
+  compact?: boolean;
+}
+const { active, compact = false } = Astro.props;
+const zones = await getZones();
+const hq = { x: 53, y: 52 }; // siège, Paris 12e
+---
+<figure class:list={["map", { "map--compact": compact }]}>
+  <svg viewBox="0 0 100 100" role="img" aria-label="Carte schématique des départements d'Île-de-France desservis par Neo Clean">
+    <circle cx="50" cy="52" r="46" class="ring ring--outer" />
+    <circle cx="50" cy="52" r="27" class="ring ring--inner" />
+    <circle cx="50" cy="50" r="9" class="ring ring--paris" />
+    {zones.map((z) => (
+      <line x1={hq.x} y1={hq.y} x2={z.data.x} y2={z.data.y} class:list={["link", { "is-active": z.id === active }]} />
+    ))}
+    <circle cx={hq.x} cy={hq.y} r="1.8" class="hq" />
+  </svg>
+  <ul class="pins">
+    {zones.map((z) => (
+      <li style={`left:${z.data.x}%;top:${z.data.y}%`} class:list={{ "is-active": z.id === active }}>
+        <a href={zoneHref(z)} aria-current={z.id === active ? "page" : undefined}>
+          <b>{z.data.code}</b>
+          <span>{z.data.name}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <figcaption>
+    <span class="hq-dot"></span> Siège Neo Clean, Paris 12e
+  </figcaption>
+</figure>
+
+<style>
+  .map {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    max-width: 100%;
+    background:
+      radial-gradient(circle at 50% 52%, rgb(31 95 209 / 0.1), transparent 60%),
+      #fff;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 0;
+    overflow: hidden;
+  }
+  svg {
+    position: absolute;
+    inset: 6%;
+    width: 88%;
+    height: 88%;
+  }
+  .ring {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 0.4;
+    stroke-dasharray: 1.2 1.2;
+  }
+  .ring--paris {
+    fill: var(--blue-soft);
+    stroke: var(--blue);
+    stroke-dasharray: none;
+  }
+  .hq {
+    fill: var(--lime);
+    stroke: #fff;
+    stroke-width: 0.6;
+  }
+  .link {
+    stroke: #c9d4e5;
+    stroke-width: 0.35;
+  }
+  .link.is-active {
+    stroke: var(--pink);
+    stroke-width: 0.7;
+  }
+  .pins {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    inset: 6%;
+  }
+  .pins li {
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+  .pins a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .pins b {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--navy);
+    font: 700 0.95rem var(--display);
+    color: var(--navy);
+    box-shadow: 0 6px 16px rgb(18 48 107 / 0.15);
+    transition: transform 0.15s, background 0.15s;
+  }
+  .pins span {
+    font: 600 0.72rem/1.1 var(--display);
+    background: rgb(255 255 255 / 0.9);
+    padding: 2px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .pins a:hover b {
+    transform: scale(1.08);
+  }
+  .pins li.is-active b {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: #fff;
+    width: 54px;
+    height: 54px;
+    font-size: 1.1rem;
+  }
+  figcaption {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .hq-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 0 0 4px rgb(168 200 47 / 0.25);
+  }
+  .map--compact .pins span {
+    display: none;
+  }
+  @media (max-width: 520px) {
+    .pins span {
+      display: none;
+    }
+    .pins b {
+      width: 36px;
+      height: 36px;
+      font-size: 0.8rem;
+    }
+    .pins li.is-active b {
+      width: 44px;
+      height: 44px;
+    }
+  }
+</style>
