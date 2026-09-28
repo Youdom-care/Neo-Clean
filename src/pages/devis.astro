@@ -172,6 +172,10 @@ const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par se
     const radio = form.querySelector<HTMLInputElement>(`input[name=profil][value="${CSS.escape(typeParam)}"]`);
     if (radio) radio.checked = true;
   }
+  const cpParam = params.get("cp");
+  if (cpParam && /^\d{5}$/.test(cpParam)) {
+    form.querySelector<HTMLInputElement>("#cp")!.value = cpParam;
+  }
   if (serviceParam) {
     const select = form.querySelector<HTMLSelectElement>("#service")!;
     if ([...select.options].some((o) => o.value === serviceParam)) select.value = serviceParam;
@@ -229,6 +233,9 @@ const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par se
       btn.textContent = "Envoyer ma demande";
     }
   });
+
+  // Profil et prestation déjà choisis (depuis l'accueil ou une page de service) : on passe à l'étape 2
+  if (typeParam && form.querySelector<HTMLSelectElement>("#service")!.value) show(1);
 </script>
 
 <style>
