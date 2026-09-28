@@ -1,0 +1,26 @@
+{
+  "name": "neo-clean",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Site vitrine Neo Clean — entreprise de nettoyage à Paris et en Île-de-France",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Youdom-care/Neo-Clean.git"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/figtree": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
+    "astro": "^7.3.5"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

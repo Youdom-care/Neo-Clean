@@ -1,0 +1,224 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { site } from "../data/site";
+import { services, type Service } from "../data/services";
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service: s } = Astro.props as { service: Service };
+const isPro = s.audience === "pro";
+const hub = isPro
+  ? { href: "/nettoyage-professionnel/", label: "Entreprises" }
+  : { href: "/services-de-menage-a-domicile/", label: "Particuliers" };
+const related = services.filter((x) => x.audience === s.audience && x.slug !== s.slug).slice(0, 3);
+const devisHref = isPro ? `/devis/?service=${s.slug}` : `/devis/?type=particulier&service=${s.slug}`;
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: s.title,
+    serviceType: s.title,
+    description: s.metaDescription,
+    provider: { "@id": `${site.url}/#entreprise` },
+    areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: `${site.url}/` },
+      { "@type": "ListItem", position: 2, name: hub.label, item: `${site.url}${hub.href}` },
+      { "@type": "ListItem", position: 3, name: s.title, item: `${site.url}/${s.slug}/` },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: s.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  },
+];
+---
+<Base title={s.metaTitle} description={s.metaDescription} schema={schema}>
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Fil d'Ariane">
+        <ol>
+          <li><a href="/">Accueil</a></li>
+          <li><a href={hub.href}>{hub.label}</a></li>
+          <li aria-current="page">{s.title}</li>
+        </ol>
+      </nav>
+      <div class="head">
+        <span class="ico"><Icon name={s.icon} size={30} /></span>
+        <div>
+          <h1>{s.h1}</h1>
+          <p class="lede">{s.summary}</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn btn--primary" href={devisHref}>Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap body">
+      <div class="main">
+        <div class="prose">
+          {s.intro.map((p) => <p>{p}</p>)}
+        </div>
+
+        <div class="block">
+          <h2>Ce qui est compris</h2>
+          <ul class="checks">
+            {s.included.map((i) => <li><Icon name="check" size={20} /><span>{i}</span></li>)}
+          </ul>
+        </div>
+
+        <div class="block">
+          <h2>Questions fréquentes</h2>
+          <div class="faq">
+            {s.faq.map((f) => (
+              <details>
+                <summary>{f.q}</summary>
+                <div><p>{f.a}</p></div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="facts">
+          <div>
+            <span class="k">Pour qui</span>
+            <ul>{s.forWho.map((f) => <li>{f}</li>)}</ul>
+          </div>
+          <div>
+            <span class="k">Fréquence</span>
+            <p>{s.frequency}</p>
+          </div>
+          <div>
+            <span class="k">Zone</span>
+            <p>Paris et Île-de-France</p>
+          </div>
+          {!isPro && (
+            <div>
+              <span class="k">Crédit d'impôt</span>
+              <p>50 % des sommes versées, avec avance immédiate possible. <a href="/tarifs/">Voir les tarifs</a></p>
+            </div>
+          )}
+          <a class="btn btn--primary" href={devisHref}>Obtenir mon devis</a>
+          <p class="small">Réponse sous 24 h ouvrées · {site.hours}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="section section--paper">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">À découvrir aussi</span>
+          <h2>Autres services {isPro ? "aux entreprises" : "à domicile"}</h2>
+        </div>
+        <div class="grid-cards">
+          {related.map((r) => (
+            <a class="svc-card" href={`/${r.slug}/`}>
+              <span class="ico"><Icon name={r.icon} /></span>
+              <h3>{r.title}</h3>
+              <p>{r.summary}</p>
+              <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBand />
+</Base>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+  .head .ico {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: #fff;
+    color: var(--blue);
+    border: 1px solid var(--line);
+  }
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .main {
+    display: grid;
+    gap: 48px;
+  }
+  .block {
+    display: grid;
+    gap: 20px;
+  }
+  .block h2 {
+    font-size: 1.6rem;
+  }
+  .side {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .facts {
+    display: grid;
+    gap: 20px;
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+  .k {
+    display: block;
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .facts ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .small {
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media (max-width: 900px) {
+    .body {
+      grid-template-columns: 1fr;
+    }
+    .side {
+      position: static;
+    }
+  }
+  @media (max-width: 560px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

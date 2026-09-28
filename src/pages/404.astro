@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Page introuvable | Neo Clean" description="Cette page n'existe pas ou a été déplacée." noindex>
+  <section class="section">
+    <div class="wrap nf">
+      <span class="eyebrow">Erreur 404</span>
+      <h1>Cette page n'existe pas ou a été déplacée</h1>
+      <p class="lede">Le site Neo Clean a été entièrement refait. Vous trouverez nos services depuis l'accueil.</p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/">Retour à l'accueil</a>
+        <a class="btn btn--ghost" href="/devis/">Demander un devis</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    gap: 18px;
+    max-width: 720px;
+  }
+</style>

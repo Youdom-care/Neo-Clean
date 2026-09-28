@@ -1,0 +1,89 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { zones } from "../data/zones";
+---
+<Base
+  title="Zones d'intervention : Paris et Île-de-France | Neo Clean"
+  description="Neo Clean intervient à Paris et dans les sept départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise, Seine-et-Marne."
+>
+  <PageHero
+    crumb="Zones d'intervention"
+    title="Paris et toute l'Île-de-France"
+    lede="Nos équipes sont organisées par secteur pour limiter les trajets et garantir la ponctualité. Choisissez votre département."
+  />
+  <section class="section">
+    <div class="wrap">
+      <ul class="zones">
+        {zones.map((z) => (
+          <li>
+            <a href={`/${z.slug}/`}>
+              <span class="code">{z.code}</span>
+              <span class="txt">
+                <strong>{z.name}</strong>
+                <small>{z.areas.slice(0, 3).join(" · ")}</small>
+              </span>
+              <Icon name="arrow" size={18} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .zones {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+  }
+  .zones a {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .zones a:hover {
+    border-color: var(--blue);
+    box-shadow: var(--shadow);
+  }
+  .code {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--navy);
+    color: #fff;
+    font: 700 1.2rem var(--display);
+  }
+  .txt {
+    display: grid;
+    gap: 2px;
+  }
+  .txt strong {
+    font: 600 1.1rem var(--display);
+  }
+  .txt small {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 400px) {
+    .zones {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

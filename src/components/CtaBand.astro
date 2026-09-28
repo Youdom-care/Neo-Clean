@@ -1,0 +1,51 @@
+---
+import Icon from "./Icon.astro";
+import { site } from "../data/site";
+interface Props {
+  title?: string;
+  text?: string;
+}
+const {
+  title = "Parlons de vos locaux",
+  text = "Décrivez votre besoin en deux minutes. Nous vous rappelons sous 24 h ouvrées avec une proposition chiffrée, ou pour organiser une visite gratuite.",
+} = Astro.props;
+---
+<section class="band">
+  <div class="wrap band__inner">
+    <div class="band__text">
+      <h2>{title}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn--primary" href="/devis/">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+      <a class="btn btn--light" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .band {
+    background: var(--navy);
+    color: #fff;
+    padding-block: clamp(48px, 7vw, 80px);
+  }
+  .band__inner {
+    display: grid;
+    grid-template-columns: 1.3fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+  .band__text {
+    display: grid;
+    gap: 12px;
+  }
+  .band__text p {
+    color: rgb(255 255 255 / 0.78);
+    max-width: 58ch;
+  }
+  @media (max-width: 860px) {
+    .band__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

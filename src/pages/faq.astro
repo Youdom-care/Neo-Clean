@@ -1,0 +1,81 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBand from "../components/CtaBand.astro";
+
+const groups = [
+  {
+    title: "Devis et contrat",
+    items: [
+      { q: "Le devis est-il gratuit ?", a: "Oui, le devis et la visite de vos locaux sont gratuits et sans engagement." },
+      { q: "Sous quel délai recevrai-je une réponse ?", a: "Nous vous recontactons sous 24 h ouvrées après votre demande." },
+      { q: "Y a-t-il une durée d'engagement ?", a: "Nos contrats d'entretien sont résiliables avec un préavis indiqué dans le contrat. Il n'y a pas de frais de dossier." },
+      { q: "Comment le prix est-il calculé ?", a: "Pour les entreprises, selon la surface, le type de locaux, la fréquence et les prestations incluses. Pour les particuliers, à l'heure." },
+    ],
+  },
+  {
+    title: "Intervention",
+    items: [
+      { q: "Est-ce toujours le même agent qui intervient ?", a: "Oui. Un agent attitré est affecté à vos locaux. En cas d'absence, un remplaçant formé sur votre site prend le relais." },
+      { q: "À quelles heures intervenez-vous ?", a: "Tôt le matin, en journée ou le soir, selon vos contraintes. Les horaires sont fixés dans le contrat." },
+      { q: "Qui fournit le matériel et les produits ?", a: "Pour les entreprises, nous fournissons le matériel et les produits. Chez les particuliers, l'intervenante utilise en général vos produits." },
+      { q: "Comment signaler un problème ?", a: "Directement auprès de votre responsable de secteur, par téléphone ou par e-mail. Il intervient rapidement pour corriger." },
+    ],
+  },
+  {
+    title: "Particuliers",
+    items: [
+      { q: "Ai-je droit au crédit d'impôt ?", a: "Oui, le ménage à domicile ouvre droit à un crédit d'impôt de 50 % des sommes versées, que vous soyez imposable ou non." },
+      { q: "Qu'est-ce que l'avance immédiate ?", a: "Un service de l'Urssaf qui déduit le crédit d'impôt directement de vos factures. Vous ne payez que 50 % chaque mois." },
+      { q: "Dois-je être présent pendant le ménage ?", a: "Non. Vous pouvez confier un jeu de clés à votre intervenante." },
+    ],
+  },
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: groups.flatMap((g) => g.items).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+<Base
+  title="Questions fréquentes | Neo Clean"
+  description="Devis, contrat, fréquence, crédit d'impôt : les réponses aux questions les plus posées sur nos services de nettoyage et de ménage à domicile."
+  schema={[schema]}
+>
+  <PageHero crumb="Questions fréquentes" title="Questions fréquentes" lede="Vous ne trouvez pas votre réponse ? Appelez-nous ou écrivez-nous, nous vous répondons sous 24 h ouvrées." />
+
+  <section class="section">
+    <div class="wrap groups">
+      {groups.map((g) => (
+        <div class="group">
+          <h2>{g.title}</h2>
+          <div class="faq">
+            {g.items.map((f) => (
+              <details>
+                <summary>{f.q}</summary>
+                <div><p>{f.a}</p></div>
+              </details>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .groups {
+    display: grid;
+    gap: 56px;
+  }
+  .group {
+    display: grid;
+    gap: 20px;
+  }
+  .group h2 {
+    font-size: 1.5rem;
+  }
+</style>

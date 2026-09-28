@@ -1,0 +1,94 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../data/site";
+
+const jobs = [
+  { t: "Agent d'entretien (H/F)", d: "Entretien de bureaux et de parties communes. Horaires du matin ou du soir, temps partiel ou temps plein.", tags: ["CDI", "Paris et petite couronne"] },
+  { t: "Aide ménagère à domicile (H/F)", d: "Ménage et repassage chez des particuliers. Planning stable, secteurs regroupés pour limiter les trajets.", tags: ["CDI", "Paris"] },
+];
+const perks = ["Contrat en CDI", "Formation avant la première intervention", "Planning stable et secteurs proches de chez vous", "Un responsable joignable à tout moment"];
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent("Candidature spontanée")}`;
+---
+<Base
+  title="Recrutement : agents d'entretien et aides ménagères en CDI à Paris | Neo Clean"
+  description="Neo Clean recrute des agents d'entretien et des aides ménagères en CDI à Paris et en Île-de-France. Formation, planning stable, encadrement de proximité."
+>
+  <PageHero crumb="Recrutement" eyebrow="Nous rejoindre" title="Travaillez chez Neo Clean" lede="Nous recrutons des personnes sérieuses et attentives, avec ou sans expérience. Nous formons nos équipes et nous leur proposons des contrats stables." />
+
+  <section class="section">
+    <div class="wrap layout">
+      <div class="jobs">
+        <h2>Postes ouverts</h2>
+        {jobs.map((j) => (
+          <article class="job">
+            <div class="tags">{j.tags.map((t) => <span>{t}</span>)}</div>
+            <h3>{j.t}</h3>
+            <p>{j.d}</p>
+            <a class="btn btn--primary" href={`mailto:${site.email}?subject=${encodeURIComponent(`Candidature : ${j.t}`)}`}>Postuler par e-mail</a>
+          </article>
+        ))}
+        <p class="spont">Aucun poste ne correspond ? Envoyez une <a href={mailto}>candidature spontanée</a> à {site.email} avec votre CV et votre secteur de résidence.</p>
+      </div>
+      <aside class="perks">
+        <h2>Ce que nous offrons</h2>
+        <ul class="checks">{perks.map((p) => <li><Icon name="check" size={20} /><span>{p}</span></li>)}</ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .jobs {
+    display: grid;
+    gap: 16px;
+  }
+  .job {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .job p {
+    color: var(--muted);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tags span {
+    font: 600 0.8rem var(--display);
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--blue-soft);
+    color: var(--navy);
+  }
+  .spont {
+    color: var(--muted);
+  }
+  .perks {
+    display: grid;
+    gap: 18px;
+    padding: 26px;
+    background: var(--paper);
+    border-radius: var(--radius);
+  }
+  .perks h2 {
+    font-size: 1.3rem;
+  }
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

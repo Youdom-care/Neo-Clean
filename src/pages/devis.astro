@@ -1,0 +1,430 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../data/site";
+import { proServices, homeServices } from "../data/services";
+
+const profiles = [
+  { v: "entreprise", l: "Une entreprise", i: "desk" },
+  { v: "syndic", l: "Un syndic ou une copropriété", i: "building" },
+  { v: "commerce", l: "Un commerce ou restaurant", i: "store" },
+  { v: "particulier", l: "Un particulier", i: "heart" },
+];
+const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par semaine", "4 à 5 fois par semaine", "Tous les jours", "Je ne sais pas encore"];
+---
+<Base
+  title="Demande de devis gratuit | Neo Clean"
+  description="Demandez un devis gratuit pour le nettoyage de vos locaux ou le ménage à domicile à Paris et en Île-de-France. Réponse sous 24 h ouvrées."
+>
+  <PageHero
+    crumb="Devis"
+    title="Demande de devis gratuit"
+    lede="Trois étapes, deux minutes. Nous vous recontactons sous 24 h ouvrées pour affiner le besoin ou organiser une visite."
+  />
+
+  <section class="section">
+    <div class="wrap layout">
+      <form id="quote" class="quote" action={site.formEndpoint} method="post" novalidate>
+        <ol class="progress" aria-hidden="true">
+          <li class="is-on">Vous</li>
+          <li>Besoin</li>
+          <li>Coordonnées</li>
+        </ol>
+
+        <!-- Étape 1 -->
+        <fieldset class="step" data-step="1">
+          <legend>Vous êtes…</legend>
+          <div class="tiles">
+            {profiles.map((p, i) => (
+              <label class="tile">
+                <input type="radio" name="profil" value={p.v} required checked={i === 0} />
+                <span><Icon name={p.i} size={28} />{p.l}</span>
+              </label>
+            ))}
+          </div>
+          <div class="nav">
+            <button type="button" class="btn btn--primary" data-next>Continuer <Icon name="arrow" size={18} /></button>
+          </div>
+        </fieldset>
+
+        <!-- Étape 2 -->
+        <fieldset class="step" data-step="2" hidden>
+          <legend>Votre besoin</legend>
+          <div class="field">
+            <label for="service">Prestation souhaitée</label>
+            <select id="service" name="service" required>
+              <option value="">Choisissez une prestation</option>
+              <optgroup label="Entreprises" data-group="pro">
+                {proServices.map((s) => <option value={s.slug}>{s.title}</option>)}
+              </optgroup>
+              <optgroup label="Particuliers" data-group="particulier">
+                {homeServices.map((s) => <option value={s.slug}>{s.title}</option>)}
+              </optgroup>
+              <option value="autre">Autre besoin</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="surface">Surface approximative (m²)</label>
+              <input id="surface" name="surface" type="number" inputmode="numeric" min="1" max="100000" placeholder="ex. 120" />
+            </div>
+            <div class="field">
+              <label for="frequence">Fréquence</label>
+              <select id="frequence" name="frequence">
+                {frequencies.map((f) => <option>{f}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="cp">Code postal des locaux</label>
+              <input id="cp" name="code_postal" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" required placeholder="ex. 75012" />
+            </div>
+            <div class="field">
+              <label for="debut">Démarrage souhaité</label>
+              <select id="debut" name="demarrage">
+                <option>Dès que possible</option>
+                <option>Dans le mois</option>
+                <option>Dans 1 à 3 mois</option>
+                <option>Pas encore défini</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Précisions <span class="opt">(facultatif)</span></label>
+            <textarea id="message" name="message" rows="4" maxlength="3000" placeholder="Type de locaux, horaires souhaités, contraintes d'accès…"></textarea>
+          </div>
+          <div class="nav">
+            <button type="button" class="btn btn--ghost" data-prev>Retour</button>
+            <button type="button" class="btn btn--primary" data-next>Continuer <Icon name="arrow" size={18} /></button>
+          </div>
+        </fieldset>
+
+        <!-- Étape 3 -->
+        <fieldset class="step" data-step="3" hidden>
+          <legend>Vos coordonnées</legend>
+          <div class="row">
+            <div class="field">
+              <label for="nom">Nom et prénom</label>
+              <input id="nom" name="nom" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field" data-only="pro">
+              <label for="societe">Société <span class="opt">(facultatif)</span></label>
+              <input id="societe" name="societe" type="text" autocomplete="organization" maxlength="160" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="tel">Téléphone</label>
+              <input id="tel" name="telephone" type="tel" autocomplete="tel" required maxlength="30" />
+            </div>
+          </div>
+          <!-- Piège à robots : ce champ doit rester vide -->
+          <div class="hp" aria-hidden="true">
+            <label for="website">Ne pas remplir</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <label class="consent">
+            <input type="checkbox" name="consentement" value="oui" required />
+            <span>J'accepte que Neo Clean utilise ces informations pour répondre à ma demande. <a href="/confidentialite/">En savoir plus</a></span>
+          </label>
+          <p class="error" role="alert" hidden></p>
+          <div class="nav">
+            <button type="button" class="btn btn--ghost" data-prev>Retour</button>
+            <button type="submit" class="btn btn--primary">Envoyer ma demande</button>
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="aside">
+        <h2>Vous préférez en parler ?</h2>
+        <p>Un conseiller vous répond {site.hours.toLowerCase()}.</p>
+        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+        <ul class="checks">
+          <li><Icon name="check" size={20} /><span>Devis gratuit et sans engagement</span></li>
+          <li><Icon name="check" size={20} /><span>Visite de vos locaux offerte</span></li>
+          <li><Icon name="check" size={20} /><span>Vos données ne sont jamais revendues</span></li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById("quote") as HTMLFormElement;
+  const steps = [...form.querySelectorAll<HTMLFieldSetElement>(".step")];
+  const dots = [...form.querySelectorAll(".progress li")];
+  const errorBox = form.querySelector<HTMLParagraphElement>(".error")!;
+  let current = 0;
+
+  // Pré-remplissage depuis l'URL (?type=particulier&service=menage-regulier)
+  const params = new URLSearchParams(location.search);
+  const typeParam = params.get("type");
+  const serviceParam = params.get("service");
+  if (typeParam) {
+    const radio = form.querySelector<HTMLInputElement>(`input[name=profil][value="${CSS.escape(typeParam)}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (serviceParam) {
+    const select = form.querySelector<HTMLSelectElement>("#service")!;
+    if ([...select.options].some((o) => o.value === serviceParam)) select.value = serviceParam;
+  }
+
+  function isParticulier() {
+    return form.querySelector<HTMLInputElement>("input[name=profil]:checked")?.value === "particulier";
+  }
+
+  function show(i: number) {
+    steps.forEach((s, n) => (s.hidden = n !== i));
+    dots.forEach((d, n) => d.classList.toggle("is-on", n <= i));
+    form.querySelectorAll<HTMLElement>("[data-only=pro]").forEach((el) => (el.hidden = isParticulier()));
+    current = i;
+    const first = steps[i].querySelector<HTMLElement>("input:not([type=radio]), select, textarea");
+    if (i > 0) first?.focus({ preventScroll: true });
+    form.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+
+  function valid(step: HTMLFieldSetElement) {
+    const fields = [...step.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input, select, textarea")].filter(
+      (f) => !f.closest("[hidden]") && f.name !== "website",
+    );
+    for (const f of fields) {
+      if (!f.checkValidity()) {
+        f.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  form.addEventListener("click", (e) => {
+    const t = e.target as HTMLElement;
+    if (t.closest("[data-next]") && valid(steps[current])) show(current + 1);
+    if (t.closest("[data-prev]")) show(current - 1);
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!valid(steps[current])) return;
+    const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+    btn.disabled = true;
+    btn.textContent = "Envoi en cours…";
+    errorBox.hidden = true;
+    try {
+      const res = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || "send");
+      location.href = "/merci/";
+    } catch {
+      errorBox.textContent = "L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez, ou appelez-nous directement.";
+      errorBox.hidden = false;
+      btn.disabled = false;
+      btn.textContent = "Envoyer ma demande";
+    }
+  });
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .quote {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: clamp(20px, 4vw, 40px);
+    box-shadow: var(--shadow);
+  }
+  .progress {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 0 0 28px;
+    padding: 0;
+    counter-reset: p;
+  }
+  .progress li {
+    counter-increment: p;
+    font: 600 0.85rem var(--display);
+    color: var(--muted);
+    padding-top: 12px;
+    border-top: 4px solid var(--line);
+  }
+  .progress li::before {
+    content: counter(p) ". ";
+  }
+  .progress li.is-on {
+    color: var(--navy);
+    border-color: var(--blue);
+  }
+  .step {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+  }
+  .step[hidden] {
+    display: none;
+  }
+  legend {
+    font: 700 1.5rem var(--display);
+    margin-bottom: 20px;
+    padding: 0;
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .tile input {
+    position: absolute;
+    opacity: 0;
+  }
+  .tile span {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 72px;
+    padding: 16px 18px;
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    font: 600 1rem var(--display);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .tile :global(svg) {
+    color: var(--blue);
+    flex: none;
+  }
+  .tile input:checked + span {
+    border-color: var(--blue);
+    background: var(--blue-soft);
+  }
+  .tile input:focus-visible + span {
+    outline: 3px solid var(--pink);
+    outline-offset: 2px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .field[hidden] {
+    display: none;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .opt {
+    font-weight: 400;
+    color: var(--muted);
+  }
+  input:not([type="radio"]):not([type="checkbox"]),
+  select,
+  textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: #fff;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-soft);
+  }
+  textarea {
+    resize: vertical;
+  }
+  .consent {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 12px;
+    font-weight: 400;
+    font-size: 0.93rem;
+    color: var(--muted);
+  }
+  .consent input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--blue);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .error {
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #fdecef;
+    color: #9b1238;
+    font-weight: 500;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .nav .btn:only-child {
+    margin-left: auto;
+  }
+  .aside {
+    display: grid;
+    gap: 16px;
+    justify-items: start;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .aside h2 {
+    font-size: 1.3rem;
+  }
+  .aside p {
+    color: var(--muted);
+  }
+  .aside .checks {
+    margin-top: 12px;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .aside {
+      position: static;
+    }
+  }
+  @media (max-width: 560px) {
+    .tiles,
+    .row {
+      grid-template-columns: 1fr;
+    }
+    .nav .btn {
+      flex: 1;
+    }
+  }
+</style>

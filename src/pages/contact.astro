@@ -1,0 +1,124 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../data/site";
+
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${site.address.street} ${site.address.postalCode} ${site.address.city}`)}`;
+---
+<Base
+  title="Contact | Neo Clean, entreprise de nettoyage à Paris 12e"
+  description={`Contactez Neo Clean au ${site.phone} ou par e-mail. ${site.hours}. ${site.address.street}, ${site.address.postalCode} ${site.address.city}.`}
+>
+  <PageHero crumb="Contact" title="Nous contacter" lede="Pour un devis, la réponse la plus rapide passe par le formulaire en ligne. Pour toute autre question, appelez-nous ou écrivez-nous." />
+
+  <section class="section">
+    <div class="wrap cards">
+      <a class="card card--main" href="/devis/">
+        <Icon name="doc" size={30} />
+        <h2>Demander un devis</h2>
+        <p>Formulaire en 3 étapes, réponse sous 24 h ouvrées.</p>
+        <span class="more">Accéder au formulaire <Icon name="arrow" size={18} /></span>
+      </a>
+      <a class="card" href={site.phoneHref}>
+        <Icon name="phone" size={30} />
+        <h2>Téléphone</h2>
+        <p class="big">{site.phone}</p>
+        <p>{site.hours}</p>
+      </a>
+      <a class="card" href={`mailto:${site.email}`}>
+        <Icon name="mail" size={30} />
+        <h2>E-mail</h2>
+        <p class="big">{site.email}</p>
+        <p>Réponse sous 24 h ouvrées</p>
+      </a>
+      <a class="card" href={mapsUrl} rel="noopener" target="_blank">
+        <Icon name="pin" size={30} />
+        <h2>Adresse</h2>
+        <p class="big">{site.address.street}<br />{site.address.postalCode} {site.address.city}</p>
+        <p>Siège administratif, sur rendez-vous</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap job">
+      <div>
+        <h2>Vous cherchez un emploi ?</h2>
+        <p class="lede">Nous recrutons des agents d'entretien et des aides ménagères en CDI à Paris et en Île-de-France.</p>
+      </div>
+      <a class="btn btn--primary" href="/recrutement/">Voir les offres</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .card:hover {
+    border-color: var(--blue);
+    box-shadow: var(--shadow);
+    color: var(--ink);
+  }
+  .card :global(svg) {
+    color: var(--blue);
+  }
+  .card h2 {
+    font-size: 1.15rem;
+  }
+  .card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .card .big {
+    color: var(--navy);
+    font: 600 1.1rem/1.4 var(--display);
+    overflow-wrap: anywhere;
+  }
+  .card--main {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  .card--main:hover {
+    color: #fff;
+  }
+  .card--main :global(svg) {
+    color: var(--lime);
+  }
+  .card--main p {
+    color: rgb(255 255 255 / 0.78);
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 600 0.98rem var(--display);
+    margin-top: 8px;
+  }
+  .job {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .job > div {
+    display: grid;
+    gap: 10px;
+  }
+</style>

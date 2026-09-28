@@ -1,0 +1,128 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+
+const values = [
+  { i: "user", t: "Des salariés en CDI", d: "Nous privilégions les contrats à durée indéterminée. Un agent stable connaît mieux vos locaux et reste plus longtemps chez vous." },
+  { i: "doc", t: "Formation continue", d: "Chaque agent est formé à nos protocoles, aux produits et aux règles d'hygiène avant sa première intervention, puis tout au long de l'année." },
+  { i: "people", t: "Un encadrement proche", d: "Nos équipes sont organisées par secteur, avec un responsable qui visite les sites et reste votre interlocuteur." },];
+---
+<Base
+  title="Qui sommes-nous | Neo Clean, entreprise de nettoyage à Paris"
+  description="Neo Clean est une entreprise de nettoyage parisienne fondée sur une conviction : des salariés bien traités font un meilleur travail. Découvrez notre équipe et nos valeurs."
+>
+  <PageHero
+    crumb="Qui sommes-nous"
+    eyebrow="Notre entreprise"
+    title="Des salariés bien traités font un meilleur travail"
+    lede="Neo Clean est une entreprise de nettoyage installée dans le 12e arrondissement de Paris. Elle intervient auprès des entreprises, des copropriétés et des particuliers dans toute l'Île-de-France."
+  />
+
+  <section class="section">
+    <div class="wrap story">
+      <div class="prose">
+        <h2>Notre approche</h2>
+        <p>Dans le nettoyage, la qualité du service dépend presque entièrement des personnes qui le réalisent. C'est pourquoi nous avons construit Neo Clean autour de nos agents : recrutement soigné, contrats stables, formation et encadrement de proximité.</p>
+        <p>Nous travaillons en relation étroite à trois : vous, votre agent et votre responsable de secteur. Chacun sait ce qui est attendu, les consignes sont écrites, et les ajustements se font rapidement.</p>
+        <p>Cette organisation évite les deux défauts les plus courants du secteur : un intervenant différent à chaque passage et un prestataire injoignable quand quelque chose ne va pas.</p>
+      </div>
+      <blockquote class="quote">
+        <p>« Chez Neo Clean, le bien-être de nos employés est la clé de la satisfaction de nos clients. Depuis le début, nous traitons chaque personne avec attention, écoute et respect. »</p>
+        <footer>
+          <strong>Le fondateur de Neo Clean</strong>
+          <span>Ancien administrateur du Syndicat des entreprises de services à la personne (SESP)</span>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Nos valeurs</span>
+        <h2>Ce sur quoi nous ne transigeons pas</h2>
+      </div>
+      <ul class="values">
+        {values.map((v) => (
+          <li>
+            <span class="ico"><Icon name={v.i} /></span>
+            <h3>{v.t}</h3>
+            <p>{v.d}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .story {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  .story h2 {
+    margin-bottom: 8px;
+  }
+  .quote {
+    margin: 0;
+    padding: 32px;
+    border-radius: 18px;
+    background: var(--navy);
+    color: #fff;
+    display: grid;
+    gap: 20px;
+  }
+  .quote p {
+    font: 500 1.2rem/1.55 var(--display);
+  }
+  .quote footer {
+    display: grid;
+    gap: 4px;
+    font-size: 0.92rem;
+    color: rgb(255 255 255 / 0.75);
+  }
+  .quote strong {
+    color: var(--lime);
+  }
+  .values {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .values li {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 26px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .values .ico {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .values p {
+    color: var(--muted);
+    font-size: 0.97rem;
+  }
+  @media (max-width: 860px) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import { site } from "../data/site";
+const l = site.legal;
+---
+<Base title="Confidentialité et cookies | Neo Clean" description="Comment Neo Clean traite vos données personnelles et utilise les cookies sur neo-clean.fr.">
+  <PageHero crumb="Confidentialité" title="Confidentialité et cookies" lede="Dernière mise à jour : septembre 2026" />
+  <section class="section">
+    <div class="wrap prose legal">
+      <h2>Responsable du traitement</h2>
+      <p>{l.company} ({site.name}), {site.address.street}, {site.address.postalCode} {site.address.city}. Contact : <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+
+      <h2>Données collectées</h2>
+      <p>Lorsque vous remplissez le formulaire de devis, nous recueillons : votre nom, votre société le cas échéant, votre e-mail, votre téléphone, le code postal des locaux et la description de votre besoin.</p>
+
+      <h2>Finalité et base légale</h2>
+      <p>Ces données servent uniquement à répondre à votre demande et à établir un devis. Le traitement repose sur votre consentement et sur les mesures précontractuelles prises à votre demande (article 6.1.a et 6.1.b du RGPD).</p>
+
+      <h2>Destinataires</h2>
+      <p>Vos données sont destinées aux seules personnes de {site.name} chargées de traiter votre demande. Elles ne sont ni vendues, ni louées, ni cédées à des tiers.</p>
+
+      <h2>Durée de conservation</h2>
+      <p>Les données d'un prospect sont conservées trois ans à compter du dernier contact. Si vous devenez client, elles sont conservées pendant la durée de la relation contractuelle, puis archivées pour la durée des obligations légales.</p>
+
+      <h2>Vos droits</h2>
+      <p>Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Pour les exercer, écrivez à <a href={`mailto:${site.email}`}>{site.email}</a>. Vous pouvez aussi introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).</p>
+
+      <h2>Cookies</h2>
+      <p>Ce site n'utilise aucun cookie publicitaire ni de mesure d'audience. Il ne dépose aucun traceur nécessitant votre consentement ; c'est pourquoi aucun bandeau cookies ne vous est présenté. Les polices de caractères sont hébergées sur nos propres serveurs : aucune donnée n'est transmise à un service tiers lors de votre visite.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal h2 {
+    font-size: 1.3rem;
+    margin-top: 16px;
+  }
+</style>

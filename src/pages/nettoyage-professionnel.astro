@@ -1,0 +1,49 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { site } from "../data/site";
+import { proServices } from "../data/services";
+---
+<Base
+  title="Nettoyage professionnel à Paris : bureaux, commerces, copropriétés | Neo Clean"
+  description="Tous nos services de nettoyage pour les entreprises en Île-de-France : bureaux, coworkings, commerces, copropriétés, fin de chantier, vitres, désinfection."
+>
+  <PageHero
+    crumb="Entreprises"
+    eyebrow="Services aux entreprises"
+    title="Nettoyage professionnel à Paris et en Île-de-France"
+    lede="Contrat d'entretien régulier ou intervention ponctuelle : un agent attitré, un cahier des charges écrit et un responsable de secteur joignable directement."
+  >
+    <div class="actions">
+      <a class="btn btn--primary" href="/devis/">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+      <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="grid-cards">
+        {proServices.map((s) => (
+          <a class="svc-card" href={`/${s.slug}/`}>
+            <span class="ico"><Icon name={s.icon} /></span>
+            <h2 class="h3">{s.title}</h2>
+            <p>{s.summary}</p>
+            <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+</style>

@@ -1,0 +1,197 @@
+<title>Audit neo-clean.fr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --ink:#18212d; --muted:#5b6675; --line:#dfe4ea;
+  --accent:#0d6e8a; --accent-soft:#e3f1f5;
+  --crit:#c2292e; --crit-bg:#fbe9e9; --high:#c25a0c; --high-bg:#fdf0e4;
+  --med:#8a6d00; --med-bg:#fbf5dc; --ok:#1f7a4a; --ok-bg:#e5f4ec;
+  --display:"Manrope",system-ui,sans-serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#11161d;--surface:#18202a;--ink:#e6ebf1;--muted:#9aa6b4;--line:#2a3441;
+  --accent:#5cc2de;--accent-soft:#16303a;--crit:#ff7a7e;--crit-bg:#3a1a1d;--high:#f5a15e;--high-bg:#3a2616;
+  --med:#e3c552;--med-bg:#332c12;--ok:#6fd3a0;--ok-bg:#15301f;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#11161d;--surface:#18202a;--ink:#e6ebf1;--muted:#9aa6b4;--line:#2a3441;
+  --accent:#5cc2de;--accent-soft:#16303a;--crit:#ff7a7e;--crit-bg:#3a1a1d;--high:#f5a15e;--high-bg:#3a2616;
+  --med:#e3c552;--med-bg:#332c12;--ok:#6fd3a0;--ok-bg:#15301f;}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body);padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:980px;margin:0 auto}
+header.top{padding-block:48px 28px;border-bottom:1px solid var(--line);display:grid;gap:14px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:800 clamp(30px,5vw,46px)/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:700 26px/1.25 var(--display);margin:0;text-wrap:balance}
+h3{font:700 17px/1.35 var(--display);margin:0}
+p{margin:0;max-width:68ch}
+.lede{color:var(--muted);font-size:19px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;font:500 13px/1.4 var(--mono);color:var(--muted)}
+.alert{margin-top:28px;background:var(--crit-bg);border:1px solid color-mix(in srgb,var(--crit) 40%,transparent);border-radius:10px;padding:20px 22px;display:grid;gap:8px}
+.alert h2{font-size:20px;color:var(--crit)}
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:28px}
+.score{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:6px}
+.score b{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.score span{font-size:14px;color:var(--muted)}
+.score i{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:block}
+.score i::after{content:"";display:block;height:100%;width:var(--v);background:var(--c)}
+section{padding-block:40px 8px;display:grid;gap:18px}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.list{display:grid;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:14px 18px;display:grid;gap:6px}
+.item .row{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.pill{font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:5px 8px;border-radius:99px;background:var(--cb);color:var(--c);white-space:nowrap}
+.c{--c:var(--crit);--cb:var(--crit-bg)} .h{--c:var(--high);--cb:var(--high-bg)} .m{--c:var(--med);--cb:var(--med-bg)}
+.item p{color:var(--muted);font-size:16px}
+code,.mono{font:500 14px var(--mono);background:var(--accent-soft);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.bad{color:var(--crit);font-weight:600}.good{color:var(--ok);font-weight:600}
+ol.steps{margin:0;padding-left:22px;display:grid;gap:10px;max-width:72ch}
+ol.steps li::marker{font:700 15px var(--display);color:var(--accent)}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:8px;align-content:start}
+.card ul{margin:0;padding-left:18px;color:var(--muted);font-size:16px;display:grid;gap:4px}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Audit de site · neo-clean.fr</div>
+  <h1>Audit complet de neo-clean.fr</h1>
+  <p class="lede">Sécurité, conversion, contenu, référencement, performance, conformité légale et mobile. Le constat est clair : le site actuel fait perdre des clients et expose l'entreprise. Une refonte complète est justifiée.</p>
+  <div class="meta"><span>Réalisé le 28/09/2026</span><span>WordPress 7.1.2 + Elementor 4.1.4</span><span>Hébergement Hostinger (hcdn)</span><span>53 pages dans le sitemap</span></div>
+</header>
+
+<div class="alert" role="alert">
+  <h2>Urgent : le site a été piraté</h2>
+  <p>La page d'accueil contient un bloc invisible (<code>position:absolute; top:-4001px; visibility:hidden</code>) avec un texte en polonais sur les casinos en ligne et un lien vers <code>kasynomalina.com</code>. C'est du spam SEO injecté par un tiers : quelqu'un a eu accès à l'administration WordPress ou à la base de données. Google pénalise ce type de lien caché, et l'accès peut servir à autre chose. Ce point doit être traité aujourd'hui, avant même la refonte (voir « Actions immédiates »).</p>
+</div>
+
+<div class="scores" aria-label="Notes par domaine">
+  <div class="score" style="--v:10%;--c:var(--crit)"><span>Sécurité</span><b>1/10</b><i></i></div>
+  <div class="score" style="--v:25%;--c:var(--crit)"><span>Conversion &amp; contact</span><b>2,5/10</b><i></i></div>
+  <div class="score" style="--v:30%;--c:var(--high)"><span>Contenu &amp; crédibilité</span><b>3/10</b><i></i></div>
+  <div class="score" style="--v:30%;--c:var(--high)"><span>SEO</span><b>3/10</b><i></i></div>
+  <div class="score" style="--v:25%;--c:var(--crit)"><span>Performance</span><b>2,5/10</b><i></i></div>
+  <div class="score" style="--v:20%;--c:var(--crit)"><span>Légal &amp; RGPD</span><b>2/10</b><i></i></div>
+</div>
+
+<section id="securite">
+  <div class="sechead"><h2>1. Sécurité</h2><span class="eyebrow">5 constats</span></div>
+  <div class="list">
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Spam casino injecté dans l'accueil</h3></div><p>Bloc caché dans un widget Elementor avec un lien sortant vers un site de jeux d'argent polonais. Preuve de compromission du site.</p></div>
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Environ 15 extensions Elementor empilées</h3></div><p>Elementor, Elementor Pro, Happy Addons, Royal Addons, ElementsKit, Essential Addons, Premium Addons, Header Footer Elementor, Ele Custom Skin, Float Menu, Smush, Complianz, MonsterInsights, WP Rocket… Chaque extension est une porte d'entrée potentielle ; c'est la cause la plus probable du piratage.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Informations techniques exposées</h3></div><p><code>/readme.html</code> accessible, version PHP annoncée dans l'en-tête <code>x-powered-by: PHP/8.3.33</code>, version WordPress dans le code, page <code>/wp-login.php</code> publique sans protection visible.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Site de préproduction encore relié</h3></div><p>Le menu pointe vers <code>olivedrab-skunk-677967.hostingersite.com</code> (« Nous rejoindre », « Demandez un devis »). Un second site non maintenu, indexable, sur le même compte.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Aucun en-tête de sécurité</h3></div><p>Pas de HSTS, de politique CSP réelle, de <code>X-Frame-Options</code> ni de <code>Referrer-Policy</code>.</p></div>
+  </div>
+</section>
+
+<section id="conversion">
+  <div class="sechead"><h2>2. Conversion et contact</h2><span class="eyebrow">7 constats</span></div>
+  <div class="list">
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Le numéro affiché n'est pas celui qu'on appelle</h3></div><p>Le texte affiche <span class="mono">06 67 22 45 27</span>, mais le lien du bandeau compose <span class="mono">01 89 70 86 96</span>. Les mentions légales donnent encore un autre numéro, <span class="mono">06 67 22 45 07</span>. Un prospect sur mobile n'appelle pas le numéro qu'il voit.</p></div>
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Liens de devis cassés ou vers la préproduction</h3></div><p>Plusieurs liens mènent vers des adresses tronquées qui n'existent pas (<code>https://olivedrab-sku/…</code>, <code>https://olivedrab-skunk-6/…</code>) : cabinets médicaux, copropriétés, fin de chantier, cookies. Le lien « Nettoyage d'hôtel » du menu renvoie une erreur 404.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Devis sur un sous-domaine séparé</h3></div><p>Le formulaire est sur <code>devis.neo-clean.fr</code>, avec un en-tête qui se chevauche (« Retour au site » passe sous « Demander un devis ») et des cartes de choix vides d'icônes. Changer de site au moment de convertir fait perdre des prospects.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Trois adresses e-mail différentes</h3></div><p><code>contacts@neo-clean.fr</code>, <code>contact@neo-clean.fr</code> et <code>contact@youdom-care.com</code> selon les pages.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Horaires contradictoires</h3></div><p>« Du lundi au vendredi de 9h00 à 19h00 » juste au-dessus de « à votre disposition 24H/24H et 7J/7J ».</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Réseaux sociaux factices</h3></div><p>Les icônes renvoient vers les pages d'accueil génériques de Facebook, Twitter, Instagram et LinkedIn, pas vers des comptes Neo Clean.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Deux sites en un</h3></div><p>L'accueil vise les entreprises (bureaux, industrie) ; les pages Tarifs et Qui sommes-nous ont un autre en-tête et parlent de ménage à domicile pour particuliers. Le visiteur ne sait pas s'il est au bon endroit.</p></div>
+  </div>
+</section>
+
+<section id="contenu">
+  <div class="sechead"><h2>3. Contenu et crédibilité</h2><span class="eyebrow">7 constats</span></div>
+  <div class="list">
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Les chiffres clés affichent 0</h3></div><p>« Clients satisfaits 0 % », « Service de nettoyage 0+ », « Agents de nettoyage 0+ ». Le compteur animé ne se déclenche pas : le visiteur lit que personne n'est satisfait.</p></div>
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Affirmation invraisemblable</h3></div><p>« Près de 15 000 agents de nettoyage » : un chiffre de grand groupe national, incompatible avec une PME parisienne. Il fragilise toute la page et peut relever de la pratique commerciale trompeuse.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Sections vides</h3></div><p>« Ce que disent nos clients » ne contient aucun avis, « Nos conseils &amp; astuces » aucun article. La page WordPress par défaut « Page d'exemple » est publiée.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Textes dupliqués et tronqués</h3></div><p>Sur Tarifs, la carte « Ménage ponctuel » apparaît deux fois ; les réductions « vacances d'été » et « jeunes parents » reprennent mot pour mot les textes « parrainage » et « voisinage ». La phrase « proposé par » s'arrête au milieu.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Fautes visibles</h3></div><p>« MENTION LÉGALES », « Nettoyage professionel », « l'ile de France », « Tout droits réservés », « Copyright 2024 », pied de page « Ménage et repassage ».</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Photos de banque d'images en combinaison intégrale</h3></div><p>Le visuel principal montre des agents en tenue de protection chimique, qui évoque la décontamination plus que l'entretien de bureaux. Aucune photo réelle des équipes.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Pas de preuve de sérieux</h3></div><p>Aucun avis Google, aucune référence client, aucune certification ni assurance mentionnée, aucune zone d'intervention précise.</p></div>
+  </div>
+</section>
+
+<section id="seo">
+  <div class="sechead"><h2>4. Référencement (SEO)</h2><span class="eyebrow">7 constats</span></div>
+  <div class="list">
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Lien spam casino</h3></div><p>Risque d'action manuelle Google et de déclassement de tout le domaine.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Titre d'accueil réduit à « NEO CLEAN »</h3></div><p>Aucun mot-clé (nettoyage de bureaux, Paris) dans la balise la plus importante. Les pages internes suivent le modèle « Contact – NEO CLEAN ».</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Aucune donnée structurée</h3></div><p>Pas de balisage <code>LocalBusiness</code> (adresse, téléphone, horaires, zone), pas de FAQ balisée, pas de fil d'Ariane. Pas de balises Open Graph : les partages sur LinkedIn ou WhatsApp s'affichent sans image ni description.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Sitemap pollué</h3></div><p>Il indexe des gabarits techniques (<code>/elementor-hf/first-header/</code>, <code>/elementskit-content/…megamenu…</code>) et des doublons (<code>/devis-2/</code>, <code>/contact-2/</code>, <code>/page-d-exemple/</code>).</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Structure de titres incohérente</h3></div><p>Le méga-menu est rendu trois fois dans le code : 60 titres H3 identiques précèdent le contenu. Les H2 sont génériques (« Nettoyage de bureaux. » pour la section services).</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Pas de pages locales</h3></div><p>Aucune page par zone (Paris 12e, Hauts-de-Seine, Val-de-Marne…) alors que l'offre est locale.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Contenu dupliqué entre services</h3></div><p>Plus de 25 pages de service, souvent courtes et construites sur le même gabarit.</p></div>
+  </div>
+</section>
+
+<section id="perf">
+  <div class="sechead"><h2>5. Performance</h2><span class="eyebrow">Mesuré sur l'accueil</span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Mesure</th><th>Site actuel</th><th>Objectif refonte</th></tr></thead>
+    <tbody>
+      <tr><td>Temps de réponse serveur (TTFB)</td><td class="n bad">1,93 s</td><td class="n good">&lt; 0,2 s</td></tr>
+      <tr><td>Chargement complet</td><td class="n bad">3,9 s</td><td class="n good">&lt; 1 s</td></tr>
+      <tr><td>Poids HTML d'une page</td><td class="n bad">≈ 600 Ko</td><td class="n good">&lt; 40 Ko</td></tr>
+      <tr><td>Scripts JavaScript</td><td class="n bad">68</td><td class="n good">1–2</td></tr>
+      <tr><td>Feuilles de style</td><td class="n bad">62</td><td class="n good">1</td></tr>
+      <tr><td>Requêtes réseau</td><td class="n bad">131</td><td class="n good">&lt; 20</td></tr>
+      <tr><td>Nœuds DOM</td><td class="n bad">2 254</td><td class="n good">&lt; 800</td></tr>
+      <tr><td>Police d'icônes seule</td><td class="n bad">252 Ko</td><td class="n good">0 (SVG inline)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Les pages ne sont pas mises en cache (<code>x-hcdn-cache-status: DYNAMIC</code>) malgré WP Rocket. Google Tag Manager est chargé deux fois, en plus de gtag et MonsterInsights. jQuery, jQuery Migrate, jQuery UI, particles.js et deux bibliothèques de parallaxe sont chargés pour des effets à peine visibles.</p>
+</section>
+
+<section id="legal">
+  <div class="sechead"><h2>6. Légal et RGPD</h2><span class="eyebrow">5 constats</span></div>
+  <div class="list">
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Mentions légales copiées d'un autre site</h3></div><p>Le texte parle de <code>menageadom.com</code> à quatre reprises. L'hébergeur indiqué est LWS avec l'URL de préproduction Hostinger. Le numéro RCS est vide. Raison sociale : YOUDOM-SERVICES (SIRET 918 366 600 00016) alors que le site s'appelle Neo Clean, sans explication du lien.</p></div>
+    <div class="item c"><div class="row"><span class="pill">Critique</span><h3>Google Analytics se déclenche avant le consentement</h3></div><p>Des requêtes vers <code>region1.google-analytics.com</code> et <code>lb.affilae.com</code> partent dès l'arrivée sur la page, sans action sur le bandeau cookies. Non conforme aux lignes directrices de la CNIL.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Traceur d'affiliation mal configuré</h3></div><p>Le script Affilae envoie une « conversion » à chaque affichage de page avec des variables jamais remplies (<code>{{PAYMENT}}</code>, <code>{{CUSTOMER_ID}}</code>…). Les statistiques d'affiliation sont fausses.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Crédit d'impôt annoncé sans déclaration SAP visible</h3></div><p>Le site met en avant 50 % de crédit d'impôt et l'avance immédiate. Le numéro de déclaration de services à la personne doit figurer sur le site, les devis et les factures pour pouvoir le revendiquer. À vérifier et à afficher.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Cinq pages juridiques qui se recoupent</h3></div><p>Conditions légales, Confidentialité, Protection de la vie privée, Gestion des cookies, Mentions légales. Deux pages suffisent : mentions légales et politique de confidentialité (cookies inclus).</p></div>
+  </div>
+</section>
+
+<section id="mobile">
+  <div class="sechead"><h2>7. Mobile et accessibilité</h2><span class="eyebrow">4 constats</span></div>
+  <div class="list">
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Bouton de devis hors du premier écran sur mobile</h3></div><p>Sur un iPhone standard (375 × 812), le titre occupe l'écran et le bouton « Demandez un devis » n'apparaît qu'après défilement.</p></div>
+    <div class="item h"><div class="row"><span class="pill">Élevé</span><h3>Contraste insuffisant</h3></div><p>Texte rose et blanc directement posé sur une photo claire, sans voile sombre suffisant.</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Cibles tactiles trop petites</h3></div><p>16 liens ou boutons font moins de 32 px de haut (icônes sociales, liens du bandeau).</p></div>
+    <div class="item m"><div class="row"><span class="pill">Moyen</span><h3>Liens sans texte</h3></div><p>Plusieurs liens n'ont aucun libellé lisible par un lecteur d'écran, et les boutons du menu pointent vers <code>#</code>.</p></div>
+  </div>
+</section>
+
+<section id="immediat">
+  <div class="sechead"><h2>Actions immédiates, avant la refonte</h2><span class="eyebrow">À faire cette semaine</span></div>
+  <ol class="steps">
+    <li><strong>Supprimer le bloc spam</strong> dans Elementor (widget de l'accueil contenant « Kasyna »), puis chercher d'autres injections dans la base (<code>wp_posts</code>, <code>wp_options</code>).</li>
+    <li><strong>Changer tous les accès</strong> : comptes administrateurs WordPress, FTP, base de données, compte Hostinger. Supprimer les comptes administrateurs inconnus.</li>
+    <li><strong>Mettre à jour ou supprimer</strong> toutes les extensions, et désactiver celles qui ne servent pas.</li>
+    <li><strong>Supprimer le site de préproduction</strong> <code>olivedrab-skunk-677967.hostingersite.com</code>.</li>
+    <li><strong>Google Search Console</strong> : vérifier les « Problèmes de sécurité » et les « Actions manuelles », puis demander un réexamen une fois le site nettoyé.</li>
+    <li><strong>Corriger le numéro de téléphone</strong> dans le bandeau pour que le lien appelle le numéro affiché.</li>
+  </ol>
+</section>
+
+<section id="refonte">
+  <div class="sechead"><h2>Plan de refonte</h2><span class="eyebrow">Ce que je vais construire</span></div>
+  <p>Un site statique, sans WordPress ni base de données : rien à pirater, rien à mettre à jour, et des pages servies instantanément.</p>
+  <div class="plan">
+    <div class="card"><h3>Technique</h3><ul><li>Astro, génération de pages statiques</li><li>CSS sur mesure, aucun jQuery ni constructeur de pages</li><li>Images optimisées (AVIF/WebP) et chargées à la demande</li><li>Hébergement statique (Hostinger, Netlify ou Cloudflare Pages)</li></ul></div>
+    <div class="card"><h3>Conversion</h3><ul><li>Formulaire de devis intégré au site, en 3 étapes</li><li>Un seul numéro, un seul e-mail, cliquables partout</li><li>Bouton d'appel fixe sur mobile</li><li>Deux parcours clairs : entreprises et particuliers</li></ul></div>
+    <div class="card"><h3>SEO</h3><ul><li>Titres et descriptions rédigés page par page</li><li>Données structurées LocalBusiness, Service et FAQ</li><li>Sitemap propre, redirections 301 des anciennes URL</li><li>Balises Open Graph pour les partages</li></ul></div>
+    <div class="card"><h3>Légal</h3><ul><li>Mentions légales réécrites avec les vraies informations</li><li>Mesure d'audience uniquement après consentement</li><li>Une page de confidentialité unique</li><li>Numéro SAP affiché si l'entreprise est déclarée</li></ul></div>
+  </div>
+</section>
+
+<footer>Audit réalisé à partir de la version publique de neo-clean.fr le 28 septembre 2026 : code source, requêtes réseau, sitemap, pages internes, vue mobile 375 px et formulaire devis.neo-clean.fr.</footer>
+</div>

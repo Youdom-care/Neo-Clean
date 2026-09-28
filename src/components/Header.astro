@@ -1,0 +1,273 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { site } from "../data/site";
+import { proServices, homeServices } from "../data/services";
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href);
+---
+<header class="hdr">
+  <div class="wrap hdr__bar">
+    <a href="/" class="hdr__logo" aria-label="Neo Clean, accueil"><Logo /></a>
+
+    <nav class="hdr__nav" id="main-nav" aria-label="Navigation principale">
+      <ul>
+        <li class="has-sub">
+          <a href="/nettoyage-professionnel/" aria-current={isActive("/nettoyage-professionnel/") ? "page" : undefined}>Entreprises</a>
+          <div class="sub">
+            <ul>
+              {proServices.map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+            </ul>
+          </div>
+        </li>
+        <li class="has-sub">
+          <a href="/services-de-menage-a-domicile/" aria-current={isActive("/services-de-menage-a-domicile/") ? "page" : undefined}>Particuliers</a>
+          <div class="sub sub--narrow">
+            <ul>
+              {homeServices.map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+              <li><a href="/tarifs/">Tarifs et crédit d'impôt</a></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="/qui-sommes-nous/" aria-current={isActive("/qui-sommes-nous/") ? "page" : undefined}>Qui sommes-nous</a></li>
+        <li><a href="/contact/" aria-current={isActive("/contact/") ? "page" : undefined}>Contact</a></li>
+      </ul>
+      <div class="hdr__navcta">
+        <a class="btn btn--primary" href="/devis/">Demander un devis</a>
+        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+      </div>
+    </nav>
+
+    <div class="hdr__actions">
+      <a class="hdr__phone" href={site.phoneHref}>
+        <Icon name="phone" size={18} />
+        <span>{site.phone}</span>
+      </a>
+      <a class="btn btn--primary hdr__cta" href="/devis/">Devis gratuit</a>
+      <button class="hdr__toggle" type="button" aria-controls="main-nav" aria-expanded="false">
+        <span class="visually-hidden">Ouvrir le menu</span>
+        <Icon name="menu" class="i-open" />
+        <Icon name="close" class="i-close" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>(".hdr__toggle");
+  const nav = document.getElementById("main-nav");
+  btn?.addEventListener("click", () => {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    nav?.classList.toggle("is-open", !open);
+    document.body.classList.toggle("nav-open", !open);
+  });
+</script>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .hdr__bar {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .hdr__logo {
+    text-decoration: none;
+    flex: none;
+  }
+  .hdr__nav {
+    flex: 1;
+  }
+  .hdr__nav > ul {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+  }
+  .hdr__nav > ul > li > a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    font: 500 0.98rem var(--display);
+  }
+  .hdr__nav > ul > li > a:hover,
+  .hdr__nav a[aria-current="page"] {
+    color: var(--blue);
+  }
+  .has-sub {
+    position: relative;
+  }
+  .sub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding-top: 8px;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  }
+  .has-sub:hover .sub,
+  .has-sub:focus-within .sub {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+  .sub ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    gap: 2px;
+  }
+  .sub--narrow ul {
+    grid-template-columns: minmax(220px, 1fr);
+  }
+  .sub a {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+  .sub a:hover {
+    background: var(--blue-soft);
+    color: var(--navy);
+  }
+  .hdr__navcta {
+    display: none;
+  }
+  .hdr__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+  }
+  .hdr__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--navy);
+    font: 600 1rem var(--display);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .hdr__cta {
+    min-height: 44px;
+    padding: 10px 20px;
+  }
+  .hdr__toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    place-items: center;
+    cursor: pointer;
+  }
+  .hdr__toggle :global(.i-close) {
+    display: none;
+  }
+  .hdr__toggle[aria-expanded="true"] :global(.i-open) {
+    display: none;
+  }
+  .hdr__toggle[aria-expanded="true"] :global(.i-close) {
+    display: block;
+  }
+
+  @media (max-width: 1080px) {
+    .hdr__phone span {
+      display: none;
+    }
+  }
+
+  @media (max-width: 940px) {
+    .hdr__toggle {
+      display: grid;
+    }
+    .hdr__phone {
+      width: 44px;
+      height: 44px;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    .hdr__cta {
+      display: none;
+    }
+    .hdr__nav {
+      position: fixed;
+      inset: var(--header-h) 0 0 0;
+      background: #fff;
+      padding: 16px var(--gutter) 32px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .hdr__nav.is-open {
+      display: flex;
+    }
+    .hdr__nav > ul {
+      flex-direction: column;
+      gap: 0;
+    }
+    .hdr__nav > ul > li {
+      border-bottom: 1px solid var(--line);
+    }
+    .hdr__nav > ul > li > a {
+      padding: 16px 0;
+      font-size: 1.1rem;
+    }
+    .sub {
+      position: static;
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      padding: 0 0 12px;
+    }
+    .sub ul {
+      box-shadow: none;
+      border: 0;
+      padding: 0;
+      grid-template-columns: 1fr 1fr;
+    }
+    .sub a {
+      padding: 8px 0;
+      white-space: normal;
+      color: var(--muted);
+    }
+    .hdr__navcta {
+      display: grid;
+      gap: 12px;
+    }
+  }
+  @media (max-width: 480px) {
+    .sub ul {
+      grid-template-columns: 1fr;
+    }
+  }
+  :global(body.nav-open) {
+    overflow: hidden;
+  }
+</style>

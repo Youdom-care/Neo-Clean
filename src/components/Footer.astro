@@ -1,0 +1,180 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { site } from "../data/site";
+import { proServices, homeServices } from "../data/services";
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div class="ftr__brand">
+      <Logo light />
+      <p>Entreprise de nettoyage pour les professionnels et les particuliers, à Paris et dans toute l'Île-de-France.</p>
+      <ul class="ftr__contact">
+        <li><Icon name="phone" size={18} /><a href={site.phoneHref}>{site.phone}</a></li>
+        <li><Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><Icon name="clock" size={18} /><span>{site.hours}</span></li>
+        <li><Icon name="pin" size={18} /><span>{site.address.street}, {site.address.postalCode} {site.address.city}</span></li>
+      </ul>
+    </div>
+
+    <nav aria-label="Services entreprises">
+      <h2>Entreprises</h2>
+      <ul>{proServices.slice(0, 8).map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+        <li><a href="/nettoyage-professionnel/">Tous les services</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-label="Services particuliers">
+      <h2>Particuliers</h2>
+      <ul>{homeServices.map((s) => <li><a href={`/${s.slug}/`}>{s.title}</a></li>)}
+        <li><a href="/tarifs/">Tarifs et crédit d'impôt</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-label="Neo Clean">
+      <h2>Neo Clean</h2>
+      <ul>
+        <li><a href="/qui-sommes-nous/">Qui sommes-nous</a></li>
+        <li><a href="/zones-d-intervention/">Zones d'intervention</a></li>
+        <li><a href="/faq/">Questions fréquentes</a></li>
+        <li><a href="/recrutement/">Nous rejoindre</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/devis/">Demande de devis</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="wrap ftr__bottom">
+    <p>© {year} {site.name} · {site.legal.company}</p>
+    <ul>
+      <li><a href="/mentions-legales/">Mentions légales</a></li>
+      <li><a href="/confidentialite/">Confidentialité et cookies</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="callbar" aria-label="Contact rapide">
+  <a href={site.phoneHref} class="callbar__call"><Icon name="phone" size={18} />Appeler</a>
+  <a href="/devis/" class="callbar__quote">Devis gratuit</a>
+</div>
+
+<style>
+  .ftr {
+    background: var(--ink);
+    color: rgb(255 255 255 / 0.72);
+    padding-block: 64px 0;
+    font-size: 0.97rem;
+  }
+  .ftr a {
+    color: rgb(255 255 255 / 0.85);
+    text-decoration: none;
+  }
+  .ftr a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .ftr__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .ftr__brand {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+  }
+  .ftr__brand p {
+    max-width: 36ch;
+  }
+  .ftr h2 {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .ftr ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .ftr__contact li {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .ftr__contact :global(svg) {
+    color: var(--lime);
+  }
+  .ftr__bottom {
+    margin-top: 56px;
+    padding-block: 22px;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.9rem;
+  }
+  .ftr__bottom ul {
+    display: flex;
+    gap: 20px;
+  }
+  .callbar {
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .ftr__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ftr__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 720px) {
+    .callbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+      background: #fff;
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -4px 16px rgb(15 29 51 / 0.08);
+    }
+    .callbar a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border-radius: 999px;
+      font: 600 1rem var(--display);
+      text-decoration: none;
+    }
+    .callbar__call {
+      border: 2px solid var(--navy);
+      color: var(--navy);
+    }
+    .callbar__quote {
+      background: var(--pink);
+      color: #fff;
+    }
+    .ftr {
+      padding-bottom: 80px;
+    }
+  }
+  @media (max-width: 520px) {
+    .ftr__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

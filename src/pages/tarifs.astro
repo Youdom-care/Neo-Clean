@@ -1,0 +1,244 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { site } from "../data/site";
+
+// TODO: confirmer les tarifs. Base reprise de l'ancien site : 17,65 €/h après crédit d'impôt.
+const offers = [
+  {
+    t: "Ménage régulier",
+    price: "17,65 €",
+    full: "35,30 € TTC/h avant crédit d'impôt",
+    d: "Chaque semaine ou tous les quinze jours, avec la même intervenante.",
+    pts: ["2 h minimum par passage", "Remplacement en cas d'absence", "Sans engagement de durée"],
+    href: "/menage-regulier/",
+  },
+  {
+    t: "Ménage ponctuel",
+    price: "17,65 €",
+    full: "35,30 € TTC/h avant crédit d'impôt",
+    d: "Un grand ménage quand vous en avez besoin, sans abonnement.",
+    pts: ["3 h minimum", "Réservation une semaine à l'avance", "Idéal avant ou après un déménagement"],
+    href: "/menage-ponctuel/",
+  },
+];
+
+const discounts = [
+  { t: "Parrainage", d: "3 heures offertes pour vous et 2 heures pour la personne que vous parrainez." },
+  { t: "Voisinage", d: "Une réduction lorsque plusieurs clients sont servis dans le même immeuble ou la même rue." },
+];
+---
+<Base
+  title="Tarifs du ménage à domicile et crédit d'impôt | Neo Clean"
+  description="Ménage à domicile à partir de 17,65 € de l'heure après crédit d'impôt à Paris. Avance immédiate, CESU préfinancé, parrainage."
+>
+  <PageHero
+    crumb="Tarifs"
+    eyebrow="Particuliers"
+    title="Tarifs et crédit d'impôt"
+    lede="Des prix clairs, à l'heure, sans frais d'inscription. Le crédit d'impôt de 50 % s'applique à toutes nos prestations à domicile."
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="offers">
+        {offers.map((o) => (
+          <article class="offer">
+            <h2>{o.t}</h2>
+            <p class="desc">{o.d}</p>
+            <p class="price"><span>{o.price}</span>/h</p>
+            <p class="full">après crédit d'impôt · {o.full}</p>
+            <ul class="checks">
+              {o.pts.map((p) => <li><Icon name="check" size={20} /><span>{p}</span></li>)}
+            </ul>
+            <div class="actions">
+              <a class="btn btn--primary" href="/devis/?type=particulier">Demander un devis</a>
+              <a class="btn btn--ghost" href={o.href}>Détails</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="note">Repassage, ménage Airbnb et aide aux seniors : même tarif horaire, sur devis selon le volume.</p>
+    </div>
+  </section>
+
+  <section class="section section--paper" id="credit-impot">
+    <div class="wrap tax">
+      <div class="section-head">
+        <span class="eyebrow">Crédit d'impôt</span>
+        <h2>Vous ne payez que la moitié</h2>
+        <p class="lede">Le ménage à domicile ouvre droit à un crédit d'impôt de 50 % des sommes versées (article 199 sexdecies du Code général des impôts), que vous soyez imposable ou non.</p>
+      </div>
+      <div class="tax__grid">
+        <div class="tax__card">
+          <Icon name="euro" size={28} />
+          <h3>Avance immédiate</h3>
+          <p>Avec le service d'avance immédiate de l'Urssaf, le crédit d'impôt est déduit directement de chaque facture. Vous ne réglez que 50 % chaque mois, sans attendre votre déclaration de revenus.</p>
+        </div>
+        <div class="tax__card">
+          <Icon name="doc" size={28} />
+          <h3>Attestation fiscale annuelle</h3>
+          <p>Si vous n'utilisez pas l'avance immédiate, nous vous adressons chaque année l'attestation à joindre à votre déclaration de revenus.</p>
+        </div>
+        <div class="tax__card">
+          <Icon name="check" size={28} />
+          <h3>CESU préfinancé accepté</h3>
+          <p>Vous pouvez régler vos prestations avec des CESU préfinancés par votre employeur ou votre comité d'entreprise.</p>
+        </div>
+      </div>
+      <div class="example">
+        <h3>Exemple : 2 h de ménage par semaine</h3>
+        <dl>
+          <div><dt>Facturé par mois (≈ 8,7 h)</dt><dd>307,11 €</dd></div>
+          <div><dt>Crédit d'impôt (50 %)</dt><dd>− 153,56 €</dd></div>
+          <div class="total"><dt>Coût réel pour vous</dt><dd>153,55 €</dd></div>
+        </dl>
+      </div>
+      {site.legal.sapNumber && <p class="note">Neo Clean est déclarée organisme de services à la personne sous le numéro {site.legal.sapNumber}.</p>}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Réductions</span>
+        <h2>Nos réductions permanentes</h2>
+      </div>
+      <div class="disc">
+        {discounts.map((d) => <div><h3>{d.t}</h3><p>{d.d}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Obtenez votre tarif exact" text="Chaque logement est différent. Décrivez le vôtre et recevez un devis précis sous 24 h ouvrées." />
+</Base>
+
+<style>
+  .offers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .offer {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    padding: clamp(24px, 4vw, 36px);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+  .offer h2 {
+    font-size: 1.5rem;
+  }
+  .desc {
+    color: var(--muted);
+  }
+  .price {
+    font: 600 1.1rem var(--display);
+    color: var(--muted);
+  }
+  .price span {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .full {
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-top: -10px;
+  }
+  .offer .checks {
+    margin-block: 8px;
+  }
+  .note {
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 72ch;
+  }
+  .tax__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .tax__card {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .tax__card :global(svg) {
+    color: var(--pink);
+  }
+  .tax__card p {
+    color: var(--muted);
+    font-size: 0.97rem;
+  }
+  .example {
+    margin-top: 24px;
+    padding: 24px 28px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--lime);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    max-width: 560px;
+    display: grid;
+    gap: 14px;
+  }
+  .example dl {
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .example dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .example dt {
+    color: var(--muted);
+  }
+  .example dd {
+    margin: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .example .total {
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .example .total dt,
+  .example .total dd {
+    color: var(--navy);
+    font: 700 1.1rem var(--display);
+  }
+  .disc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .disc div {
+    display: grid;
+    gap: 8px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .disc p {
+    color: var(--muted);
+  }
+  @media (max-width: 860px) {
+    .offers,
+    .tax__grid,
+    .disc {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

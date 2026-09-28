@@ -1,0 +1,184 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { site } from "../data/site";
+import { proServices } from "../data/services";
+import { zones, type Zone } from "../data/zones";
+
+export function getStaticPaths() {
+  return zones.map((z) => ({ params: { zone: z.slug.replace("nettoyage-bureaux-", "") }, props: { z } }));
+}
+const { z } = Astro.props as { z: Zone };
+const others = zones.filter((o) => o.slug !== z.slug);
+const top = proServices.slice(0, 6);
+
+const title = `Entreprise de nettoyage de bureaux ${z.in} (${z.code}) | Neo Clean`;
+const description = `Nettoyage de bureaux, commerces et copropriétés ${z.in} : ${z.areas.slice(0, 3).join(", ")}… Agent attitré, visite et devis gratuits sous 24 h.`;
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `Nettoyage de bureaux ${z.in}`,
+    serviceType: "Nettoyage de bureaux",
+    provider: { "@id": `${site.url}/#entreprise` },
+    areaServed: { "@type": "AdministrativeArea", name: `${z.name} (${z.code})` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: `${site.url}/` },
+      { "@type": "ListItem", position: 2, name: "Zones d'intervention", item: `${site.url}/zones-d-intervention/` },
+      { "@type": "ListItem", position: 3, name: z.name, item: `${site.url}/${z.slug}/` },
+    ],
+  },
+];
+---
+<Base title={title} description={description} schema={schema}>
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Fil d'Ariane">
+        <ol>
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/zones-d-intervention/">Zones d'intervention</a></li>
+          <li aria-current="page">{z.name}</li>
+        </ol>
+      </nav>
+      <span class="eyebrow">{z.name} · {z.code}</span>
+      <h1>Nettoyage de bureaux {z.in}</h1>
+      <p class="lede">Entretien régulier ou ponctuel de vos bureaux, commerces et parties communes, avec un agent attitré et un responsable de secteur joignable directement.</p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/devis/">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+        <a class="btn btn--ghost" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap local">
+      <div class="prose">
+        <h2>Neo Clean {z.in}</h2>
+        {z.intro.map((p) => <p>{p}</p>)}
+      </div>
+      <aside class="areas">
+        <span class="k">Principaux secteurs</span>
+        <ul>{z.areas.map((a) => <li><Icon name="pin" size={18} />{a}</li>)}</ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Nos services {z.in}</span>
+        <h2>Ce que nous entretenons</h2>
+      </div>
+      <div class="grid-cards">
+        {top.map((s) => (
+          <a class="svc-card" href={`/${s.slug}/`}>
+            <span class="ico"><Icon name={s.icon} /></span>
+            <h3>{s.title}</h3>
+            <p>{s.summary}</p>
+            <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h-sm">Communes desservies {z.in}</h2>
+      <ul class="cities">{z.cities.map((c) => <li>{c}</li>)}</ul>
+      <p class="muted">Votre commune n'est pas dans la liste ? Nous couvrons tout le département : <a href="/devis/">décrivez votre besoin</a>.</p>
+
+      <h2 class="h-sm other">Autres départements</h2>
+      <ul class="cities">{others.map((o) => <li><a href={`/${o.slug}/`}>{o.name} ({o.code})</a></li>)}</ul>
+    </div>
+  </section>
+
+  <CtaBand title={`Un devis pour vos locaux ${z.in}`} />
+</Base>
+
+<style>
+  .page-hero .eyebrow {
+    margin-bottom: 14px;
+  }
+  .local {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .local h2 {
+    margin-bottom: 4px;
+  }
+  .areas {
+    padding: 26px;
+    background: var(--paper);
+    border-radius: var(--radius);
+  }
+  .k {
+    display: block;
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .areas ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .areas li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 500;
+  }
+  .areas :global(svg) {
+    color: var(--pink);
+    flex: none;
+  }
+  .h-sm {
+    font-size: 1.4rem;
+    margin-bottom: 18px;
+  }
+  .other {
+    margin-top: 40px;
+  }
+  .cities {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cities li {
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.93rem;
+  }
+  .cities a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .cities a:hover {
+    color: var(--blue);
+  }
+  .muted {
+    color: var(--muted);
+  }
+  @media (max-width: 860px) {
+    .local {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

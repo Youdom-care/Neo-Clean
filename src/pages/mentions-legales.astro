@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import { site } from "../data/site";
+const l = site.legal;
+const todo = "à compléter";
+---
+<Base title="Mentions légales | Neo Clean" description="Mentions légales du site neo-clean.fr : éditeur, hébergeur, propriété intellectuelle.">
+  <PageHero crumb="Mentions légales" title="Mentions légales" />
+  <section class="section">
+    <div class="wrap prose legal">
+      <h2>Éditeur du site</h2>
+      <p>
+        Le site {site.url.replace("https://", "")} est édité par la société <strong>{l.company}</strong>, exploitant la marque {site.name}.<br />
+        Forme juridique et capital : <span class:list={{ todo: !l.legalForm }}>{l.legalForm ? `${l.legalForm} au capital de ${l.capital}` : todo}</span><br />
+        Siège social : {site.address.street}, {site.address.postalCode} {site.address.city}<br />
+        SIRET : {l.siret}<br />
+        RCS : <span class:list={{ todo: !l.rcs }}>{l.rcs || todo}</span><br />
+        TVA intracommunautaire : {l.vat}<br />
+        {l.sapNumber && <>Déclaration de services à la personne : {l.sapNumber}<br /></>}
+        Téléphone : {site.phone} · E-mail : {site.email}
+      </p>
+      <p>Directeur de la publication : <span class:list={{ todo: !l.director }}>{l.director || todo}</span></p>
+
+      <h2>Hébergeur</h2>
+      <p>{l.host.name}, {l.host.address}. Site : <a href={l.host.url} rel="noopener">{l.host.url.replace("https://", "")}</a></p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>L'ensemble des éléments du site (textes, logo, illustrations, mise en page) est la propriété de {l.company} ou utilisé avec autorisation. Toute reproduction, totale ou partielle, sans autorisation écrite préalable est interdite.</p>
+
+      <h2>Responsabilité</h2>
+      <p>{l.company} s'efforce de fournir des informations exactes et à jour. Les tarifs et descriptions de prestations sont donnés à titre indicatif ; seuls le devis et le contrat signés engagent les parties.</p>
+
+      <h2>Données personnelles</h2>
+      <p>Le traitement des données collectées par le formulaire de devis est décrit dans notre <a href="/confidentialite/">politique de confidentialité</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal h2 {
+    font-size: 1.3rem;
+    margin-top: 16px;
+  }
+  .todo {
+    background: #fff3c4;
+    padding: 0 4px;
+    border-radius: 4px;
+  }
+</style>

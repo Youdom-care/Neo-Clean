@@ -1,0 +1,102 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/Icon.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { homeServices } from "../data/services";
+
+const reasons = [
+  { t: "Aucune démarche d'employeur", d: "Nous recrutons, déclarons et payons l'intervenante. Vous recevez une facture." },
+  { t: "La même intervenante", d: "Elle connaît votre logement et vos consignes. Un remplaçant est prévu en cas d'absence." },
+  { t: "50 % de crédit d'impôt", d: "Avec l'avance immédiate, vous ne payez que la moitié de la facture chaque mois." },
+  { t: "Sans engagement de durée", d: "Vous pouvez modifier la fréquence ou arrêter le service avec un simple préavis." },
+];
+---
+<Base
+  title="Ménage à domicile à Paris et en Île-de-France | Neo Clean"
+  description="Femme de ménage à domicile, repassage, ménage Airbnb et aide aux seniors à Paris. 50 % de crédit d'impôt, avance immédiate, même intervenante à chaque passage."
+>
+  <PageHero
+    crumb="Particuliers"
+    eyebrow="Particuliers"
+    title="Ménage à domicile à Paris et en Île-de-France"
+    lede="Une intervenante attitrée, déclarée et remplacée si besoin. Vous ne payez que 50 % du prix grâce au crédit d'impôt."
+  >
+    <div class="actions">
+      <a class="btn btn--primary" href="/devis/?type=particulier">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+      <a class="btn btn--ghost" href="/tarifs/">Voir les tarifs</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="grid-cards">
+        {homeServices.map((s) => (
+          <a class="svc-card" href={`/${s.slug}/`}>
+            <span class="ico"><Icon name={s.icon} /></span>
+            <h2 class="h3">{s.title}</h2>
+            <p>{s.summary}</p>
+            <span class="more">En savoir plus <Icon name="arrow" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Pourquoi passer par Neo Clean</span>
+        <h2>Le ménage sans les contraintes</h2>
+      </div>
+      <ul class="reasons">
+        {reasons.map((r) => (
+          <li><Icon name="check" size={22} /><div><h3>{r.t}</h3><p>{r.d}</p></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand title="Un devis en deux minutes" />
+</Base>
+
+<style>
+  .h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .reasons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .reasons li {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 16px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .reasons :global(svg) {
+    color: var(--pink);
+    margin-top: 2px;
+  }
+  .reasons div {
+    display: grid;
+    gap: 6px;
+  }
+  .reasons p {
+    color: var(--muted);
+  }
+  @media (max-width: 700px) {
+    .reasons {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
