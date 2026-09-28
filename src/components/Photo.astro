@@ -28,6 +28,7 @@ const usable = widths.filter((w) => w <= img.width);
   src={img}
   alt={alt ?? altFor(name)}
   formats={["avif", "webp"]}
+  fallbackFormat="jpg"
   widths={usable.length ? usable : [img.width]}
   sizes={sizes}
   loading={loading}
