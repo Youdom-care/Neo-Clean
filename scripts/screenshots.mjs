@@ -14,7 +14,7 @@ function shot(url, name, w, h) {
     const p = spawn(EDGE, [
       "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run",
       `--user-data-dir=${profile}`, `--window-size=${w},${h}`,
-      "--virtual-time-budget=6000", `--screenshot=${join(out, name + ".png")}`, url,
+      "--virtual-time-budget=15000", `--screenshot=${join(out, name + ".png")}`, url,
     ]);
     const timer = setTimeout(() => p.kill(), 45000);
     p.on("exit", (code) => {

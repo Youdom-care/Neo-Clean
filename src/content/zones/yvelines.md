@@ -74,3 +74,7 @@ Nous intervenons en priorité dans l'est et le centre du département, les mieux
 ## Les locaux que nous entretenons dans les Yvelines
 
 Bureaux et centres de recherche de Saint-Quentin-en-Yvelines, sièges d'entreprises de Vélizy-Villacoublay, cabinets de professions libérales et commerces de Versailles, copropriétés de Saint-Germain-en-Laye, du Vésinet ou de Chatou : nous adaptons nos méthodes à chaque type de locaux. Dans les bâtiments anciens des centres historiques, nous prêtons une attention particulière aux parquets, aux escaliers en bois et aux sols en pierre, qui demandent des produits doux et un entretien régulier plutôt que des traitements agressifs.
+
+## Transports et accès dans les Yvelines
+
+Les Yvelines sont desservies par le RER A (Saint-Germain-en-Laye), le RER C (Versailles, Saint-Quentin-en-Yvelines), les lignes Transilien N, L et U et le tramway T6 jusqu'à Vélizy. Nous affectons en priorité des agents qui habitent le long de ces axes, pour des trajets courts et fiables, y compris pour les passages tôt le matin.

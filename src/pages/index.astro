@@ -13,7 +13,7 @@ import { getProServices, getHomeServices, getZones, serviceHref, zoneHref } from
 const pro = await getProServices();
 const home = await getHomeServices();
 const zones = await getZones();
-const featured = pro.slice(0, 9);
+const featured = pro.slice(0, 8);
 
 const trust = [
   { i: "user", t: "Agent attitré", d: "La même personne à chaque passage" },
@@ -22,15 +22,6 @@ const trust = [
   { i: "euro", t: "50 % de crédit d'impôt", d: "Pour le ménage à domicile" },
 ];
 
-const compare = [
-  { c: "Agent attitré, qui connaît vos locaux", n: true, a: false, s: true },
-  { c: "Remplacement organisé en cas d'absence", n: true, a: true, s: false },
-  { c: "Cahier des charges écrit, pièce par pièce", n: true, a: false, s: false },
-  { c: "Responsable joignable directement", n: true, a: false, s: false },
-  { c: "Aucune gestion administrative ni de paie", n: true, a: true, s: false },
-  { c: "Matériel et produits professionnels fournis", n: true, a: true, s: false },
-  { c: "Prix fixé à l'avance, sans frais de dossier", n: true, a: false, s: true },
-];
 
 const faq = [
   { q: "Combien coûte le nettoyage de bureaux à Paris ?", a: "Le prix dépend de la surface, du type de locaux, du nombre de sanitaires, de la fréquence des passages et des prestations incluses. Nous établissons un devis précis et gratuit après une visite de vos locaux, sans frais de dossier." },
@@ -108,9 +99,9 @@ const faqSchema = {
         <p class="lede">Chaque prestation fait l'objet d'un cahier des charges écrit : vous savez exactement ce qui est fait, à quelle fréquence et à quel prix.</p>
       </div>
       <div class="svc-grid">
-        {featured.map((s, i) => (
-          <a class:list={["svc", { "svc--wide": i === 0 }]} href={serviceHref(s)}>
-            <Photo name={s.data.photos[0]} sizes={i === 0 ? "(max-width: 700px) 100vw, 50vw" : "(max-width: 700px) 100vw, 25vw"} widths={[480, 800, 1200]} class="svc__img" />
+        {featured.map((s) => (
+          <a class="svc" href={serviceHref(s)}>
+            <Photo name={s.data.photos[0]} sizes="(max-width: 700px) 100vw, 25vw" widths={[480, 800]} class="svc__img" />
             <span class="svc__body">
               <span class="svc__ico"><Icon name={s.data.icon} size={20} /></span>
               <strong>{s.data.title}</strong>
@@ -147,42 +138,9 @@ const faqSchema = {
     </div>
   </section>
 
-  <Commitments photo="accueil-1" />
+  <Commitments photo="copro-2" />
 
   <Process />
-
-  <!-- Comparatif -->
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">Comparatif</span>
-        <h2>Neo Clean, un prestataire classique ou un salarié en direct ?</h2>
-        <p class="lede">Trois façons d'organiser l'entretien de vos locaux, et ce que chacune vous apporte vraiment.</p>
-      </div>
-      <div class="cmp">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col"><span class="visually-hidden">Critère</span></th>
-              <th scope="col" class="cmp__us">Neo Clean</th>
-              <th scope="col">Prestataire classique</th>
-              <th scope="col">Salarié en direct</th>
-            </tr>
-          </thead>
-          <tbody>
-            {compare.map((r) => (
-              <tr>
-                <th scope="row">{r.c}</th>
-                <td class="cmp__us">{r.n ? <span class="yes" aria-label="Oui"><Icon name="check" size={18} /></span> : <span class="no" aria-label="Non">–</span>}</td>
-                <td>{r.a ? <span class="yes" aria-label="Oui"><Icon name="check" size={18} /></span> : <span class="no" aria-label="Non">–</span>}</td>
-                <td>{r.s ? <span class="yes" aria-label="Oui"><Icon name="check" size={18} /></span> : <span class="no" aria-label="Non">–</span>}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 
   <!-- Particuliers -->
   <section class="section section--paper">
@@ -406,23 +364,10 @@ const faqSchema = {
     transform: translateY(-3px);
     color: var(--ink);
   }
-  .svc--wide {
-    grid-column: span 2;
-    grid-row: span 2;
-    grid-template-rows: 1fr auto;
-  }
-  .svc--wide :global(picture) {
-    height: 100%;
-  }
   .svc :global(.svc__img) {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
     object-fit: cover;
-  }
-  .svc--wide :global(.svc__img) {
-    aspect-ratio: auto;
-    height: 100%;
-    min-height: 280px;
   }
   .svc__body {
     position: relative;
@@ -446,9 +391,6 @@ const faqSchema = {
   }
   .svc strong {
     font: 600 1.08rem var(--display);
-  }
-  .svc--wide strong {
-    font-size: 1.4rem;
   }
   .svc small {
     color: var(--muted);
@@ -497,61 +439,6 @@ const faqSchema = {
     font: 500 0.85rem var(--body);
     font-style: normal;
     color: var(--lime);
-  }
-
-  /* Comparatif */
-  .cmp {
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: #fff;
-  }
-  .cmp table {
-    width: 100%;
-    min-width: 640px;
-    border-collapse: collapse;
-  }
-  .cmp th,
-  .cmp td {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--line);
-    text-align: center;
-  }
-  .cmp tbody th {
-    text-align: left;
-    font-weight: 500;
-  }
-  .cmp thead th {
-    font: 600 0.95rem var(--display);
-    color: var(--muted);
-  }
-  .cmp tr:last-child th,
-  .cmp tr:last-child td {
-    border-bottom: 0;
-  }
-  .cmp .cmp__us {
-    background: var(--blue-soft);
-    color: var(--navy);
-  }
-  .cmp thead .cmp__us {
-    background: var(--navy);
-    color: #fff;
-  }
-  .yes {
-    display: inline-grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #eef6d6;
-    color: #5b7a00;
-  }
-  .yes :global(svg) {
-    stroke-width: 2.6;
-  }
-  .no {
-    color: #b0b9c7;
-    font-size: 1.3rem;
   }
 
   /* Particuliers */
@@ -743,14 +630,6 @@ const faqSchema = {
     .split,
     .svc-grid {
       grid-template-columns: 1fr;
-    }
-    .svc--wide {
-      grid-column: auto;
-      grid-row: auto;
-    }
-    .svc--wide :global(.svc__img) {
-      aspect-ratio: 4 / 3;
-      min-height: 0;
     }
     .split__card {
       min-height: 380px;

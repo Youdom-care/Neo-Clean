@@ -1,7 +1,7 @@
 ---
 // Photo optimisée (AVIF + WebP, plusieurs tailles) à partir de src/assets/photos/.
 import { Picture } from "astro:assets";
-import { photo, alt as altFor } from "../lib/photos";
+import { photo, alt as altFor, focusFor } from "../lib/photos";
 
 interface Props {
   name: string;
@@ -19,7 +19,7 @@ const {
   widths = [480, 800, 1200, 1600],
   class: className,
   loading = "lazy",
-  position = "50% 50%",
+  position,
 } = Astro.props;
 const img = photo(name);
 const usable = widths.filter((w) => w <= img.width);
@@ -34,5 +34,5 @@ const usable = widths.filter((w) => w <= img.width);
   loading={loading}
   fetchpriority={loading === "eager" ? "high" : undefined}
   class={className}
-  style={`object-position:${position}`}
+  style={`object-position:${position ?? focusFor(name)}`}
 />

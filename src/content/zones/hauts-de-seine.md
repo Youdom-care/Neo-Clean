@@ -76,3 +76,7 @@ Dans les communes résidentielles du département, de Neuilly à Clamart, nous p
 ## Une organisation par secteur
 
 Nos agents intervenant dans les Hauts-de-Seine sont regroupés par secteur géographique, pour limiter les trajets et garantir la ponctualité. Un responsable dédié au département suit vos locaux, contrôle la prestation et reste votre interlocuteur direct.
+
+## Transports et accès dans les Hauts-de-Seine
+
+La Défense, Boulogne-Billancourt, Issy-les-Moulineaux et Levallois-Perret sont parmi les communes les mieux desservies d'Île-de-France : RER A, lignes 1, 9, 12 et 13 du métro, tramways T2 et T6, Transilien. Nos agents du secteur ouest s'y rendent rapidement, ce qui nous permet de garantir des horaires de passage fiables, même tôt le matin avant l'arrivée des équipes.

@@ -61,3 +61,15 @@ export const alts: Record<string, string> = {
 };
 
 export const alt = (name: string) => alts[name] ?? "";
+
+// Cadrage par défaut. Certaines photos viennent d'anciennes bannières dont la moitié
+// est délavée pour y poser du texte : on cadre sur la partie nette.
+const focus: Record<string, string> = {
+  "accueil-3": "80% 50%",
+  "bureau-1": "18% 50%",
+  "vitres-1": "80% 50%",
+  "tags-1": "78% 50%",
+  "medical-1": "75% 50%",
+  "ponctuel-1": "80% 50%",
+};
+export const focusFor = (name: string) => focus[name] ?? "50% 50%";
