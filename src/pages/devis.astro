@@ -216,6 +216,60 @@ const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par se
     if (t.closest("[data-prev]")) show(current - 1);
   });
 
+  // Construit la demande telle qu'elle apparaît dans l'e-mail reçu et sur formspree.io :
+  // libellés en français, valeurs lisibles, ordre logique (le besoin, puis le client).
+  const PROFILS: Record<string, string> = {
+    entreprise: "Entreprise",
+    syndic: "Syndic / copropriété",
+    commerce: "Commerce / restaurant",
+    particulier: "Particulier",
+  };
+
+  function val(name: string) {
+    return ((form.elements.namedItem(name) as HTMLInputElement | null)?.value ?? "").trim();
+  }
+
+  function formatPhone(raw: string) {
+    const digits = raw.replace(/\D/g, "");
+    const fr = digits.startsWith("33") && digits.length === 11 ? "0" + digits.slice(2) : digits;
+    return /^0\d{9}$/.test(fr) ? fr.replace(/(\d{2})(?=\d)/g, "$1 ") : raw;
+  }
+
+  function buildPayload() {
+    const select = form.querySelector<HTMLSelectElement>("#service")!;
+    const prestation = select.value ? select.selectedOptions[0].text : "Non précisée";
+    const profil = PROFILS[form.querySelector<HTMLInputElement>("input[name=profil]:checked")?.value ?? ""] ?? "Non précisé";
+    const surface = val("surface");
+    const nom = val("nom");
+    const societe = val("societe");
+    const cp = val("code_postal");
+    const now = new Date();
+    const quand = now.toLocaleString("fr-FR", { timeZone: "Europe/Paris", dateStyle: "full", timeStyle: "short" });
+
+    const data: Record<string, string> = {
+      _subject: `Devis ${prestation} · ${cp} · ${nom}${societe ? " (" + societe + ")" : ""}`,
+      _replyto: val("email"),
+      _gotcha: val("_gotcha"),
+
+      "Prestation demandée": prestation,
+      "Type de client": profil,
+      "Surface": surface ? `${surface} m²` : "Non précisée",
+      "Fréquence souhaitée": val("frequence"),
+      "Démarrage souhaité": val("demarrage"),
+      "Code postal des locaux": cp,
+      "Précisions du client": val("message") || "Aucune",
+
+      "Nom et prénom": nom,
+      "Société": societe || (profil === "Particulier" ? "Particulier" : "Non précisée"),
+      "E-mail": val("email"),
+      "Téléphone": formatPhone(val("telephone")),
+
+      "Demande envoyée le": quand,
+      "Consentement RGPD": `Accepté le ${now.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" })}`,
+    };
+    return data;
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!valid(steps[current])) return;
@@ -224,7 +278,11 @@ const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par se
     btn.textContent = "Envoi en cours…";
     errorBox.hidden = true;
     try {
-      const res = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: JSON.stringify(buildPayload()),
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error(data.error || "send");
       location.href = "/merci/";
