@@ -126,10 +126,12 @@ const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par se
               <input id="tel" name="telephone" type="tel" autocomplete="tel" required maxlength="30" />
             </div>
           </div>
+          <!-- Objet de l'e-mail reçu via Formspree -->
+          <input type="hidden" name="_subject" value="Nouvelle demande de devis – neo-clean.fr" />
           <!-- Piège à robots : ce champ doit rester vide -->
           <div class="hp" aria-hidden="true">
-            <label for="website">Ne pas remplir</label>
-            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            <label for="gotcha">Ne pas remplir</label>
+            <input id="gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
           </div>
           <label class="consent">
             <input type="checkbox" name="consentement" value="oui" required />
@@ -197,7 +199,7 @@ const frequencies = ["Une seule fois", "1 fois par semaine", "2 à 3 fois par se
 
   function valid(step: HTMLFieldSetElement) {
     const fields = [...step.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input, select, textarea")].filter(
-      (f) => !f.closest("[hidden]") && f.name !== "website",
+      (f) => !f.closest("[hidden]") && f.name !== "_gotcha",
     );
     for (const f of fields) {
       if (!f.checkValidity()) {

@@ -46,6 +46,6 @@ export const site = {
     linkedin: "",
   },
 
-  // Point d'envoi du formulaire de devis (voir public/api/devis.php).
-  formEndpoint: "/api/devis.php",
+  // Point d'envoi du formulaire de devis (Formspree : formspree.io, compte contact@neo-clean.fr).
+  formEndpoint: "https://formspree.io/f/maeqqged",
 } as const;
