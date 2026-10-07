@@ -4,8 +4,9 @@ import Photo from "./Photo.astro";
 
 interface Props {
   photo?: string;
+  tint?: boolean; // fond bleu pâle pour alterner avec la section précédente
 }
-const { photo = "equipe-1" } = Astro.props;
+const { photo = "equipe-1", tint = false } = Astro.props;
 
 const items = [
   { i: "user", t: "Un agent attitré", d: "La même personne à chaque passage. Elle connaît vos locaux, vos consignes et vos habitudes." },
@@ -16,7 +17,7 @@ const items = [
   { i: "euro", t: "Un prix maîtrisé", d: "Le prix est fixé à l'avance. Les prestations exceptionnelles sont chiffrées à part, jamais ajoutées sans accord." },
 ];
 ---
-<section class="section commit" id="engagements">
+<section class:list={["section", "commit", { "section--paper": tint }]} id="engagements">
   <div class="wrap grid">
     <div class="visual">
       <Photo name={photo} sizes="(max-width: 900px) 100vw, 40vw" class="img" />
@@ -80,6 +81,10 @@ const items = [
     place-items: center;
     background: var(--blue-soft);
     color: var(--blue);
+  }
+  .section--paper .ico {
+    background: #fff;
+    box-shadow: 0 2px 6px rgb(18 48 107 / 0.08);
   }
   .list h3 {
     font-size: 1.05rem;

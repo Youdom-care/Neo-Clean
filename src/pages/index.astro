@@ -138,7 +138,7 @@ const faqSchema = {
     </div>
   </section>
 
-  <Commitments photo="copro-2" />
+  <Commitments photo="copro-2" tint />
 
   <Process />
 
@@ -218,8 +218,9 @@ const faqSchema = {
 <style>
   /* Bande de confiance */
   .trust {
-    border-block: 1px solid var(--line);
-    background: #fff;
+    position: relative;
+    z-index: 2;
+    margin-top: -64px;
   }
   .trust ul {
     list-style: none;
@@ -227,6 +228,9 @@ const faqSchema = {
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px -30px rgb(18 48 107 / 0.45), 0 2px 6px rgb(15 29 51 / 0.05);
   }
   .trust li {
     display: flex;

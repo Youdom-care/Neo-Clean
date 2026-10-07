@@ -9,7 +9,8 @@
   --pink: #d81e6c;
   --pink-dark: #b3145a;
   --lime: #a8c82f;
-  --paper: #f5f7fb;
+  --paper: #f3f6fb;
+  --tint: #e5eefb;
   --white: #ffffff;
   --line: #dde3ec;
   --muted: #56637a;
@@ -43,7 +44,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--white);
+  background: var(--paper);
   color: var(--ink);
   font: 17px/1.65 var(--body);
   -webkit-font-smoothing: antialiased;
@@ -110,7 +111,7 @@ a:hover {
   padding-block: clamp(56px, 8vw, 104px);
 }
 .section--paper {
-  background: var(--paper);
+  background: var(--tint);
 }
 .section--navy {
   background: var(--navy);
