@@ -48,4 +48,7 @@ export const site = {
 
   // Point d'envoi du formulaire de devis (Formspree : formspree.io, compte contact@neo-clean.fr).
   formEndpoint: "https://formspree.io/f/maeqqged",
+
+  // Vérification Google Search Console (propriété neo-clean.fr)
+  googleSiteVerification: "FraZJ9t74zlE5kb4Em4MrqoNoa723ou3K5NOcMgKij0",
 } as const;
