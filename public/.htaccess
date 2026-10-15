@@ -7,7 +7,7 @@ ErrorDocument 404 /404.html
 
   # HTTPS et domaine avec www
   RewriteCond %{HTTPS} off [OR]
-  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
   RewriteRule ^ https://www.neo-clean.fr%{REQUEST_URI} [L,R=301]
 
   # Anciens chemins WordPress : on coupe court (bots de scan)
