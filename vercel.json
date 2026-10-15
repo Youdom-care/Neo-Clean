@@ -158,12 +158,12 @@
       "permanent": true
     },
     {
-      "source": "/elementor-hf/:path*",
+      "source": "/elementor-hf/(.*)",
       "destination": "/",
       "permanent": true
     },
     {
-      "source": "/elementskit-content/:path*",
+      "source": "/elementskit-content/(.*)",
       "destination": "/",
       "permanent": true
     }
