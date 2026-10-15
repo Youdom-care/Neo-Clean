@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /merci/
 
-Sitemap: https://neo-clean.fr/sitemap-index.xml
+Sitemap: https://www.neo-clean.fr/sitemap-index.xml

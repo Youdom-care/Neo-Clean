@@ -5,7 +5,7 @@
 
 export const site = {
   name: "Neo Clean",
-  url: "https://neo-clean.fr",
+  url: "https://www.neo-clean.fr",
   tagline: "Entreprise de nettoyage à Paris et en Île-de-France",
 
   phone: "06 67 22 45 27",

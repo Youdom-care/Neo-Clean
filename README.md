@@ -1,6 +1,6 @@
 # Neo Clean — site vitrine
 
-Site statique de [neo-clean.fr](https://neo-clean.fr), construit avec [Astro](https://astro.build).
+Site statique de [www.neo-clean.fr](https://www.neo-clean.fr), construit avec [Astro](https://astro.build) et hébergé sur [Vercel](https://vercel.com).
 Il remplace l'ancien site WordPress/Elementor (voir `audit/audit-neo-clean.html`).
 
 ## Démarrer
@@ -23,15 +23,16 @@ npm run preview   # sert dist/ en local
 | Pages fixes (accueil, tarifs, contact…) | `src/pages/*.astro` |
 | Couleurs, typographie, composants communs | `src/styles/global.css` |
 | Réception du formulaire de devis | Formspree (`formEndpoint` dans `src/data/site.ts`) |
-| Redirections des anciennes URL, en-têtes de sécurité | `public/.htaccess` |
+| Redirections des anciennes URL, en-têtes de sécurité | `vercel.json` (Vercel) et `public/.htaccess` (si hébergement Apache/Hostinger) |
 
-## Mise en ligne sur Hostinger
+## Mise en ligne
 
-1. `npm run build`
-2. Envoyer le **contenu** du dossier `dist/` dans `public_html/` (gestionnaire de fichiers ou FTP),
-   après avoir sauvegardé puis supprimé l'ancien WordPress.
-3. Envoyer une demande de test depuis `/devis/` et vérifier qu'elle arrive sur formspree.io et par e-mail.
-4. Dans Google Search Console : soumettre `https://neo-clean.fr/sitemap-index.xml`.
+Le site est hébergé sur **Vercel**, relié au dépôt GitHub `Youdom-care/Neo-Clean` :
+chaque envoi (`git push`) sur la branche `main` reconstruit et publie le site automatiquement.
+
+- Adresse principale : **https://www.neo-clean.fr** (`neo-clean.fr` y redirige).
+- Sitemap à déclarer dans Google Search Console : `https://www.neo-clean.fr/sitemap-index.xml`.
+- Les redirections et en-têtes de sécurité sont dans `vercel.json` (Vercel ignore `.htaccess`).
 
 ## À compléter avant la mise en ligne
 
