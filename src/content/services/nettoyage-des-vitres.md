@@ -4,8 +4,8 @@ audience: pro
 icon: window
 title: Nettoyage des vitres
 h1: Nettoyage de vitres et de vitrines à Paris et en Île-de-France
-metaTitle: Nettoyage de vitres et vitrines à Paris | Neo Clean
-metaDescription: Vitres, baies vitrées, vitrines et verrières nettoyées à l'intérieur et à l'extérieur à Paris et en Île-de-France. Perche à eau pure pour les hauteurs, sans traces.
+metaTitle: "Nettoyage de vitres et vitrines à Paris | Neo Clean"
+metaDescription: "Vitres, baies vitrées, vitrines et verrières nettoyées à Paris et en Île-de-France, intérieur et extérieur, à la perche à eau pure, sans traces."
 summary: Vitres, vitrines et verrières, intérieur et extérieur, y compris les accès difficiles.
 photos: ["vitres-1", "accueil-2"]
 included:

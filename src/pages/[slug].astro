@@ -23,7 +23,13 @@ const hub = isPro
   ? { href: "/nettoyage-professionnel/", label: "Entreprises" }
   : { href: "/services-de-menage-a-domicile/", label: "Particuliers" };
 const all = await getServices();
-const related = all.filter((x) => x.data.audience === s.audience && x.id !== entry.id).slice(0, 4);
+// Services liés : les 4 suivants dans la liste (en boucle), pour que chaque service
+// reçoive des liens internes depuis plusieurs autres pages.
+const sameAudience = all.filter((x) => x.data.audience === s.audience);
+const pos = sameAudience.findIndex((x) => x.id === entry.id);
+const related = [1, 2, 3, 4]
+  .map((k) => sameAudience[(pos + k) % sameAudience.length])
+  .filter((x, i, arr) => x.id !== entry.id && arr.indexOf(x) === i);
 const zones = await getZones();
 const devisHref = isPro ? `/devis/?service=${entry.id}` : `/devis/?type=particulier&service=${entry.id}`;
 const [heroPhoto, ...morePhotos] = s.photos;

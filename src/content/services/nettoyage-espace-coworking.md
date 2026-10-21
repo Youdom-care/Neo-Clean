@@ -4,8 +4,8 @@ audience: pro
 icon: people
 title: Espaces de coworking
 h1: Nettoyage d'espaces de coworking à Paris et en Île-de-France
-metaTitle: Nettoyage d'espaces de coworking à Paris | Neo Clean
-metaDescription: Entretien des postes partagés, salles de réunion, cuisines et sanitaires de coworkings et centres d'affaires à Paris. Passages adaptés à la fréquentation, désinfection des postes.
+metaTitle: "Nettoyage d'espaces de coworking à Paris | Neo Clean"
+metaDescription: "Entretien des postes partagés, salles de réunion, cuisines et sanitaires de coworkings à Paris, au rythme de la fréquentation. Devis gratuit."
 summary: Postes partagés, salles de réunion et cuisines entretenus au rythme de la fréquentation.
 photos: ["coworking-2", "coworking-1"]
 included:

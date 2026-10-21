@@ -4,8 +4,8 @@ audience: particulier
 icon: iron
 title: Repassage
 h1: Repassage à domicile à Paris et en Île-de-France
-metaTitle: Repassage à domicile à Paris, 50 % de crédit d'impôt | Neo Clean
-metaDescription: Votre linge repassé, plié et rangé chez vous, seul ou en complément du ménage, à Paris et en Île-de-France. Chemises, draps, linge de maison. 50 % de crédit d'impôt.
+metaTitle: "Repassage à domicile à Paris | Neo Clean"
+metaDescription: "Votre linge repassé, plié et rangé chez vous à Paris et en Île-de-France, seul ou avec le ménage. Chemises, draps. 50 % de crédit d'impôt."
 summary: Votre linge repassé et rangé chez vous, seul ou avec le ménage.
 photos: ["repassage-1", "repassage-2"]
 included:

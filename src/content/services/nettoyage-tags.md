@@ -5,7 +5,7 @@ icon: brush
 title: Enlèvement de tags
 h1: Enlèvement de tags et graffitis à Paris et en Île-de-France
 metaTitle: Enlèvement de tags et graffitis à Paris | Neo Clean
-metaDescription: Effacement de tags et de graffitis sur façades, rideaux métalliques, portes, boîtes aux lettres et vitrines à Paris et en Île-de-France, avec une méthode adaptée au support.
+metaDescription: "Effacement de tags et graffitis sur façades, rideaux métalliques, portes et vitrines à Paris et en Île-de-France, avec une méthode adaptée au support."
 summary: Façades, rideaux métalliques et vitrines, méthode adaptée au support.
 photos: ["tags-2", "sols-4"]
 included:

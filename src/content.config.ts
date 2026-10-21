@@ -27,23 +27,26 @@ const services = defineCollection({
   }),
 });
 
-// Un département = un fichier Markdown dans src/content/zones/.
+// Une zone = un fichier Markdown dans src/content/zones/ : un département ou une ville.
 // Le nom du fichier donne l'adresse : paris.md → /nettoyage-bureaux-paris/
 const zones = defineCollection({
   loader: glob({ pattern: "*.md", base: "./src/content/zones" }),
   schema: z.object({
     order: z.number(),
+    kind: z.enum(["departement", "ville"]).default("departement"),
+    parent: z.string().optional(), // pour une ville : id du département (ex. "hauts-de-seine")
+    postalCode: z.string().optional(), // pour une ville
     name: z.string(),
-    code: z.string(),
+    code: z.string(), // numéro de département
     in: z.string(),
     metaDescription: z.string(),
     lede: z.string(),
     photo: z.string(),
     areas: z.array(z.object({ name: z.string(), text: z.string() })),
     cities: z.array(z.string()),
-    // Position sur la carte schématique (0–100)
-    x: z.number(),
-    y: z.number(),
+    // Position sur la carte schématique (0–100), départements uniquement
+    x: z.number().default(50),
+    y: z.number().default(50),
     faq,
   }),
 });

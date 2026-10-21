@@ -6,7 +6,7 @@ in: à Paris
 x: 50
 y: 50
 photo: bureau-1
-metaDescription: Entreprise de nettoyage à Paris, siège dans le 12e. Nettoyage de bureaux, commerces, copropriétés et ménage à domicile dans les 20 arrondissements. Devis gratuit sous 24 h.
+metaDescription: "Entreprise de nettoyage à Paris, siège dans le 12e : bureaux, commerces, copropriétés et ménage à domicile dans les 20 arrondissements. Devis sous 24 h."
 lede: Notre siège est rue de Lyon, dans le 12e. Nos agents interviennent chaque jour dans les 20 arrondissements, des bureaux du quartier central des affaires aux copropriétés de l'Est parisien.
 areas:
   - name: Quartier central des affaires

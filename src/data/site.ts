@@ -5,6 +5,8 @@
 
 export const site = {
   name: "Neo Clean",
+  // Variantes du nom, déclarées à Google pour qu'il reconnaisse la marque
+  alternateNames: ["Neo-Clean", "NeoClean", "Neo Clean Paris", "neo-clean.fr"],
   url: "https://www.neo-clean.fr",
   tagline: "Entreprise de nettoyage à Paris et en Île-de-France",
 
@@ -22,6 +24,8 @@ export const site = {
     region: "Île-de-France",
     country: "FR",
   },
+  // Coordonnées approximatives du siège (61 rue de Lyon, Paris 12e)
+  geo: { latitude: 48.8497, longitude: 2.3713 },
 
   legal: {
     company: "YOUDOM-SERVICES",
@@ -33,9 +37,9 @@ export const site = {
     director: "", // TODO: nom du directeur de la publication
     sapNumber: "", // TODO: numéro de déclaration SAP (obligatoire pour annoncer le crédit d'impôt)
     host: {
-      name: "Hostinger International Ltd",
-      address: "61 Lordou Vironos Street, 6023 Larnaca, Chypre",
-      url: "https://www.hostinger.fr",
+      name: "Vercel Inc.",
+      address: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
+      url: "https://vercel.com",
     },
   },
 
@@ -45,6 +49,9 @@ export const site = {
     instagram: "",
     linkedin: "",
   },
+
+  // Lien de la fiche Google Business Profile (à renseigner dès sa création)
+  googleBusinessUrl: "",
 
   // Point d'envoi du formulaire de devis (Formspree : formspree.io, compte contact@neo-clean.fr).
   formEndpoint: "https://formspree.io/f/maeqqged",

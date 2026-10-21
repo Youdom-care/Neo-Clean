@@ -13,13 +13,19 @@ interface Props {
 const { title, description, noindex = false, schema = [] } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 
+const sameAs = [site.googleBusinessUrl, ...Object.values(site.social)].filter(Boolean);
 const business = {
   "@context": "https://schema.org",
   "@type": "HousekeepingService",
   "@id": `${site.url}/#entreprise`,
   name: site.name,
-  url: site.url,
-  telephone: site.phone.replace(/\s/g, ""),
+  alternateName: site.alternateNames,
+  legalName: site.legal.company,
+  url: `${site.url}/`,
+  logo: `${site.url}/logo.png`,
+  image: `${site.url}/og.png`,
+  description: "Entreprise de nettoyage à Paris et en Île-de-France : bureaux, commerces, copropriétés, fin de chantier et ménage à domicile.",
+  telephone: "+33" + site.phone.replace(/\s/g, "").slice(1),
   email: site.email,
   address: {
     "@type": "PostalAddress",
@@ -29,11 +35,28 @@ const business = {
     addressRegion: site.address.region,
     addressCountry: site.address.country,
   },
+  geo: { "@type": "GeoCoordinates", latitude: site.geo.latitude, longitude: site.geo.longitude },
   openingHours: site.hoursSchema,
-  areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
+  areaServed: [
+    { "@type": "City", name: "Paris" },
+    { "@type": "AdministrativeArea", name: "Île-de-France" },
+  ],
   priceRange: "€€",
+  vatID: site.legal.vat,
+  identifier: { "@type": "PropertyValue", propertyID: "SIRET", value: site.legal.siret.replace(/\s/g, "") },
+  ...(sameAs.length ? { sameAs } : {}),
 };
-const graphs = [business, ...schema];
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${site.url}/#site`,
+  name: site.name,
+  alternateName: site.alternateNames,
+  url: `${site.url}/`,
+  inLanguage: "fr-FR",
+  publisher: { "@id": `${site.url}/#entreprise` },
+};
+const graphs = [business, website, ...schema];
 ---
 <!doctype html>
 <html lang="fr">

@@ -4,8 +4,8 @@ audience: pro
 icon: helmet
 title: Fin de chantier
 h1: Nettoyage de fin de chantier et remise en état
-metaTitle: Nettoyage de fin de chantier à Paris et en Île-de-France | Neo Clean
-metaDescription: Remise en état après travaux à Paris et en Île-de-France. Poussières de plâtre, traces de peinture, colle, vitres et sols. Locaux prêts à être livrés ou occupés.
+metaTitle: "Nettoyage de fin de chantier à Paris | Neo Clean"
+metaDescription: "Remise en état après travaux à Paris et en Île-de-France : poussières de plâtre, peinture, colle, vitres et sols. Locaux prêts à être livrés."
 summary: Élimination des poussières et résidus de travaux avant la livraison ou l'emménagement.
 photos: ["chantier-1", "chantier-2"]
 included:

@@ -5,7 +5,7 @@ icon: box
 title: Débarras
 h1: Débarras de caves, bureaux et logements
 metaTitle: Débarras de cave, bureau et appartement à Paris | Neo Clean
-metaDescription: Débarras de caves, greniers, bureaux et logements à Paris et en Île-de-France. Tri, démontage, évacuation vers les filières adaptées et nettoyage des lieux une fois vidés.
+metaDescription: "Débarras de caves, bureaux et logements à Paris et en Île-de-France : tri, évacuation vers les filières adaptées et nettoyage des lieux vidés."
 summary: Caves, bureaux et logements vidés, évacués et nettoyés.
 photos: ["debarras-2", "debarras-1"]
 included:

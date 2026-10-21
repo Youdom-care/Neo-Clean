@@ -4,8 +4,8 @@ audience: pro
 icon: store
 title: Commerces et restaurants
 h1: Nettoyage de commerces et de restaurants
-metaTitle: Nettoyage de commerces et restaurants à Paris | Neo Clean
-metaDescription: Entretien de boutiques, restaurants, cafés et cuisines professionnelles à Paris et en Île-de-France, avant l'ouverture ou après la fermeture. Vitrines, sols, sanitaires, dégraissage.
+metaTitle: "Nettoyage de commerces et restaurants à Paris | Neo Clean"
+metaDescription: "Entretien de boutiques, restaurants et cuisines professionnelles à Paris, avant l'ouverture ou après la fermeture : vitrines, sols, dégraissage."
 summary: Boutiques, salles et cuisines prêtes avant l'ouverture, entretenues après la fermeture.
 photos: ["commerce-2", "restaurant-1"]
 included:

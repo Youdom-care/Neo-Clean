@@ -5,7 +5,7 @@ icon: heart
 title: Aide aux seniors
 h1: Ménage pour les personnes âgées et en situation de handicap
 metaTitle: Aide ménagère pour personnes âgées à Paris | Neo Clean
-metaDescription: Aide ménagère régulière pour les personnes âgées ou en situation de handicap à Paris et en Île-de-France. Entretien du logement, linge, présence rassurante, 50 % de crédit d'impôt.
+metaDescription: "Aide ménagère pour personnes âgées ou en situation de handicap à Paris et en Île-de-France : logement, linge, présence. 50 % de crédit d'impôt."
 summary: Entretien du logement et présence régulière pour rester chez soi.
 photos: ["aines-1", "regulier-2"]
 included:

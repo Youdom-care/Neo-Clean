@@ -4,8 +4,8 @@ audience: particulier
 icon: calendar
 title: Ménage régulier
 h1: Ménage régulier à domicile à Paris et en Île-de-France
-metaTitle: Femme de ménage à domicile à Paris, 50 % de crédit d'impôt | Neo Clean
-metaDescription: Une aide ménagère attitrée chaque semaine ou tous les quinze jours à Paris et en Île-de-France. Déclaration, remplacement et avance immédiate du crédit d'impôt inclus.
+metaTitle: "Femme de ménage à domicile à Paris | Neo Clean"
+metaDescription: "Une aide ménagère attitrée chaque semaine à Paris et en Île-de-France. Déclaration, remplacement et 50 % de crédit d'impôt avec avance immédiate."
 summary: La même intervenante chaque semaine ou tous les quinze jours.
 photos: ["regulier-1", "regulier-2"]
 included:

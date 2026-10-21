@@ -6,7 +6,7 @@ in: dans les Hauts-de-Seine
 x: 36
 y: 53
 photo: coworking-1
-metaDescription: Nettoyage de bureaux à La Défense, Boulogne-Billancourt, Issy-les-Moulineaux, Levallois et dans tous les Hauts-de-Seine (92). Agent attitré, devis gratuit sous 24 h.
+metaDescription: "Nettoyage de bureaux à La Défense, Boulogne-Billancourt, Issy-les-Moulineaux, Levallois et dans tous les Hauts-de-Seine (92). Devis sous 24 h."
 lede: De La Défense à Boulogne-Billancourt, les Hauts-de-Seine concentrent une grande partie des sièges sociaux d'Île-de-France. Nous y entretenons bureaux, commerces et copropriétés.
 areas:
   - name: La Défense

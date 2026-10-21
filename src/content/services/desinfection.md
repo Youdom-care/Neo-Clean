@@ -5,7 +5,7 @@ icon: spray
 title: Désinfection
 h1: Désinfection de locaux professionnels
 metaTitle: Désinfection de locaux professionnels à Paris | Neo Clean
-metaDescription: Désinfection ponctuelle ou régulière de bureaux, commerces et établissements recevant du public à Paris et en Île-de-France, avec des produits virucides et bactéricides normés.
+metaDescription: "Désinfection ponctuelle ou régulière de bureaux, commerces et ERP à Paris et en Île-de-France, avec des produits virucides et bactéricides normés."
 summary: Désinfection ponctuelle ou régulière avec produits virucides normés.
 photos: ["desinfection-1", "accueil-3"]
 included:

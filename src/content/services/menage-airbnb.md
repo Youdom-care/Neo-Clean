@@ -5,7 +5,7 @@ icon: key
 title: Ménage Airbnb
 h1: Ménage de locations courte durée (Airbnb, Booking, Abritel)
 metaTitle: Ménage Airbnb et location courte durée à Paris | Neo Clean
-metaDescription: Ménage entre deux voyageurs, changement du linge, réassort et contrôle du logement avec photos pour vos locations Airbnb, Booking ou Abritel à Paris et en Île-de-France.
+metaDescription: "Ménage entre deux voyageurs, linge changé, réassort et photos de contrôle pour vos locations Airbnb, Booking ou Abritel à Paris."
 summary: Logement remis en état entre deux voyageurs, linge changé.
 photos: ["airbnb-2", "airbnb-1"]
 included:

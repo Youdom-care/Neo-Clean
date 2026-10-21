@@ -8,10 +8,10 @@ import CtaBand from "../components/CtaBand.astro";
 import Process from "../components/Process.astro";
 import Commitments from "../components/Commitments.astro";
 import { site } from "../data/site";
-import { getZones, getProServices, getHomeServices, serviceHref, zoneHref, type ZoneEntry } from "../lib/content";
+import { getZones, getVilles, getAllZones, getProServices, getHomeServices, serviceHref, zoneHref, type ZoneEntry } from "../lib/content";
 
 export async function getStaticPaths() {
-  const zones = await getZones();
+  const zones = await getAllZones();
   return zones.map((z) => ({ params: { zone: z.id }, props: { entry: z } }));
 }
 const { entry } = Astro.props as { entry: ZoneEntry };
@@ -19,10 +19,30 @@ const z = entry.data;
 const { Content } = await render(entry);
 const pro = await getProServices();
 const home = await getHomeServices();
+const isVille = z.kind === "ville";
 const zones = await getZones();
-const others = zones.filter((o) => o.id !== entry.id);
+const parent = isVille ? zones.find((d) => d.id === z.parent) : undefined;
+// Villes du département (page département) ou villes voisines du même département (page ville)
+const villes = await getVilles(isVille ? z.parent : entry.id);
+const siblingVilles = villes.filter((v) => v.id !== entry.id);
+const villeByName = new Map((await getVilles()).map((v) => [v.data.name, v]));
+const others = isVille ? [] : zones.filter((o) => o.id !== entry.id);
+const mapActive = isVille ? z.parent : entry.id;
 
-const title = `Entreprise de nettoyage ${z.in} (${z.code}) · bureaux, commerces, copropriétés | Neo Clean`;
+// FAQ : celle du fichier, plus une question « prix » pour les pages villes
+const faq = isVille
+  ? [
+      ...z.faq,
+      {
+        q: `Combien coûte le nettoyage de bureaux ${z.in} ?`,
+        a: `Le prix dépend de la surface, du nombre de postes et de sanitaires, de la fréquence des passages et des contraintes d'accès de votre immeuble ${z.in}. Nous établissons un devis gratuit et détaillé après une visite de vos locaux, avec un prix mensuel fixe et sans frais de dossier.`,
+      },
+    ]
+  : z.faq;
+
+const title = isVille
+  ? `Entreprise de nettoyage à ${z.name} (${z.code}) | Neo Clean`
+  : `Entreprise de nettoyage ${z.name} (${z.code}) | Neo Clean`;
 
 const schema = [
   {
@@ -33,7 +53,7 @@ const schema = [
     url: `${site.url}${zoneHref(entry)}`,
     telephone: site.phone.replace(/\s/g, ""),
     areaServed: [
-      { "@type": "AdministrativeArea", name: `${z.name} (${z.code})` },
+      isVille ? { "@type": "City", name: z.name } : { "@type": "AdministrativeArea", name: `${z.name} (${z.code})` },
       ...z.cities.map((c) => ({ "@type": "City", name: c })),
     ],
   },
@@ -43,13 +63,14 @@ const schema = [
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Accueil", item: `${site.url}/` },
       { "@type": "ListItem", position: 2, name: "Zones d'intervention", item: `${site.url}/zones-d-intervention/` },
-      { "@type": "ListItem", position: 3, name: z.name, item: `${site.url}${zoneHref(entry)}` },
+      ...(parent ? [{ "@type": "ListItem", position: 3, name: parent.data.name, item: `${site.url}${zoneHref(parent)}` }] : []),
+      { "@type": "ListItem", position: parent ? 4 : 3, name: z.name, item: `${site.url}${zoneHref(entry)}` },
     ],
   },
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: z.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   },
 ];
 ---
@@ -65,12 +86,13 @@ const schema = [
           <ol>
             <li><a href="/">Accueil</a></li>
             <li><a href="/zones-d-intervention/">Zones d'intervention</a></li>
+            {parent && <li><a href={zoneHref(parent)}>{parent.data.name}</a></li>}
             <li aria-current="page">{z.name}</li>
           </ol>
         </nav>
         <div class="code-row">
           <span class="code">{z.code}</span>
-          <span class="code-lbl">{z.name}<small>Île-de-France</small></span>
+          <span class="code-lbl">{z.name}<small>{parent ? `${parent.data.name} · ${z.postalCode ?? ""}` : "Île-de-France"}</small></span>
         </div>
         <h1>Entreprise de nettoyage {z.in}</h1>
         <p class="lede">{z.lede}</p>
@@ -79,13 +101,13 @@ const schema = [
           <a class="btn btn--light" href={site.phoneHref}><Icon name="phone" size={18} />{site.phone}</a>
         </div>
         <dl class="kpis">
-          <div><dt>Communes desservies</dt><dd>{z.cities.length}+</dd></div>
+          <div><dt>{isVille ? "Communes voisines" : "Communes desservies"}</dt><dd>{z.cities.length}+</dd></div>
           <div><dt>Services proposés</dt><dd>{pro.length + home.length}</dd></div>
           <div><dt>Réponse au devis</dt><dd>24 h</dd></div>
         </dl>
       </div>
       <div class="zhero__map">
-        <IdfMap active={entry.id} />
+        <IdfMap active={mapActive} />
       </div>
     </div>
   </section>
@@ -93,7 +115,7 @@ const schema = [
   <!-- Secteurs -->
   <section class="sectors">
     <div class="wrap">
-      <ul class="sectors__list">
+      <ul class="sectors__list" style={`--n:${z.areas.length}`}>
         {z.areas.map((a) => (
           <li>
             <Icon name="pin" size={20} />
@@ -139,7 +161,7 @@ const schema = [
         <p class="lede">Pour les entreprises, les commerces, les copropriétés et les particuliers, avec un agent attitré et un responsable de secteur joignable directement.</p>
       </div>
       <div class="cards">
-        {pro.slice(0, 6).map((s) => (
+        {pro.slice(0, isVille ? 9 : 6).map((s) => (
           <a class="scard" href={serviceHref(s)}>
             <Photo name={s.data.photos[0]} sizes="(max-width: 700px) 100vw, 33vw" widths={[480, 800]} class="scard__img" />
             <span class="scard__body">
@@ -168,15 +190,20 @@ const schema = [
     <div class="wrap local">
       <div>
         <span class="eyebrow">Communes</span>
-        <h2>Communes desservies {z.in}</h2>
-        <ul class="chips cities">{z.cities.map((c) => <li>{c}</li>)}</ul>
+        <h2>{isVille ? `Communes voisines de ${z.name}` : `Communes desservies ${z.in}`}</h2>
+        <ul class="chips cities">
+          {z.cities.map((c) => {
+            const v = villeByName.get(c);
+            return v ? <li><a href={zoneHref(v)}>{c}</a></li> : <li>{c}</li>;
+          })}
+        </ul>
         <p class="muted">Votre commune n'apparaît pas ? Indiquez votre code postal dans la <a href="/devis/">demande de devis</a> : nous vous confirmons sous 24 h ouvrées si nous pouvons intervenir.</p>
       </div>
       <div>
         <span class="eyebrow">Questions fréquentes</span>
         <h2>Nettoyage {z.in} : vos questions</h2>
         <div class="faq">
-          {z.faq.map((f, i) => (
+          {faq.map((f, i) => (
             <details open={i === 0}>
               <summary>{f.q}</summary>
               <div><p>{f.a}</p></div>
@@ -188,11 +215,27 @@ const schema = [
   </section>
 
   <section class="section section--paper">
-    <div class="wrap">
-      <h2 class="h-sm">Nous intervenons aussi</h2>
-      <ul class="chips">
-        {others.map((o) => <li><a href={zoneHref(o)}><Icon name="pin" size={16} />{o.data.name} ({o.data.code})</a></li>)}
-      </ul>
+    <div class="wrap nearby">
+      {(isVille ? siblingVilles.length > 0 : villes.length > 0) && (
+        <div>
+          <h2 class="h-sm">{isVille ? `Nos autres pages ${parent?.data.in ?? ""}` : `Nos pages par ville ${z.in}`}</h2>
+          <ul class="chips">
+            {(isVille ? siblingVilles : villes).map((v) => (
+              <li><a href={zoneHref(v)}><Icon name="pin" size={16} />Nettoyage à {v.data.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div>
+        <h2 class="h-sm">{isVille ? "Le département" : "Nous intervenons aussi"}</h2>
+        <ul class="chips">
+          {isVille && parent && (
+            <li><a href={zoneHref(parent)}><Icon name="pin" size={16} />Entreprise de nettoyage {parent.data.in} ({parent.data.code})</a></li>
+          )}
+          {others.map((o) => <li><a href={zoneHref(o)}><Icon name="pin" size={16} />{o.data.name} ({o.data.code})</a></li>)}
+          {isVille && <li><a href="/zones-d-intervention/"><Icon name="pin" size={16} />Toutes nos zones d'intervention</a></li>}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -311,7 +354,7 @@ const schema = [
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--n, 4), 1fr);
   }
   .sectors__list li {
     display: grid;
@@ -484,6 +527,10 @@ const schema = [
   .h-sm {
     font-size: 1.4rem;
     margin-bottom: 18px;
+  }
+  .nearby {
+    display: grid;
+    gap: 36px;
   }
   .chips :global(svg) {
     color: var(--pink);

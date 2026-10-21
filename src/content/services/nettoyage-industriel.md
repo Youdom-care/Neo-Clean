@@ -4,8 +4,8 @@ audience: pro
 icon: factory
 title: Locaux industriels
 h1: Nettoyage industriel d'entrepôts, ateliers et parkings
-metaTitle: Nettoyage industriel d'entrepôts, ateliers et parkings en Île-de-France | Neo Clean
-metaDescription: Nettoyage d'entrepôts, d'ateliers, de locaux techniques et de parkings en Île-de-France. Autolaveuse, dégraissage, dépoussiérage des racks, vestiaires du personnel.
+metaTitle: "Nettoyage industriel en Île-de-France | Neo Clean"
+metaDescription: "Nettoyage d'entrepôts, ateliers, locaux techniques et parkings en Île-de-France : autolaveuse, dégraissage, dépoussiérage des racks."
 summary: Entrepôts, ateliers, locaux techniques et parkings, avec matériel mécanisé.
 photos: ["industriel-1", "industriel-2"]
 included:

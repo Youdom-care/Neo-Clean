@@ -8,11 +8,12 @@ import CtaBand from "../components/CtaBand.astro";
 import Process from "../components/Process.astro";
 import Commitments from "../components/Commitments.astro";
 import { site } from "../data/site";
-import { getProServices, getHomeServices, getZones, serviceHref, zoneHref } from "../lib/content";
+import { getProServices, getHomeServices, getZones, getVilles, serviceHref, zoneHref } from "../lib/content";
 
 const pro = await getProServices();
 const home = await getHomeServices();
 const zones = await getZones();
+const villes = await getVilles();
 const featured = pro.slice(0, 8);
 
 const trust = [
@@ -41,8 +42,8 @@ const faqSchema = {
 };
 ---
 <Base
-  title="Neo Clean · Entreprise de nettoyage de bureaux à Paris et en Île-de-France"
-  description="Entreprise de nettoyage à Paris : bureaux, commerces, copropriétés, fin de chantier et ménage à domicile en Île-de-France. Agent attitré, visite et devis gratuits sous 24 h."
+  title="Neo Clean · Entreprise de nettoyage à Paris et Île-de-France"
+  description="Neo Clean, entreprise de nettoyage à Paris : bureaux, commerces, copropriétés et ménage à domicile en Île-de-France. Devis gratuit sous 24 h."
   schema={[faqSchema]}
 >
   <HomeHero />
@@ -123,6 +124,7 @@ const faqSchema = {
         <p>Neo Clean est une entreprise de nettoyage installée au 61 rue de Lyon, dans le 12e arrondissement de Paris. Nous entretenons les bureaux, les commerces, les cabinets médicaux, les hôtels et les parties communes d'immeubles, et proposons aux particuliers le ménage, le repassage et l'aide à domicile.</p>
         <p>Notre conviction est simple : dans le nettoyage, la qualité du service dépend presque entièrement des personnes qui le réalisent. Nous avons donc construit notre organisation autour de nos agents. Ils sont salariés, le plus souvent en CDI, formés à nos protocoles et encadrés par des responsables de secteur qui visitent régulièrement les sites.</p>
         <p>Pour nos clients, cela se traduit concrètement : un agent attitré qui connaît vos locaux, un cahier des charges écrit qui précise ce qui est fait pièce par pièce, un remplaçant formé quand l'agent est absent, et un interlocuteur que vous pouvez appeler directement. Pas de centre d'appels, pas de nouvel intervenant chaque semaine.</p>
+        <p>Neo Clean (neo-clean.fr) est exploitée par la société YOUDOM-SERVICES. Pour découvrir notre histoire et nos équipes, consultez la page <a href="/qui-sommes-nous/">Qui sommes-nous</a> ; pour nous joindre, rendez-vous sur la page <a href="/contact/">Contact</a> ou appelez le {site.phone}.</p>
         <h3>Des méthodes professionnelles</h3>
         <p>Nous travaillons avec des microfibres à code couleur pour séparer les zones, des désinfectants conformes aux normes européennes pour les sanitaires et les points de contact, et du matériel mécanisé pour les grandes surfaces. Chaque revêtement de sol reçoit le traitement qui lui convient, de la moquette au marbre.</p>
         <h3>Des horaires adaptés à votre activité</h3>
@@ -187,6 +189,10 @@ const faqSchema = {
           {zones.map((z) => (
             <li><a href={zoneHref(z)}><b>{z.data.code}</b><span>Nettoyage {z.data.in}</span><Icon name="arrow" size={16} /></a></li>
           ))}
+        </ul>
+        <p class="villes-lbl">Villes les plus demandées</p>
+        <ul class="chips villes">
+          {villes.map((v) => <li><a href={zoneHref(v)}>{v.data.name}</a></li>)}
         </ul>
       </div>
       <IdfMap />
@@ -582,6 +588,17 @@ const faqSchema = {
   }
   .zones__list :global(svg) {
     color: var(--muted);
+  }
+  .villes-lbl {
+    margin: 10px 0 0;
+    font: 600 0.75rem var(--display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .chips.villes a {
+    font-size: 0.88rem;
+    padding: 6px 12px;
   }
 
   /* FAQ */

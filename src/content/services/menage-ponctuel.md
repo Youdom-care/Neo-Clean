@@ -4,8 +4,8 @@ audience: particulier
 icon: sparkle
 title: Ménage ponctuel
 h1: Ménage ponctuel et grand ménage à domicile
-metaTitle: Ménage ponctuel et grand ménage à domicile à Paris | Neo Clean
-metaDescription: Un grand ménage avant une réception, après un déménagement ou au changement de saison, à Paris et en Île-de-France. Dès 3 heures, sans abonnement, 50 % de crédit d'impôt.
+metaTitle: "Grand ménage ponctuel à domicile à Paris | Neo Clean"
+metaDescription: "Grand ménage avant une réception, après un déménagement ou au printemps, à Paris et en Île-de-France. Dès 3 heures, 50 % de crédit d'impôt."
 summary: Un grand ménage quand vous en avez besoin, dès 3 heures.
 photos: ["ponctuel-1", "ponctuel-2"]
 included:

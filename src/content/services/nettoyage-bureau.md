@@ -4,8 +4,8 @@ audience: pro
 icon: desk
 title: Nettoyage de bureaux
 h1: Nettoyage de bureaux à Paris et en Île-de-France
-metaTitle: Nettoyage de bureaux à Paris et en Île-de-France | Neo Clean
-metaDescription: Entretien régulier de vos bureaux par un agent attitré à Paris et en Île-de-France. Sols, postes de travail, sanitaires, cuisine. Passage tôt le matin ou le soir. Devis gratuit sous 24 h.
+metaTitle: "Nettoyage de bureaux à Paris et Île-de-France | Neo Clean"
+metaDescription: "Entretien de vos bureaux par un agent attitré à Paris et en Île-de-France : sols, postes, sanitaires, cuisine. Devis gratuit sous 24 h."
 summary: Entretien quotidien ou hebdomadaire de vos espaces de travail, en dehors de vos heures d'activité.
 photos: ["bureau-1", "bureau-2"]
 included:

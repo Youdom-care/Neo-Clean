@@ -4,8 +4,8 @@ audience: pro
 icon: building
 title: Copropriétés
 h1: Entretien des parties communes de copropriété
-metaTitle: Nettoyage de copropriété et parties communes à Paris | Neo Clean
-metaDescription: Entretien des halls, escaliers et paliers, sortie des poubelles, distribution du courrier, remplacement de gardien. Pour syndics et conseils syndicaux à Paris et en Île-de-France.
+metaTitle: "Nettoyage de copropriété à Paris | Neo Clean"
+metaDescription: "Parties communes, sortie des poubelles, courrier et remplacement de gardien pour syndics et copropriétés à Paris et en Île-de-France."
 summary: Halls, escaliers, sortie des poubelles, courrier et remplacement de gardien.
 photos: ["copro-2", "copro-1"]
 included:

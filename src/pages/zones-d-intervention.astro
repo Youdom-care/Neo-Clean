@@ -5,14 +5,16 @@ import Icon from "../components/Icon.astro";
 import Photo from "../components/Photo.astro";
 import IdfMap from "../components/IdfMap.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { getZones, zoneHref } from "../lib/content";
+import { getZones, getVilles, zoneHref } from "../lib/content";
 const zones = await getZones();
+const villes = await getVilles();
+const villesOf = (id: string) => villes.filter((v) => v.data.parent === id);
 const petite = zones.filter((z) => ["75", "92", "93", "94"].includes(z.data.code));
 const grande = zones.filter((z) => !["75", "92", "93", "94"].includes(z.data.code));
 ---
 <Base
-  title="Zones d'intervention : entreprise de nettoyage à Paris et en Île-de-France | Neo Clean"
-  description="Neo Clean intervient à Paris et dans les départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise et Seine-et-Marne."
+  title="Zones d'intervention en Île-de-France | Neo Clean"
+  description="Neo Clean intervient à Paris et en Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise, Seine-et-Marne."
 >
   <HubHero
     crumb="Zones d'intervention"
@@ -64,6 +66,11 @@ const grande = zones.filter((z) => !["75", "92", "93", "94"].includes(z.data.cod
               <ul>
                 {z.data.areas.map((a) => <li><strong>{a.name}</strong> — {a.text}</li>)}
               </ul>
+              {villesOf(z.id).length > 0 && (
+                <ul class="vl">
+                  {villesOf(z.id).map((v) => <li><a href={zoneHref(v)}>Nettoyage à {v.data.name}</a></li>)}
+                </ul>
+              )}
               <a class="go" href={zoneHref(z)}>Notre page {z.data.name} <Icon name="arrow" size={16} /></a>
             </div>
           </article>
@@ -209,6 +216,26 @@ const grande = zones.filter((z) => !["75", "92", "93", "94"].includes(z.data.cod
   }
   .dz strong {
     color: var(--ink);
+  }
+  .dz .vl {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dz .vl a {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--blue-soft);
+    color: var(--navy);
+    font-size: 0.88rem;
+    text-decoration: none;
+  }
+  .dz .vl a:hover {
+    background: var(--navy);
+    color: #fff;
   }
   .go {
     display: inline-flex;

@@ -4,8 +4,8 @@ audience: pro
 icon: medical
 title: Cabinets médicaux
 h1: Nettoyage de cabinets médicaux, cliniques et pharmacies
-metaTitle: Nettoyage de cabinet médical, clinique et pharmacie à Paris | Neo Clean
-metaDescription: Entretien et désinfection des cabinets médicaux, dentaires, centres de santé, cliniques et pharmacies à Paris et en Île-de-France, selon un protocole adapté aux établissements de santé.
+metaTitle: "Nettoyage de cabinet médical à Paris | Neo Clean"
+metaDescription: "Entretien et désinfection de cabinets médicaux, dentaires, cliniques et pharmacies à Paris et en Île-de-France, selon un protocole adapté."
 summary: Protocole de désinfection adapté aux salles d'attente, de soins et aux officines.
 photos: ["medical-1", "medical-2"]
 included:
@@ -90,3 +90,7 @@ Nos agents travaillent dans des locaux où se trouvent des dossiers patients et 
 ## Un suivi régulier
 
 Votre responsable de secteur contrôle régulièrement la qualité de l'entretien et reste votre interlocuteur pour toute demande particulière : désinfection renforcée en période épidémique, nettoyage après des travaux, intervention ponctuelle en cas d'incident.
+
+## Renforcer l'entretien en période épidémique
+
+Pendant les épidémies saisonnières de grippe, de bronchiolite ou de gastro-entérite, la salle d'attente et les sanitaires accueillent davantage de patients contagieux. Nous pouvons augmenter temporairement la fréquence de désinfection des points de contact, ajouter un passage en milieu de journée et renforcer l'entretien des sanitaires, puis revenir au rythme habituel une fois la période passée.

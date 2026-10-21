@@ -4,7 +4,7 @@ audience: pro
 icon: bed
 title: Hôtels
 h1: Nettoyage d'hôtels et de résidences hôtelières
-metaTitle: Nettoyage d'hôtel et résidences hôtelières à Paris | Neo Clean
+metaTitle: "Nettoyage d'hôtels à Paris et Île-de-France | Neo Clean"
 metaDescription: Externalisation ou renfort du nettoyage des chambres et des parties communes d'hôtels, apparthotels et résidences hôtelières à Paris et en Île-de-France.
 summary: Chambres, parties communes et renfort en haute saison.
 photos: ["hotel-1", "airbnb-1"]
