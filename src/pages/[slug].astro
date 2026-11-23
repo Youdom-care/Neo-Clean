@@ -6,6 +6,7 @@ import Photo from "../components/Photo.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Process from "../components/Process.astro";
 import { site } from "../data/site";
+import { prixParService, netParService } from "../data/tarifs";
 import { getServices, getZones, zoneHref, serviceHref, type ServiceEntry } from "../lib/content";
 
 export async function getStaticPaths() {
@@ -33,6 +34,8 @@ const related = [1, 2, 3, 4]
 const zones = await getZones();
 const devisHref = isPro ? `/devis/?service=${entry.id}` : `/devis/?type=particulier&service=${entry.id}`;
 const [heroPhoto, ...morePhotos] = s.photos;
+const prix = prixParService[entry.id] ?? "sur devis";
+const prixNet = netParService[entry.id];
 
 const schema = [
   {
@@ -85,7 +88,7 @@ const schema = [
         <ul class="facts">
           <li><Icon name="clock" size={18} /><span><b>Fréquence</b>{s.frequency}</span></li>
           <li><Icon name="pin" size={18} /><span><b>Zone</b>Paris et Île-de-France</span></li>
-          <li><Icon name="doc" size={18} /><span><b>Devis</b>{isPro ? "Gratuit, après visite" : "Gratuit, sous 24 h"}</span></li>
+          <li><Icon name="euro" size={18} /><span><b>Tarif</b>{prix === "sur devis" ? "Sur devis, gratuit" : prix}{prixNet && <small class="net">{prixNet}</small>}</span></li>
         </ul>
       </div>
 
@@ -144,8 +147,9 @@ const schema = [
             {s.included.map((i) => <li><Icon name="check" size={20} /><span>{i}</span></li>)}
           </ul>
           {!isPro && (
-            <p class="tax"><Icon name="euro" size={20} />Ce service ouvre droit à <strong>50 % de crédit d'impôt</strong>, déduit directement de votre facture avec l'avance immédiate. <a href="/tarifs/">Voir les tarifs</a></p>
+            <p class="tax"><Icon name="euro" size={20} /><span>Ce service ouvre droit à <strong>50 % de crédit d'impôt</strong>, déduit directement de votre facture avec l'avance immédiate. <a href="/tarifs/">Voir les tarifs</a></span></p>
           )}
+          <p class="tarif"><Icon name="doc" size={20} /><span>Tarif : <strong>{prix === "sur devis" ? "sur devis, après visite gratuite" : prix}</strong>{prixNet && <> · {prixNet}</>}. Aucun frais de dossier. <a href="/tarifs/">Voir toute la grille tarifaire</a></span></p>
         </div>
       </div>
     </div>
@@ -429,6 +433,7 @@ const schema = [
   }
   .main {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 56px;
     min-width: 0;
   }
@@ -450,6 +455,7 @@ const schema = [
     border-radius: 16px;
   }
   .gallery--1 :global(.gallery__img) {
+    height: auto;
     aspect-ratio: 16 / 8;
   }
   .included {
@@ -474,6 +480,25 @@ const schema = [
     background: #fff;
     border-left: 4px solid var(--pink);
     border-radius: 0 12px 12px 0;
+  }
+  .facts .net {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--lime);
+  }
+  .tarif {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    background: #fff;
+    border-left: 4px solid var(--blue);
+    border-radius: 0 12px 12px 0;
+  }
+  .tarif :global(svg) {
+    color: var(--blue);
+    flex: none;
+    margin-top: 3px;
   }
   .tax :global(svg) {
     color: var(--pink);

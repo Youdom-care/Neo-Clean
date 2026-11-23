@@ -75,9 +75,9 @@ Nous définissons avec vous le contenu de l'intervention selon vos priorités et
 
 Le minimum est de 3 heures par intervention. Pour un appartement de 60 m² en état normal, un grand ménage complet prend en général 4 à 6 heures. Un logement très sale, après des travaux ou longtemps inoccupé, demande davantage. Lors de votre demande, décrivez votre logement et vos attentes : nous vous proposons une durée réaliste.
 
-## Le même tarif et le même crédit d'impôt
+## Le tarif et le crédit d'impôt
 
-Le ménage ponctuel est facturé au même tarif horaire que le ménage régulier, et ouvre droit au même crédit d'impôt de 50 %. Avec l'avance immédiate, vous ne réglez que la moitié de la facture.
+Le ménage ponctuel est facturé 36,90 € TTC de l'heure, avec un minimum de 3 heures, soit 18,45 € de l'heure après crédit d'impôt. Il est un peu plus cher que le ménage régulier (32,90 € TTC de l'heure), car chaque intervention ponctuelle demande une organisation particulière : planning, déplacement, découverte d'un logement inconnu. Il ouvre droit au même crédit d'impôt de 50 %, et avec l'avance immédiate, vous ne réglez que la moitié de la facture.
 
 ## Une première étape vers le ménage régulier
 

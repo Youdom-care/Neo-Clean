@@ -4,53 +4,93 @@ import HubHero from "../components/HubHero.astro";
 import Icon from "../components/Icon.astro";
 import CtaBand from "../components/CtaBand.astro";
 import { site } from "../data/site";
+import {
+  euro, net, particuliers, horaires, finDeBail, airbnb, frequences, bureaux, bureauxMinimum,
+  tauxPro, secteurs, ponctuelles, remises,
+} from "../data/tarifs";
 
-// TODO: confirmer les tarifs. Base reprise de l'ancien site : 17,65 €/h après crédit d'impôt.
+// Exemple : 2 h de ménage par semaine ≈ 8,7 h par mois
+const heuresMois = 8.7;
+const facture = Math.round(particuliers.regulier * heuresMois * 100) / 100;
+const credit = Math.round((facture / 2) * 100) / 100;
+const reste = Math.round((facture - credit) * 100) / 100;
+
 const offers = [
   {
     t: "Ménage régulier",
-    price: "17,65 €",
-    full: "35,30 € TTC/h avant crédit d'impôt",
+    prix: particuliers.regulier,
     d: "Chaque semaine ou tous les quinze jours, avec la même intervenante.",
     pts: ["2 h minimum par passage", "Remplacement en cas d'absence", "Sans engagement de durée"],
     href: "/menage-regulier/",
   },
   {
     t: "Ménage ponctuel",
-    price: "17,65 €",
-    full: "35,30 € TTC/h avant crédit d'impôt",
+    prix: particuliers.ponctuel,
     d: "Un grand ménage quand vous en avez besoin, sans abonnement.",
-    pts: ["3 h minimum", "Réservation une semaine à l'avance", "Idéal avant ou après un déménagement"],
+    pts: ["3 h minimum", "Réservation une semaine à l'avance", "Idéal avant une réception ou au printemps"],
     href: "/menage-ponctuel/",
   },
 ];
 
-const discounts = [
-  { t: "Parrainage", d: "3 heures offertes pour vous et 2 heures pour la personne que vous parrainez." },
-  { t: "Voisinage", d: "Une réduction lorsque plusieurs clients sont servis dans le même immeuble ou la même rue." },
+const exemples = [
+  { cas: "Bureaux de 80 m², 1 passage par semaine", prix: Math.max(80 * bureaux[0].prix[0], bureauxMinimum) },
+  { cas: "Bureaux de 150 m², 2 passages par semaine", prix: 150 * bureaux[1].prix[1] },
+  { cas: "Plateau de 300 m², 3 passages par semaine", prix: 300 * bureaux[2].prix[2] },
 ];
+
+const offerCatalog = {
+  "@context": "https://schema.org",
+  "@type": "OfferCatalog",
+  name: "Tarifs Neo Clean",
+  url: `${site.url}/tarifs/`,
+  itemListElement: [
+    ...horaires.map((h) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: h.t },
+      priceSpecification: { "@type": "UnitPriceSpecification", price: h.prix, priceCurrency: "EUR", unitText: "heure", valueAddedTaxIncluded: true },
+    })),
+    ...airbnb.map((a) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: `Ménage Airbnb ${a.t}` },
+      priceSpecification: { "@type": "UnitPriceSpecification", price: a.prix, priceCurrency: "EUR", unitText: "rotation", valueAddedTaxIncluded: true },
+    })),
+  ],
+};
 ---
 <Base
-  title="Tarifs du ménage à domicile et crédit d'impôt | Neo Clean"
-  description="Ménage à domicile à partir de 17,65 € de l'heure après crédit d'impôt à Paris. Avance immédiate, CESU préfinancé, parrainage."
+  title="Tarifs ménage et nettoyage à Paris 2027 | Neo Clean"
+  description={`Ménage à domicile ${euro(particuliers.regulier)} TTC/h (${euro(net(particuliers.regulier))} après crédit d'impôt), bureaux dès 1,00 € HT/m²/mois, Airbnb dès ${euro(airbnb[0].prix, 0)}. Sans frais de dossier.`}
+  schema={[offerCatalog]}
 >
   <HubHero
     crumb="Tarifs"
-    eyebrow="Particuliers"
-    title="Tarifs et crédit d'impôt"
-    lede="Des prix clairs, à l'heure, sans frais d'inscription. Le crédit d'impôt de 50 % s'applique à toutes nos prestations à domicile, avec l'avance immédiate."
+    eyebrow="Particuliers et entreprises"
+    title="Nos tarifs, sans frais cachés"
+    lede="Des prix clairs et publics, sans frais de dossier ni engagement caché. Pour les particuliers, le crédit d'impôt de 50 % est déduit directement de chaque facture."
     photo="regulier-1"
-  />
+  >
+    <nav class="jump" aria-label="Rubriques de la page">
+      <a href="#particuliers">Particuliers</a>
+      <a href="#entreprises">Entreprises</a>
+      <a href="#ponctuelles">Prestations ponctuelles</a>
+      <a href="#conditions">Conditions</a>
+    </nav>
+  </HubHero>
 
-  <section class="section">
+  <!-- ——— Particuliers ——— -->
+  <section class="section" id="particuliers">
     <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Particuliers · prix TTC</span>
+        <h2>Ménage, repassage et aide à domicile</h2>
+      </div>
       <div class="offers">
         {offers.map((o) => (
           <article class="offer">
-            <h2>{o.t}</h2>
+            <h3>{o.t}</h3>
             <p class="desc">{o.d}</p>
-            <p class="price"><span>{o.price}</span>/h</p>
-            <p class="full">après crédit d'impôt · {o.full}</p>
+            <p class="price"><span>{euro(net(o.prix))}</span>/h</p>
+            <p class="full">après crédit d'impôt · {euro(o.prix)} TTC/h facturés</p>
             <ul class="checks">
               {o.pts.map((p) => <li><Icon name="check" size={20} /><span>{p}</span></li>)}
             </ul>
@@ -61,10 +101,53 @@ const discounts = [
           </article>
         ))}
       </div>
-      <p class="note">Repassage, ménage Airbnb et aide aux seniors : même tarif horaire, sur devis selon le volume.</p>
+
+      <h3 class="tt">Toutes nos prestations à l'heure</h3>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Prestation</th><th>Conditions</th><th class="n">Prix TTC/h</th><th class="n">Après crédit d'impôt</th></tr></thead>
+          <tbody>
+            {horaires.map((h) => (
+              <tr><td><a href={`/${h.slug}/`}>{h.t}</a></td><td>{h.c}</td><td class="n strong">{euro(h.prix)}</td><td class="n">{euro(net(h.prix))}</td></tr>
+            ))}
+            <tr><td>Dimanche et jours fériés</td><td>Sur demande, selon les disponibilités</td><td class="n strong">+ {particuliers.majorationDimanche} %</td><td class="n">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="two">
+        <div>
+          <h3 class="tt">Ménage de fin de bail</h3>
+          <p class="muted small">Logement vide : placards, cuisine, électroménager, sanitaires, sols, vitres accessibles.</p>
+          <div class="tbl">
+            <table>
+              <thead><tr><th>Surface</th><th class="n">Prix TTC</th><th class="n">Après crédit d'impôt</th></tr></thead>
+              <tbody>
+                {finDeBail.map((f) => <tr><td>{f.t}</td><td class="n strong">{euro(f.prix, 0)}</td><td class="n">{euro(net(f.prix), 0)}</td></tr>)}
+                <tr><td>Plus de 100 m² ou logement très sale</td><td class="n" colspan="2">sur devis</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="tt">Ménage Airbnb et location courte durée</h3>
+          <p class="muted small">Par rotation : ménage complet, changement du linge, réassort, photos de contrôle. Pas de crédit d'impôt (activité de location).</p>
+          <div class="tbl">
+            <table>
+              <thead><tr><th>Logement</th><th class="n">Prix TTC par rotation</th></tr></thead>
+              <tbody>
+                {airbnb.map((a) => <tr><td>{a.t}</td><td class="n strong">{euro(a.prix, 0)}</td></tr>)}
+                <tr><td>T4 et plus, maisons, blanchisserie</td><td class="n">sur devis</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small"><a href="/menage-airbnb/">En savoir plus sur le ménage Airbnb</a></p>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- ——— Crédit d'impôt ——— -->
   <section class="section section--paper" id="credit-impot">
     <div class="wrap tax">
       <div class="section-head">
@@ -92,24 +175,107 @@ const discounts = [
       <div class="example">
         <h3>Exemple : 2 h de ménage par semaine</h3>
         <dl>
-          <div><dt>Facturé par mois (≈ 8,7 h)</dt><dd>307,11 €</dd></div>
-          <div><dt>Crédit d'impôt (50 %)</dt><dd>− 153,56 €</dd></div>
-          <div class="total"><dt>Coût réel pour vous</dt><dd>153,55 €</dd></div>
+          <div><dt>Facturé par mois (≈ {heuresMois.toLocaleString("fr-FR")} h × {euro(particuliers.regulier)})</dt><dd>{euro(facture)}</dd></div>
+          <div><dt>Crédit d'impôt (50 %)</dt><dd>− {euro(credit)}</dd></div>
+          <div class="total"><dt>Coût réel pour vous</dt><dd>{euro(reste)}</dd></div>
         </dl>
       </div>
       {site.legal.sapNumber && <p class="note">Neo Clean est déclarée organisme de services à la personne sous le numéro {site.legal.sapNumber}.</p>}
     </div>
   </section>
 
-  <section class="section">
+  <!-- ——— Entreprises ——— -->
+  <section class="section" id="entreprises">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Réductions</span>
-        <h2>Nos réductions permanentes</h2>
+        <span class="eyebrow">Entreprises · prix HT</span>
+        <h2>Entretien régulier de bureaux</h2>
+        <p class="lede">Prix en € HT par m² et par mois, selon la surface et le nombre de passages. Matériel et produits fournis. Le prix définitif est confirmé après une visite gratuite de vos locaux.</p>
+      </div>
+      <div class="tbl">
+        <table class="grid">
+          <thead><tr><th>Surface</th>{frequences.map((f) => <th class="n">{f}</th>)}</tr></thead>
+          <tbody>
+            {bureaux.map((b) => (
+              <tr><td>{b.surface}</td>{b.prix.map((p) => <td class="n strong">{euro(p)}</td>)}</tr>
+            ))}
+            <tr><td>Plus de 800 m²</td><td class="n" colspan="4">sur devis, tarifs dégressifs</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">Minimum de facturation : <strong>{euro(bureauxMinimum, 0)} HT par mois</strong>.</p>
+
+      <div class="two">
+        <div>
+          <h3 class="tt">Exemples de budgets mensuels</h3>
+          <ul class="ex">
+            {exemples.map((e) => <li><span>{e.cas}</span><strong>{euro(Math.round(e.prix), 0)} HT</strong></li>)}
+          </ul>
+        </div>
+        <div>
+          <h3 class="tt">Taux horaires et majorations</h3>
+          <div class="tbl">
+            <table>
+              <tbody>
+                <tr><td>Contrat régulier (coworkings, renforts, remplacement de gardien)</td><td class="n strong">{euro(tauxPro.regulier)} HT/h</td></tr>
+                <tr><td>Intervention ponctuelle, 3 h minimum</td><td class="n strong">{euro(tauxPro.ponctuel)} HT/h</td></tr>
+                <tr><td>Horaires de nuit (21 h – 6 h)</td><td class="n">+ {tauxPro.nuit} %</td></tr>
+                <tr><td>Samedi</td><td class="n">+ {tauxPro.samedi} %</td></tr>
+                <tr><td>Dimanche et jours fériés</td><td class="n">+ {tauxPro.dimanche} %</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="tt">Par secteur</h3>
+      <div class="sect">
+        {secteurs.map((s) => (
+          <div><strong>{s.t}</strong><span class="p">{s.prix}</span><small>{s.base}</small></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ——— Ponctuelles ——— -->
+  <section class="section section--paper" id="ponctuelles">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Prestations ponctuelles · prix HT</span>
+        <h2>Vitres, sols, fin de chantier, désinfection, débarras</h2>
+        <p class="lede">Prix de départ, ajustés après visite ou sur photos selon l'accessibilité et l'état des surfaces. Particuliers : prix TTC sur devis.</p>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Prestation</th><th class="n">À partir de</th><th class="n">Minimum</th></tr></thead>
+          <tbody>
+            {ponctuelles.map((p) => (
+              <tr><td><a href={`/${p.service}/`}>{p.t}</a></td><td class="n strong">{p.prix}</td><td class="n">{p.min ? euro(p.min, 0) + " HT" : "—"}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ——— Conditions et remises ——— -->
+  <section class="section" id="conditions">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Conditions</span>
+        <h2>Remises et conditions tarifaires</h2>
       </div>
       <div class="disc">
-        {discounts.map((d) => <div><h3>{d.t}</h3><p>{d.d}</p></div>)}
+        {remises.map((d) => <div><h3>{d.t}</h3><p>{d.d}</p></div>)}
       </div>
+      <ul class="conds">
+        <li><Icon name="check" size={18} /><span><strong>Devis et visite gratuits</strong>, réponse sous 24 h ouvrées. Aucun frais de dossier ni de mise en place.</span></li>
+        <li><Icon name="check" size={18} /><span><strong>Entreprises</strong> : prix HT, TVA 20 % en sus, facturation mensuelle, paiement à 30 jours.</span></li>
+        <li><Icon name="check" size={18} /><span><strong>Particuliers</strong> : prix TTC, facturation mensuelle, avance immédiate du crédit d'impôt proposée.</span></li>
+        <li><Icon name="check" size={18} /><span>Consommables sanitaires (papier, savon, sacs) refacturés au prix d'achat, ou fournis par vos soins.</span></li>
+        <li><Icon name="check" size={18} /><span>Intervention ponctuelle annulée moins de 48 h avant : 50 % facturés.</span></li>
+        <li><Icon name="check" size={18} /><span>Révision annuelle des tarifs au 1er janvier, selon l'évolution des salaires de la branche propreté.</span></li>
+      </ul>
     </div>
   </section>
 
@@ -120,22 +286,19 @@ const discounts = [
         <p>Les services de ménage, de repassage et d'aide à domicile réalisés à votre résidence principale ou secondaire, en France, ouvrent droit à un crédit d'impôt égal à 50 % des sommes versées. Ce dispositif est prévu par l'article 199 sexdecies du Code général des impôts. Il s'agit d'un crédit, et non d'une simple réduction : si son montant dépasse votre impôt, ou si vous n'êtes pas imposable, la différence vous est remboursée.</p>
         <p>Les dépenses sont retenues dans la limite d'un plafond annuel de 12 000 euros, majoré de 1 500 euros par enfant à charge ou par membre du foyer âgé de plus de 65 ans, sans pouvoir dépasser 15 000 euros. Des plafonds plus élevés s'appliquent la première année ou lorsqu'un membre du foyer est en situation de handicap. Pour la grande majorité des foyers, le plafond n'est pas atteint.</p>
         <h2>L'avance immédiate : ne payer que 50 %</h2>
-        <p>Jusqu'à récemment, il fallait avancer la totalité des sommes et attendre l'année suivante pour récupérer le crédit d'impôt. Avec le service d'avance immédiate proposé par l'Urssaf, ce n'est plus le cas : le crédit d'impôt est déduit directement de chaque facture. Concrètement, pour une facture mensuelle de 300 euros, vous ne réglez que 150 euros ; l'Urssaf nous verse le reste.</p>
+        <p>Avec le service d'avance immédiate proposé par l'Urssaf, le crédit d'impôt est déduit directement de chaque facture. Concrètement, pour une facture mensuelle de 300 euros, vous ne réglez que 150 euros ; l'Urssaf nous verse le reste.</p>
         <p>L'activation est simple : nous créons votre espace auprès de l'Urssaf, vous recevez un courriel pour confirmer votre inscription, puis chaque facture vous est présentée pour validation avant le prélèvement de votre part. Vous gardez à tout moment le contrôle de ce qui est payé.</p>
-        <p>Si vous préférez ne pas utiliser l'avance immédiate, vous réglez la totalité de vos factures et nous vous adressons chaque année une attestation fiscale à joindre à votre déclaration de revenus.</p>
-        <p>L'avance immédiate ne change rien au montant de votre crédit d'impôt : elle en modifie seulement le calendrier. Les sommes déjà déduites de vos factures apparaissent sur votre déclaration de revenus préremplie, et ne sont évidemment pas remboursées une seconde fois.</p>
+        <p>Si vous préférez ne pas utiliser l'avance immédiate, vous réglez la totalité de vos factures et nous vous adressons chaque année une attestation fiscale à joindre à votre déclaration de revenus. L'avance immédiate ne change rien au montant de votre crédit d'impôt : elle en modifie seulement le calendrier.</p>
         <h2>Le paiement en CESU préfinancé</h2>
         <p>Si votre employeur, votre comité social et économique ou votre caisse de retraite vous remet des chèques emploi service universel préfinancés, vous pouvez les utiliser pour régler nos prestations, en tout ou partie. La part payée en CESU préfinancé n'ouvre pas droit au crédit d'impôt, puisqu'elle a déjà été financée par un tiers.</p>
         <h2>Combien coûte réellement une aide ménagère ?</h2>
-        <p>Prenons l'exemple d'un ménage de deux heures par semaine. Sur un mois, cela représente environ 8,7 heures, soit une facture d'environ 307 euros au tarif de 35,30 euros de l'heure. Avec le crédit d'impôt de 50 %, le coût réel est d'environ 154 euros par mois, soit moins de 18 euros l'heure. Avec l'avance immédiate, c'est ce montant que vous réglez directement, sans attendre de remboursement.</p>
+        <p>Prenons l'exemple d'un ménage de deux heures par semaine. Sur un mois, cela représente environ 8,7 heures, soit une facture d'environ {euro(Math.round(facture), 0)} au tarif de {euro(particuliers.regulier)} de l'heure. Avec le crédit d'impôt de 50 %, le coût réel est d'environ {euro(Math.round(reste), 0)} par mois, soit {euro(net(particuliers.regulier))} de l'heure. Avec l'avance immédiate, c'est ce montant que vous réglez directement, sans attendre de remboursement.</p>
         <p>Ce prix comprend le salaire et les charges de l'intervenante, ses congés payés, son remplacement pendant ses absences, sa formation, son assurance, ainsi que la gestion administrative. En emploi direct, ces éléments restent à votre charge ou sous votre responsabilité.</p>
         <h2>Ce qui fait varier le nombre d'heures</h2>
         <p>Le tarif horaire est le même pour tous, mais le nombre d'heures nécessaires varie d'un logement à l'autre. La surface compte, bien sûr, mais aussi le nombre de pièces d'eau, la présence d'enfants ou d'animaux, le type de sols, la quantité de linge à repasser et le niveau d'exigence de chacun. Un appartement de 60 m² avec une salle de bain et sans animal s'entretient en deux heures par semaine ; le même appartement avec deux jeunes enfants et un chien en demandera souvent trois.</p>
-        <p>Lors du premier échange, nous vous proposons un nombre d'heures réaliste. Après quelques passages, nous faisons le point avec vous et votre intervenante pour ajuster si nécessaire, à la hausse comme à la baisse. Notre intérêt est que vous restiez satisfait dans la durée, pas de vous facturer des heures inutiles.</p>
-        <h2>Les réductions permanentes</h2>
-        <p>Le parrainage vous permet de bénéficier d'heures offertes lorsque vous recommandez Neo Clean à un proche qui devient client. La réduction voisinage s'applique lorsque plusieurs clients sont servis dans le même immeuble ou la même rue : l'organisation des trajets étant plus simple pour nous, nous en faisons profiter nos clients. Les conditions précises vous sont indiquées lors de votre demande de devis.</p>
-        <h2>Et pour les entreprises ?</h2>
-        <p>Pour les professionnels, nos tarifs ne sont pas affichés à l'heure : ils dépendent de la surface, du type de locaux, du nombre de postes et de sanitaires, des revêtements, de la fréquence des passages et des contraintes d'accès. Nous établissons un devis précis et gratuit après une visite de vos locaux, avec un prix mensuel fixe pour l'entretien régulier et un prix séparé pour chaque prestation ponctuelle. Il n'y a pas de frais de dossier ni de frais de mise en place. <a href="/nettoyage-professionnel/">Découvrir nos services aux entreprises</a>.</p>
+        <p>Lors du premier échange, nous vous proposons un nombre d'heures réaliste. Après quelques passages, nous faisons le point avec vous et votre intervenante pour ajuster si nécessaire, à la hausse comme à la baisse.</p>
+        <h2>Comment est calculé le prix pour une entreprise</h2>
+        <p>Pour les locaux professionnels, notre grille indique un prix au mètre carré selon la surface et le nombre de passages par semaine. Plus la surface est grande, plus le prix au mètre carré baisse, car l'organisation du travail est plus efficace. Le prix définitif tient aussi compte du nombre de sanitaires, des revêtements, des contraintes d'accès et des horaires imposés. C'est pourquoi nous le confirmons toujours après une visite gratuite, avec un cahier des charges écrit qui précise ce qui est fait à chaque passage. <a href="/nettoyage-professionnel/">Découvrir nos services aux entreprises</a>.</p>
       </div>
       <aside class="side">
         <div class="faq">
@@ -144,12 +307,12 @@ const discounts = [
             <div><p>Oui. C'est un crédit d'impôt : s'il dépasse votre impôt, la différence vous est remboursée.</p></div>
           </details>
           <details>
-            <summary>Y a-t-il des frais d'inscription ?</summary>
-            <div><p>Non. Vous ne payez que les heures réalisées, au tarif indiqué dans votre devis.</p></div>
+            <summary>Y a-t-il des frais d'inscription ou de dossier ?</summary>
+            <div><p>Non, ni pour les particuliers ni pour les entreprises. Vous ne payez que les prestations réalisées.</p></div>
           </details>
           <details>
-            <summary>Les heures annulées sont-elles facturées ?</summary>
-            <div><p>Une intervention annulée suffisamment à l'avance, selon le délai prévu au contrat, n'est pas facturée.</p></div>
+            <summary>Les prix affichés sont-ils définitifs ?</summary>
+            <div><p>Les prix à l'heure des particuliers et les forfaits sont fermes. Pour les entreprises, la grille donne le prix de départ, confirmé après visite selon la configuration réelle des locaux.</p></div>
           </details>
           <details>
             <summary>Le ménage Airbnb ouvre-t-il droit au crédit d'impôt ?</summary>
@@ -157,17 +320,34 @@ const discounts = [
           </details>
           <details>
             <summary>Comment suis-je facturé ?</summary>
-            <div><p>Une facture mensuelle récapitule les heures réalisées. Avec l'avance immédiate, vous validez chaque facture avant le prélèvement de votre part.</p></div>
+            <div><p>Une facture mensuelle récapitule les prestations réalisées. Avec l'avance immédiate, les particuliers valident chaque facture avant le prélèvement de leur part.</p></div>
           </details>
         </div>
       </aside>
     </div>
   </section>
 
-  <CtaBand title="Obtenez votre tarif exact" text="Chaque logement est différent. Décrivez le vôtre et recevez un devis précis sous 24 h ouvrées." />
+  <CtaBand title="Obtenez votre prix exact" text="Décrivez votre logement ou vos locaux et recevez un devis précis sous 24 h ouvrées, sans frais de dossier." />
 </Base>
 
 <style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .jump a {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.35);
+    color: #fff;
+    text-decoration: none;
+    font: 600 0.92rem var(--display);
+  }
+  .jump a:hover {
+    background: rgb(255 255 255 / 0.12);
+  }
   .offers {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -178,10 +358,11 @@ const discounts = [
     gap: 14px;
     align-content: start;
     padding: clamp(24px, 4vw, 36px);
+    background: #fff;
     border: 1px solid var(--line);
     border-radius: 18px;
   }
-  .offer h2 {
+  .offer h3 {
     font-size: 1.5rem;
   }
   .desc {
@@ -194,7 +375,7 @@ const discounts = [
   .price span {
     font-size: 2.8rem;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--pink);
     letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
   }
@@ -205,6 +386,99 @@ const discounts = [
   }
   .offer .checks {
     margin-block: 8px;
+  }
+  .tt {
+    margin: 40px 0 12px;
+    font-size: 1.3rem;
+  }
+  .tbl {
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.97rem;
+  }
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--navy);
+    color: #fff;
+    font: 600 0.88rem var(--display);
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tr:last-child td {
+    border-bottom: 0;
+  }
+  .n {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .strong {
+    font-weight: 700;
+    color: var(--navy);
+  }
+  table.grid {
+    min-width: 620px;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .small {
+    font-size: 0.92rem;
+    margin-top: 10px;
+  }
+  .ex {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .ex li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    background: var(--paper);
+    border-radius: 12px;
+  }
+  .ex strong {
+    color: var(--navy);
+    white-space: nowrap;
+  }
+  .sect {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .sect div {
+    display: grid;
+    gap: 4px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .sect .p {
+    font: 700 1.1rem var(--display);
+    color: var(--pink);
+  }
+  .sect small {
+    color: var(--muted);
   }
   .note {
     margin-top: 24px;
@@ -240,7 +514,7 @@ const discounts = [
     border: 1px solid var(--line);
     border-left: 4px solid var(--lime);
     border-radius: 0 var(--radius) var(--radius) 0;
-    max-width: 560px;
+    max-width: 600px;
     display: grid;
     gap: 14px;
   }
@@ -273,18 +547,39 @@ const discounts = [
   }
   .disc {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
   .disc div {
     display: grid;
     gap: 8px;
-    padding: 24px;
+    align-content: start;
+    padding: 22px;
+    background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--radius);
   }
   .disc p {
     color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .conds {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 28px;
+  }
+  .conds li {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 12px;
+  }
+  .conds :global(svg) {
+    color: #6f8f10;
+    margin-top: 4px;
+    stroke-width: 2.4;
   }
   .long {
     display: grid;
@@ -296,19 +591,38 @@ const discounts = [
     position: sticky;
     top: calc(var(--header-h) + 24px);
   }
+  @media (max-width: 1000px) {
+    .disc {
+      grid-template-columns: 1fr 1fr;
+    }
+    .sect {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
   @media (max-width: 900px) {
-    .long {
+    .long,
+    .two {
       grid-template-columns: 1fr;
     }
     .side {
       position: static;
     }
   }
-  @media (max-width: 860px) {
+  @media (max-width: 760px) {
     .offers,
     .tax__grid,
-    .disc {
+    .conds {
       grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .disc,
+    .sect {
+      grid-template-columns: 1fr;
+    }
+    th,
+    td {
+      padding: 10px 12px;
     }
   }
 </style>

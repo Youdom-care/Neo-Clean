@@ -8,6 +8,7 @@ import CtaBand from "../components/CtaBand.astro";
 import Process from "../components/Process.astro";
 import Commitments from "../components/Commitments.astro";
 import { site } from "../data/site";
+import { euro, net, particuliers } from "../data/tarifs";
 import { getProServices, getHomeServices, getZones, getVilles, serviceHref, zoneHref } from "../lib/content";
 
 const pro = await getProServices();
@@ -25,7 +26,7 @@ const trust = [
 
 
 const faq = [
-  { q: "Combien coûte le nettoyage de bureaux à Paris ?", a: "Le prix dépend de la surface, du type de locaux, du nombre de sanitaires, de la fréquence des passages et des prestations incluses. Nous établissons un devis précis et gratuit après une visite de vos locaux, sans frais de dossier." },
+  { q: "Combien coûte le nettoyage de bureaux à Paris ?", a: "À partir de 1,00 € HT par m² et par mois selon la surface et le nombre de passages, avec un minimum de 150 € HT par mois. Par exemple, 150 m² entretenus deux fois par semaine reviennent à 375 € HT par mois. Toute notre grille est sur la page Tarifs, et le prix est confirmé après une visite gratuite." },
   { q: "Dans quelles villes intervenez-vous ?", a: "À Paris et dans les sept autres départements d'Île-de-France : Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Yvelines, Essonne, Val-d'Oise et Seine-et-Marne. En grande couronne, nous vérifions avec vous la faisabilité selon votre commune." },
   { q: "Quel est le délai pour démarrer une prestation ?", a: "Après validation du devis, nous démarrons en général sous une à deux semaines, le temps d'affecter un agent qui habite votre secteur et de le former sur votre site. Une intervention ponctuelle peut être organisée plus rapidement." },
   { q: "Est-ce toujours le même agent qui intervient ?", a: "Oui. Nous affectons un agent attitré à chaque site. En cas d'absence ou de congés, un remplaçant déjà formé sur vos locaux assure le passage." },
@@ -151,8 +152,8 @@ const faqSchema = {
         <Photo name="domicile-1" sizes="(max-width: 900px) 100vw, 45vw" class="home__img" />
         <div class="price">
           <span class="price__label">Ménage à domicile, à partir de</span>
-          <span class="price__value">17,65 €<small>/h</small></span>
-          <span class="price__note">après crédit d'impôt · 35,30 € TTC facturés</span>
+          <span class="price__value">{euro(net(particuliers.regulier))}<small>/h</small></span>
+          <span class="price__note">après crédit d'impôt · {euro(particuliers.regulier)} TTC facturés</span>
         </div>
       </div>
       <div class="home__text">

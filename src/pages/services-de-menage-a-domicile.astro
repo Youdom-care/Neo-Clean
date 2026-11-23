@@ -6,6 +6,7 @@ import Photo from "../components/Photo.astro";
 import CtaBand from "../components/CtaBand.astro";
 import Process from "../components/Process.astro";
 import { site } from "../data/site";
+import { euro, net, particuliers } from "../data/tarifs";
 import { getHomeServices, getZones, serviceHref, zoneHref } from "../lib/content";
 
 const home = await getHomeServices();
@@ -68,8 +69,8 @@ const faqSchema = {
         <a class="item item--price" href="/tarifs/">
           <span class="item__body">
             <span class="k">À partir de</span>
-            <span class="big">17,65 €<small>/h</small></span>
-            <p>après crédit d'impôt, soit 35,30 € TTC facturés</p>
+            <span class="big">{euro(net(particuliers.regulier))}<small>/h</small></span>
+            <p>après crédit d'impôt, soit {euro(particuliers.regulier)} TTC facturés</p>
             <span class="go">Tarifs et crédit d'impôt <Icon name="arrow" size={16} /></span>
           </span>
         </a>

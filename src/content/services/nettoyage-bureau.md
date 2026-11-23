@@ -49,7 +49,7 @@ faq:
   - q: Que se passe-t-il quand notre agent est malade ou en congé ?
     a: Un remplaçant formé sur votre site assure le passage. Nous vous prévenons à l'avance pour les congés, et le jour même pour une absence imprévue. Le service n'est pas interrompu.
   - q: Combien coûte le nettoyage de bureaux à Paris ?
-    a: Le prix dépend de la surface, du nombre de sanitaires, de la fréquence de passage et des prestations incluses. Un devis précis est établi gratuitement après une visite de vos locaux, sans frais de dossier.
+    a: "Notre grille démarre à 1,00 € HT par m² et par mois, selon la surface et le nombre de passages, avec un minimum de 150 € HT par mois. Par exemple, 150 m² entretenus deux fois par semaine reviennent à 375 € HT par mois. Le prix est confirmé gratuitement après une visite de vos locaux, sans frais de dossier."
   - q: Peut-on modifier la fréquence en cours de contrat ?
     a: Oui. Si votre effectif change, si vous passez au télétravail partiel ou si vous agrandissez vos locaux, nous ajustons la fréquence et le devis. Il suffit d'en parler à votre responsable de secteur.
   - q: Travaillez-vous avec des bureaux de petite taille ?
