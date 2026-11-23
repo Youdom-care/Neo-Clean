@@ -33,8 +33,9 @@ const isActive = (href: string) => path === href || path.startsWith(href);
             </ul>
           </div>
         </li>
+        <li><a href="/tarifs/" aria-current={isActive("/tarifs/") ? "page" : undefined}>Tarifs</a></li>
         <li><a href="/zones-d-intervention/" aria-current={isActive("/zones-d-intervention/") || path.startsWith("/nettoyage-bureaux-") ? "page" : undefined}>Zones</a></li>
-        <li><a href="/qui-sommes-nous/" aria-current={isActive("/qui-sommes-nous/") ? "page" : undefined}>Qui sommes-nous</a></li>
+        <li><a href="/qui-sommes-nous/" aria-current={isActive("/qui-sommes-nous/") ? "page" : undefined}>À propos</a></li>
         <li><a href="/contact/" aria-current={isActive("/contact/") ? "page" : undefined}>Contact</a></li>
       </ul>
       <div class="hdr__navcta">
@@ -100,6 +101,7 @@ const isActive = (href: string) => path === href || path.startsWith(href);
   .hdr__nav > ul > li > a {
     display: block;
     padding: 10px 12px;
+    white-space: nowrap;
     border-radius: 8px;
     color: var(--ink);
     text-decoration: none;
